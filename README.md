@@ -1,2 +1,2 @@
 # Search
-API para servicio de búsqueda
+API REST para servicio de búsqueda
