@@ -9,4 +9,4 @@ mvn clean && mvn package
 java -jar target/dependency/webapp-runner.jar target/Search.war  
 ```
 
-Make requests to http://localhost:8080/api/v1/search
+Make requests to http://localhost:8080/api/v1/search?q=XXX
