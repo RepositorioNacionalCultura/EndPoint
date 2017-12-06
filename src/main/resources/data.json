@@ -1,14 +1,250 @@
 [
   {
-    "title":"My movie",
-    "description": "Another movie"
+    "identifier": [
+      {
+        "type": "oai",
+        "value": "123456789/20",
+        "preferred": true
+      },
+      {
+        "type": "other",
+        "value": "CY01_02_01_H_JIBV_H_01_2012",
+        "preferred": false
+      },
+      {
+        "type": "uri",
+        "value": "http://alin.inali.gob.mx:80/xmlui/handle/123456789/20",
+        "preferred": false
+      }
+    ],
+    "type": [
+      "Elicitacion",
+      "Lexico",
+      "Lista de palabras"
+    ],
+    "title": [
+      {
+        "type": "main",
+        "value": "Lista de Haspelmath. Campo semántico 1; Luis Rio Colorado, Sonora"
+      }
+    ],
+    "description": "Archivo de audio del campo semántico 1 \"el mundo físico\" de la lista de Haspelmath. Elicitada en San Luis Rio Colorado. Datos de hombre",
+    "digitalobject": [
+      {
+        "title":"Haspeltmath y tadmor.jpg",
+        "rights": [
+          {
+            "type": "",
+            "url": "http://alin.inali.gob.mx:80/xmlui/bitstream/123456789/20/2/license.txt",
+            "title": "",
+            "description": "",
+            "holder": ""
+          }
+        ],
+        "url": "http://alin.inali.gob.mx:80/xmlui/bitstream/123456789/20/3/Haspeltmath+y+tadmor.jpg",
+        "format": "image/jpeg"
+      },
+      {
+        "title":"1. El mundo físico.zip",
+        "rights": [
+          {
+            "type": "",
+            "url": "http://alin.inali.gob.mx:80/xmlui/bitstream/123456789/20/2/license.txt",
+            "title": "",
+            "description": "",
+            "holder": ""
+          }
+        ],
+        "url": "http://alin.inali.gob.mx:80/xmlui/bitstream/123456789/20/1/1.+El+mundo+f%C3%ADsico.zip",
+        "format": "application/octet-stream"
+      }
+    ],
+    "rights": [
+      {
+        "type": "",
+        "url": "http://alin.inali.gob.mx:80/xmlui/bitstream/123456789/20/2/license.txt",
+        "title": "",
+        "description": "",
+        "holder": ""
+      }
+    ],
+    "creator": [
+      "Barrera Vega, José Israel"
+    ],
+    "datecreated": {
+      "format": "iso8601",
+      "value": "2015-10-12"
+    },
+    "holder": "Acervo de Lenguas Indígenas Nacionales"
   },
   {
-    "title":"My second movie",
-    "description": "Another"
+    "identifier": [
+      {
+        "type": "oai",
+        "value": "123456789/21",
+        "preferred": true
+      },
+      {
+        "type": "other",
+        "value": "CY01_02_01_H_JIBV_H_01_2012",
+        "preferred": false
+      },
+      {
+        "type": "uri",
+        "value": "http://alin.inali.gob.mx:80/xmlui/handle/123456789/21",
+        "preferred": false
+      }
+    ],
+    "type": [
+      "Elicitacion",
+      "Lexico",
+      "Lista de palabras"
+    ],
+    "title": [
+      {
+        "type": "main",
+        "value": "Lista de Haspelmath. San Luis Rio Colorado, Sonora"
+      }
+    ],
+    "description": "Archivo de audio",
+    "digitalobject": [
+      {
+        "title":"Haspeltmath y tadmor.jpg",
+        "rights": [
+          {
+            "type": "",
+            "url": "http://alin.inali.gob.mx:80/xmlui/bitstream/123456789/21/4/license.txt",
+            "title": "",
+            "description": "",
+            "holder": ""
+          }
+        ],
+        "url": "http://alin.inali.gob.mx:80/xmlui/bitstream/123456789/21/5/Haspeltmath+y+tadmor.jpg",
+        "format": "image/jpeg"
+      },
+      {
+        "title":"1.21_tierra.wav",
+        "rights": [
+          {
+            "type": "",
+            "url": "http://alin.inali.gob.mx:80/xmlui/bitstream/123456789/21/4/license.txt",
+            "title": "",
+            "description": "",
+            "holder": ""
+          }
+        ],
+        "url": "http://alin.inali.gob.mx:80/xmlui/bitstream/123456789/21/1/1.21_tierra.wav",
+        "format": "audio/x-wav"
+      },
+      {
+        "title":"1.22_montaña_loma.wav",
+        "rights": [
+          {
+            "type": "",
+            "url": "http://alin.inali.gob.mx:80/xmlui/bitstream/123456789/21/4/license.txt",
+            "title": "",
+            "description": "",
+            "holder": ""
+          }
+        ],
+        "url": "http://alin.inali.gob.mx:80/xmlui/bitstream/123456789/21/2/1.22_monta%C3%B1a_loma.wav",
+        "format": "audio/x-wav"
+      }
+    ],
+    "rights": [
+      {
+        "type": "",
+        "url": "http://alin.inali.gob.mx:80/xmlui/bitstream/123456789/21/4/license.txt",
+        "title": "",
+        "description": "",
+        "holder": ""
+      }
+    ],
+    "creator": [
+      "Barrera Vega, José Israel"
+    ],
+    "datecreated": {
+      "format": "iso8601",
+      "value": "2015-10-12"
+    },
+    "holder": "Acervo de Lenguas Indígenas Nacionales"
   },
   {
-    "title":"Terminator",
-    "description": "Best film"
+    "identifier": [
+      {
+        "type": "oai",
+        "value": "123456789/22",
+        "preferred": true
+      },
+      {
+        "type": "other",
+        "value": "CY01_02_01_H_JIBV_H_02_2012",
+        "preferred": false
+      },
+      {
+        "type": "uri",
+        "value": "http://alin.inali.gob.mx:80/xmlui/handle/123456789/22",
+        "preferred": false
+      }
+    ],
+    "type": [
+      "Elicitacion",
+      "Lexico",
+      "Lista de palabras"
+    ],
+    "title": [
+      {
+        "type": "main",
+        "value": "Lista de Haspelmath. Cucapá. Campo semántico 2"
+      }
+    ],
+    "description": "Archivos de audio correspondientes al campo semántico 2 \"parentesco\" de la Lista de Haspelmath. Elicitados en San Luis Rio Colorado, Sonora.",
+    "digitalobject": [
+      {
+        "title":"Haspeltmath y tadmor.jpg",
+        "rights": [
+          {
+            "type": "",
+            "url": "http://alin.inali.gob.mx:80/xmlui/bitstream/123456789/22/2/license.txt",
+            "title": "",
+            "description": "",
+            "holder": ""
+          }
+        ],
+        "url": "http://alin.inali.gob.mx:80/xmlui/bitstream/123456789/22/3/Haspeltmath+y+tadmor.jpg",
+        "format": "image/jpeg"
+      },
+      {
+        "title":"2. Parentesco.zip",
+        "rights": [
+          {
+            "type": "",
+            "url": "http://alin.inali.gob.mx:80/xmlui/bitstream/123456789/22/2/license.txt",
+            "title": "",
+            "description": "",
+            "holder": ""
+          }
+        ],
+        "url": "http://alin.inali.gob.mx:80/xmlui/bitstream/123456789/22/1/2.+Parentesco.zip",
+        "format": "application/octet-stream"
+      }
+    ],
+    "rights": [
+      {
+        "type": "",
+        "url": "http://alin.inali.gob.mx:80/xmlui/bitstream/123456789/22/2/license.txt",
+        "title": "",
+        "description": "",
+        "holder": ""
+      }
+    ],
+    "creator": [
+      "Barrera Vega, José Israel"
+    ],
+    "datecreated": {
+      "format": "iso8601",
+      "value": "2015-10-13"
+    },
+    "holder": "Acervo de Lenguas Indígenas Nacionales"
   }
 ]
