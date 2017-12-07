@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.*;
 
@@ -30,10 +31,14 @@ public class SearchEndPoint {
     public Response keywordSearch(@Context UriInfo context) {
         MultivaluedMap<String, String> params = context.getQueryParameters();
         String q = params.getFirst("q");
+        String id = params.getFirst("identifier");
+
         JSONArray ret = new JSONArray();
         Cursor cur;
 
-        if (null != q && !q.isEmpty()) {
+        if (null != id && !id.isEmpty()) {
+            cur = coll.find(Filters.elemMatch("identifier", Filters.eq("value", id)));
+        } else if (null != q && !q.isEmpty()) {
             cur = coll.find(Filters.or(Filters.text("title", q), Filters.text("description", q)));
         } else {
             cur = coll.find();
