@@ -1,0 +1,152 @@
+{
+  "mappings": {
+    "bic" : {
+      "properties": {
+        "identifier": {
+          "properties": {
+            "type":{
+              "type": "text",
+              "index": false
+            },
+            "value":{
+              "type": "text",
+              "index": false
+            },
+            "preferred":{ "type": "boolean" }
+          }
+        },
+        "resourcetype": {
+          "type":"text",
+          "fields": {
+            "raw": { "type":"keyword" }
+          }
+        },
+        "resourcetitle": {
+          "properties": {
+            "type":{
+              "type": "text",
+              "index": false
+            },
+            "value": { "type":"text" }
+          }
+        },
+        "digitalobejct": {
+          "properties":{
+            "rights": {
+              "properties": {
+                "type": {
+                  "type": "text",
+                  "index": false
+                },
+                "url": {
+                  "type": "text",
+                  "index": false
+                },
+                "rightstitle":{
+                  "type": "text",
+                  "index": false
+                },
+                "description": {
+                  "type": "text",
+                  "index": false
+                },
+                "holder": {
+                  "type": "text",
+                  "index": false
+                }
+              }
+            },
+            "digitalobjecttitle":{
+              "type": "text",
+              "index": false
+            },
+            "url":{
+              "type": "text",
+              "index": false
+            },
+            "mediatype": {
+              "properties": {
+                "name" : { "type": "text" },
+                "mime": {
+                  "type": "text",
+                  "index": false
+                }
+              }
+            }
+          }
+        },
+        "rights": {
+          "properties": {
+            "type": {
+              "type": "text",
+              "index": false
+            },
+            "url": {
+              "type": "text",
+              "index": false
+            },
+            "rightstitle":{
+              "type": "text",
+              "index": false
+            },
+            "description": {
+              "type": "text",
+              "index": false
+            },
+            "holder": {
+              "type": "text",
+              "index": false
+            }
+          }
+        },
+        "creator": { "type" : "text" },
+        "datecreated": {
+          "properties": {
+            "format": {
+              "type": "text",
+              "index": false
+            },
+            "value": {
+              "type": "date"
+            }
+          }
+        },
+        "periodcerated": {
+          "properties": {
+            "name": {
+              "type": "text",
+              "fields": {
+                "raw": { "type":"keyword" }
+              }
+            },
+            "datestart": {
+              "properties": {
+                "format": {
+                  "type": "text",
+                  "index": false
+                },
+                "value": { "type": "date" }
+              }
+            },
+            "dateend": {
+              "properties": {
+                "format": {
+                  "type": "text",
+                  "index": false
+                },
+                "value": { "type": "date" }
+              }
+            }
+          }
+        },
+        "holder" : {
+          "type" : "text",
+          "fields": {
+            "raw": { "type": "keyword" }
+          }
+        },
+        "catchall": { "type" : "text"}
+      }
+    }
+  }
+}

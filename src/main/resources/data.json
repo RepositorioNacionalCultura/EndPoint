@@ -246,5 +246,65 @@
       "value": "2015-10-13"
     },
     "holder": "Acervo de Lenguas Indígenas Nacionales"
+  },
+  {
+    "identifier": [
+      {
+        "type": "uri",
+        "value": "http://alin.inali.gob.mx:80/xmlui/handle/123456789/677",
+        "preferred": false
+      },
+      {
+        "type": "oai",
+        "value": "123456789/677",
+        "preferred": true
+      }
+    ],
+    "type": [
+      "Materiales",
+      "Diferencias entre las casas habitacionales",
+      "Etnografía",
+      "Fotografía"
+    ],
+    "title": [
+      {
+        "type": "main",
+        "value": "Casas y paisaje : obnók (del este) : Yécora, Sonora"
+      }
+    ],
+    "description": "Esta serie fotográfica aporta elementos para conocer algunos aspectos de la vida y del contexto de los Pimas de Yécora, al observar imágenes del paisaje, de sus casas y de su medio ambiente.",
+    "digitalobject": [
+      {
+        "title":"Casas y paisaje_pima del este_EAO_7.jpg",
+        "rights": [
+          {
+            "type": "",
+            "url": "http://alin.inali.gob.mx:80/xmlui/bitstream/123456789/677/5/license.txt",
+            "title": "",
+            "description": "",
+            "holder": ""
+          }
+        ],
+        "url": "http://alin.inali.gob.mx:80/xmlui/bitstream/123456789/677/2/Casas+y+paisaje_pima+del+este_EAO_7.jpg",
+        "format": "image/jpeg"
+      }
+    ],
+    "rights": [
+      {
+        "type": "",
+        "url": "http://alin.inali.gob.mx:80/xmlui/bitstream/123456789/677/5/license.txt",
+        "title": "",
+        "description": "",
+        "holder": ""
+      }
+    ],
+    "creator": [
+      "Embriz Osorio, Arnulfo"
+    ],
+    "datecreated": {
+      "format": "iso8601",
+      "value": "2016-11-28"
+    },
+    "holder": "Acervo de Lenguas Indígenas Nacionales"
   }
 ]
