@@ -66,7 +66,12 @@
             },
             "mediatype": {
               "properties": {
-                "name" : { "type": "text" },
+                "name" : {
+                  "type": "text",
+                  "fields": {
+                    "raw": { "type":"keyword" }
+                  }
+                },
                 "mime": {
                   "type": "text",
                   "index": false
