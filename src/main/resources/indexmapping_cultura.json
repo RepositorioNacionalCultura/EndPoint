@@ -15,6 +15,11 @@
             "preferred":{ "type": "boolean" }
           }
         },
+        "resourcestats": {
+          "properties": {
+            "views": { "type" : "long" }
+          }
+        },
         "resourcetype": {
           "type":"text",
           "fields": {
@@ -32,6 +37,7 @@
         },
         "digitalobejct": {
           "properties":{
+            "downloads": { "type" : "long"},
             "rights": {
               "properties": {
                 "type": {

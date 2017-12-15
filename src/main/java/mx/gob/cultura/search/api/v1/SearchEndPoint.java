@@ -1,13 +1,18 @@
 package mx.gob.cultura.search.api.v1;
 
 import mx.gob.cultura.commons.Util;
+import org.elasticsearch.action.DocWriteResponse;
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.update.UpdateRequest;
+import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.rest.RestStatus;
+import org.elasticsearch.script.Script;
+import org.elasticsearch.script.ScriptType;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
@@ -21,11 +26,10 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.IOException;
+import java.util.HashMap;
 
 /**
  * REST EndPoint to manage search requests.
@@ -62,6 +66,35 @@ public class SearchEndPoint {
             ret = searchByKeyword(q);
         } else {
             ret = getObjectById(id);
+        }
+
+        return Response.ok(ret.toString()).build();
+    }
+
+    /**
+     * Updates object view count.
+     * @param oId Object ID
+     * @return
+     */
+    @Path("/hits/{objectId}")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addView(@PathParam("objectId") String oId) {
+        JSONObject ret = new JSONObject();
+        if (null != oId && !oId.isEmpty()) {
+            UpdateRequest req = new UpdateRequest("cultura", "bic", oId);
+            Script inline = new Script(ScriptType.INLINE, "painless", "ctx._source.resourcestats.views += 1", new HashMap<>());
+
+            req.script(inline);
+
+            try {
+                UpdateResponse resp = elastic.update(req);
+                if (resp.getResult() == DocWriteResponse.Result.UPDATED) {
+                    ret.put("_id", resp.getId());
+                }
+            } catch (IOException ioex) {
+                ioex.printStackTrace();
+            }
         }
 
         return Response.ok(ret.toString()).build();
