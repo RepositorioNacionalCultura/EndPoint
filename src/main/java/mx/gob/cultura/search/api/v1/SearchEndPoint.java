@@ -49,7 +49,7 @@ public class SearchEndPoint {
     /**
      * Processes search request by keyword or identifier.
      * @param context {@link UriInfo} object with request context information.
-     * @return
+     * @return Response object with search results
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -74,12 +74,10 @@ public class SearchEndPoint {
     /**
      * Updates object view count.
      * @param oId Object ID
-     * @return
      */
     @Path("/hits/{objectId}")
     @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response addView(@PathParam("objectId") String oId) {
+    public void addView(@PathParam("objectId") String oId) {
         JSONObject ret = new JSONObject();
         if (null != oId && !oId.isEmpty()) {
             UpdateRequest req = new UpdateRequest("cultura", "bic", oId);
@@ -96,8 +94,6 @@ public class SearchEndPoint {
                 ioex.printStackTrace();
             }
         }
-
-        return Response.ok(ret.toString()).build();
     }
 
     /**
@@ -113,10 +109,12 @@ public class SearchEndPoint {
         Histogram histogram = aggregations.get(aggName);
         if (histogram.getBuckets().size() > 0) {
             for (Histogram.Bucket bucket : histogram.getBuckets()) {
-                JSONObject o = new JSONObject();
-                o.put("name", bucket.getKeyAsString());
-                o.put("count", bucket.getDocCount());
-                aggs.put(o);
+                if (bucket.getDocCount() > 0) {
+                    JSONObject o = new JSONObject();
+                    o.put("name", bucket.getKeyAsString());
+                    o.put("count", bucket.getDocCount());
+                    aggs.put(o);
+                }
             }
         }
         ret.put(aggName, aggs);
