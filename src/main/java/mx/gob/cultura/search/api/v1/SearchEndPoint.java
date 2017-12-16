@@ -57,13 +57,23 @@ public class SearchEndPoint {
         MultivaluedMap<String, String> params = context.getQueryParameters();
         String id = params.getFirst("identifier");
         String q = params.getFirst("q");
+        String from = params.getFirst("from");
+        String size = params.getFirst("size");
 
         JSONObject ret;
         if (null == id || id.isEmpty()) {
-            if (null == q) {
-                q = "*";
+            if (null == q) q = "*";
+
+            int f = -1, s = -1;
+            if (null != from && !from.isEmpty()) {
+                f = Integer.parseInt(from);
             }
-            ret = searchByKeyword(q);
+
+            if (null != size && !size.isEmpty()) {
+                s = Integer.parseInt(size);
+            }
+
+            ret = searchByKeyword(q, f, s);
         } else {
             ret = getObjectById(id);
         }
@@ -171,9 +181,11 @@ public class SearchEndPoint {
     /**
      * Gets documents from ElasticSearch matching keyword search.
      * @param q Query string
+     * @param from Number of record to start from
+     * @param size Number of records to retrieve
      * @return JSONObject wrapping search results.
      */
-    private JSONObject searchByKeyword(String q) {
+    private JSONObject searchByKeyword(String q, int from, int size) {
         JSONObject ret = new JSONObject();
 
         //Create search request
@@ -183,7 +195,11 @@ public class SearchEndPoint {
         SearchSourceBuilder ssb = new SearchSourceBuilder();
         ssb.query(QueryBuilders.queryStringQuery(q));
 
-        //Build aggregations
+        //Set paging parameters
+        if (from > -1) ssb.from(from);
+        if (size > 0) ssb.size(size);
+
+        //Build aggregations for faceted search
         TermsAggregationBuilder holdersAgg = AggregationBuilders.terms("holders")
                 .field("holder.raw");
         TermsAggregationBuilder typesAgg = AggregationBuilders.terms("resourcetypes")
