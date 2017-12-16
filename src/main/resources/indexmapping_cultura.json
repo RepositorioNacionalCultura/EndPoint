@@ -22,6 +22,8 @@
         },
         "resourcetype": {
           "type":"text",
+          "analyzer": "spanish",
+          "search_analyzer": "spanish",
           "fields": {
             "raw": { "type":"keyword" }
           }
@@ -32,7 +34,11 @@
               "type": "text",
               "index": false
             },
-            "value": { "type":"text" }
+            "value": {
+              "type":"text",
+              "analyzer": "spanish",
+              "search_analyzer": "spanish"
+            }
           }
         },
         "digitalobejct": {
@@ -74,6 +80,8 @@
               "properties": {
                 "name" : {
                   "type": "text",
+                  "analyzer": "spanish",
+                  "search_analyzer": "spanish",
                   "fields": {
                     "raw": { "type":"keyword" }
                   }
@@ -110,7 +118,11 @@
             }
           }
         },
-        "creator": { "type" : "text" },
+        "creator": {
+          "type" : "text",
+          "analyzer": "spanish",
+          "search_analyzer": "spanish"
+        },
         "datecreated": {
           "properties": {
             "format": {
@@ -118,7 +130,10 @@
               "index": false
             },
             "value": {
-              "type": "date"
+              "type": "date",
+              "fields": {
+                "textvalue": { "type" : "text" }
+              }
             }
           }
         },
@@ -126,6 +141,8 @@
           "properties": {
             "name": {
               "type": "text",
+              "analyzer": "spanish",
+              "search_analyzer": "spanish",
               "fields": {
                 "raw": { "type":"keyword" }
               }
@@ -152,6 +169,8 @@
         },
         "holder" : {
           "type" : "text",
+          "analyzer": "spanish",
+          "search_analyzer": "spanish",
           "fields": {
             "raw": { "type": "keyword" }
           }
