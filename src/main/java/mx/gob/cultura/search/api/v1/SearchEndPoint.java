@@ -37,7 +37,7 @@ import java.util.HashMap;
  */
 @Path("/search")
 public class SearchEndPoint {
-    private RestHighLevelClient elastic;
+    private final RestHighLevelClient elastic;
 
     /**
      * Constructor. Creates a new instance of {@link SearchEndPoint}.
