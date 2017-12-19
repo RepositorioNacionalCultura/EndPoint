@@ -1,310 +1,701 @@
 [
   {
+    "indexcreated": "2017-12-18T03:00:21.00Z",
     "identifier": [
       {
-        "type": "oai",
-        "value": "123456789/20",
+        "type": "SIGROPAM",
+        "value": "10243",
         "preferred": true
-      },
-      {
-        "type": "other",
-        "value": "CY01_02_01_H_JIBV_H_01_2012",
-        "preferred": false
-      },
-      {
-        "type": "uri",
-        "value": "http://alin.inali.gob.mx:80/xmlui/handle/123456789/20",
-        "preferred": false
       }
     ],
-    "type": [
-      "Elicitacion",
-      "Lexico",
-      "Lista de palabras"
-    ],
-    "title": [
+    "resourcestats": {
+      "views":0
+    },
+    "resourcetype": ["Óleo sobre cartón"],
+    "recordtitle": [
       {
-        "type": "main",
-        "value": "Lista de Haspelmath. Campo semántico 1; Luis Rio Colorado, Sonora"
+        "type":"main",
+        "value":"La chica de la Ventana"
       }
     ],
-    "description": "Archivo de audio del campo semántico 1 \"el mundo físico\" de la lista de Haspelmath. Elicitada en San Luis Rio Colorado. Datos de hombre",
     "digitalobject": [
       {
-        "title":"Haspeltmath y tadmor.jpg",
-        "rights": [
-          {
-            "type": "",
-            "url": "http://alin.inali.gob.mx:80/xmlui/bitstream/123456789/20/2/license.txt",
-            "title": "",
-            "description": "",
-            "holder": ""
-          }
-        ],
-        "url": "http://alin.inali.gob.mx:80/xmlui/bitstream/123456789/20/3/Haspeltmath+y+tadmor.jpg",
-        "format": "image/jpeg"
-      },
-      {
-        "title":"1. El mundo físico.zip",
-        "rights": [
-          {
-            "type": "",
-            "url": "http://alin.inali.gob.mx:80/xmlui/bitstream/123456789/20/2/license.txt",
-            "title": "",
-            "description": "",
-            "holder": ""
-          }
-        ],
-        "url": "http://alin.inali.gob.mx:80/xmlui/bitstream/123456789/20/1/1.+El+mundo+f%C3%ADsico.zip",
-        "format": "application/octet-stream"
+        "url": "http://129.144.24.140:8080/cultura/mam/17La_chica_de_la ventana1923.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
       }
     ],
-    "rights": [
-      {
-        "type": "",
-        "url": "http://alin.inali.gob.mx:80/xmlui/bitstream/123456789/20/2/license.txt",
-        "title": "",
-        "description": "",
-        "holder": ""
-      }
-    ],
-    "creator": [
-      "Barrera Vega, José Israel"
-    ],
+    "creator": ["Abraham Ángel"],
     "datecreated": {
       "format": "iso8601",
-      "value": "2015-10-12"
+      "value": "1923"
     },
-    "holder": "Acervo de Lenguas Indígenas Nacionales"
+    "holder": "Museo de Arte Moderno"
   },
   {
+    "indexcreated": "2017-12-17T03:00:21.00Z",
     "identifier": [
       {
-        "type": "oai",
-        "value": "123456789/21",
+        "type": "SIGROPAM",
+        "value": "13157",
         "preferred": true
-      },
-      {
-        "type": "other",
-        "value": "CY01_02_01_H_JIBV_H_01_2012",
-        "preferred": false
-      },
-      {
-        "type": "uri",
-        "value": "http://alin.inali.gob.mx:80/xmlui/handle/123456789/21",
-        "preferred": false
       }
     ],
-    "type": [
-      "Elicitacion",
-      "Lexico",
-      "Lista de palabras"
-    ],
-    "title": [
+    "resourcestats": {
+      "views":0
+    },
+    "resourcetype": ["Óleo sobre tela"],
+    "recordtitle": [
       {
-        "type": "main",
-        "value": "Lista de Haspelmath. San Luis Rio Colorado, Sonora"
+        "type":"main",
+        "value":"Las dos Fridas"
       }
     ],
-    "description": "Archivo de audio",
     "digitalobject": [
       {
-        "title":"Haspeltmath y tadmor.jpg",
-        "rights": [
-          {
-            "type": "",
-            "url": "http://alin.inali.gob.mx:80/xmlui/bitstream/123456789/21/4/license.txt",
-            "title": "",
-            "description": "",
-            "holder": ""
-          }
-        ],
-        "url": "http://alin.inali.gob.mx:80/xmlui/bitstream/123456789/21/5/Haspeltmath+y+tadmor.jpg",
-        "format": "image/jpeg"
-      },
-      {
-        "title":"1.21_tierra.wav",
-        "rights": [
-          {
-            "type": "",
-            "url": "http://alin.inali.gob.mx:80/xmlui/bitstream/123456789/21/4/license.txt",
-            "title": "",
-            "description": "",
-            "holder": ""
-          }
-        ],
-        "url": "http://alin.inali.gob.mx:80/xmlui/bitstream/123456789/21/1/1.21_tierra.wav",
-        "format": "audio/x-wav"
-      },
-      {
-        "title":"1.22_montaña_loma.wav",
-        "rights": [
-          {
-            "type": "",
-            "url": "http://alin.inali.gob.mx:80/xmlui/bitstream/123456789/21/4/license.txt",
-            "title": "",
-            "description": "",
-            "holder": ""
-          }
-        ],
-        "url": "http://alin.inali.gob.mx:80/xmlui/bitstream/123456789/21/2/1.22_monta%C3%B1a_loma.wav",
-        "format": "audio/x-wav"
+        "url": "http://129.144.24.140:8080/cultura/mam/28Las_dos Fridas1939copia.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
       }
     ],
-    "rights": [
-      {
-        "type": "",
-        "url": "http://alin.inali.gob.mx:80/xmlui/bitstream/123456789/21/4/license.txt",
-        "title": "",
-        "description": "",
-        "holder": ""
-      }
-    ],
-    "creator": [
-      "Barrera Vega, José Israel"
-    ],
+    "creator": ["Frida Kahlo"],
     "datecreated": {
       "format": "iso8601",
-      "value": "2015-10-12"
+      "value": "1939"
     },
-    "holder": "Acervo de Lenguas Indígenas Nacionales"
+    "holder": "Museo de Arte Moderno"
   },
   {
+    "indexcreated": "2017-12-15T03:00:21.00Z",
     "identifier": [
       {
-        "type": "oai",
-        "value": "123456789/22",
+        "type": "SIGROPAM",
+        "value": "11587",
         "preferred": true
-      },
-      {
-        "type": "other",
-        "value": "CY01_02_01_H_JIBV_H_02_2012",
-        "preferred": false
-      },
-      {
-        "type": "uri",
-        "value": "http://alin.inali.gob.mx:80/xmlui/handle/123456789/22",
-        "preferred": false
       }
     ],
-    "type": [
-      "Elicitacion",
-      "Lexico",
-      "Lista de palabras"
-    ],
-    "title": [
+    "resourcestats": {
+      "views":0
+    },
+    "resourcetype": ["Óleo sobre masonite"],
+    "recordtitle": [
       {
-        "type": "main",
-        "value": "Lista de Haspelmath. Cucapá. Campo semántico 2"
+        "type":"main",
+        "value":"La huida"
       }
     ],
-    "description": "Archivos de audio correspondientes al campo semántico 2 \"parentesco\" de la Lista de Haspelmath. Elicitados en San Luis Rio Colorado, Sonora.",
     "digitalobject": [
       {
-        "title":"Haspeltmath y tadmor.jpg",
-        "rights": [
-          {
-            "type": "",
-            "url": "http://alin.inali.gob.mx:80/xmlui/bitstream/123456789/22/2/license.txt",
-            "title": "",
-            "description": "",
-            "holder": ""
-          }
-        ],
-        "url": "http://alin.inali.gob.mx:80/xmlui/bitstream/123456789/22/3/Haspeltmath+y+tadmor.jpg",
-        "format": "image/jpeg"
-      },
-      {
-        "title":"2. Parentesco.zip",
-        "rights": [
-          {
-            "type": "",
-            "url": "http://alin.inali.gob.mx:80/xmlui/bitstream/123456789/22/2/license.txt",
-            "title": "",
-            "description": "",
-            "holder": ""
-          }
-        ],
-        "url": "http://alin.inali.gob.mx:80/xmlui/bitstream/123456789/22/1/2.+Parentesco.zip",
-        "format": "application/octet-stream"
+        "url": "http://129.144.24.140:8080/cultura/mam/49La_huida1962copia.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
       }
     ],
-    "rights": [
-      {
-        "type": "",
-        "url": "http://alin.inali.gob.mx:80/xmlui/bitstream/123456789/22/2/license.txt",
-        "title": "",
-        "description": "",
-        "holder": ""
-      }
-    ],
-    "creator": [
-      "Barrera Vega, José Israel"
-    ],
+    "creator": ["Remedios Varo"],
     "datecreated": {
       "format": "iso8601",
-      "value": "2015-10-13"
+      "value": "1961"
     },
-    "holder": "Acervo de Lenguas Indígenas Nacionales"
+    "holder": "Museo de Arte Moderno"
   },
   {
+    "indexcreated": "2017-12-11T03:00:21.00Z",
     "identifier": [
       {
-        "type": "uri",
-        "value": "http://alin.inali.gob.mx:80/xmlui/handle/123456789/677",
-        "preferred": false
-      },
-      {
-        "type": "oai",
-        "value": "123456789/677",
+        "type": "SIGROPAM",
+        "value": "14613",
         "preferred": true
       }
     ],
-    "type": [
-      "Materiales",
-      "Diferencias entre las casas habitacionales",
-      "Etnografía",
-      "Fotografía"
-    ],
-    "title": [
+    "resourcestats": {
+      "views":0
+    },
+    "resourcetype": ["Óleo sobre tela"],
+    "recordtitle": [
       {
-        "type": "main",
-        "value": "Casas y paisaje : obnók (del este) : Yécora, Sonora"
+        "type":"main",
+        "value":"Indígenas"
       }
     ],
-    "description": "Esta serie fotográfica aporta elementos para conocer algunos aspectos de la vida y del contexto de los Pimas de Yécora, al observar imágenes del paisaje, de sus casas y de su medio ambiente.",
     "digitalobject": [
       {
-        "title":"Casas y paisaje_pima del este_EAO_7.jpg",
-        "rights": [
-          {
-            "type": "",
-            "url": "http://alin.inali.gob.mx:80/xmlui/bitstream/123456789/677/5/license.txt",
-            "title": "",
-            "description": "",
-            "holder": ""
-          }
-        ],
-        "url": "http://alin.inali.gob.mx:80/xmlui/bitstream/123456789/677/2/Casas+y+paisaje_pima+del+este_EAO_7.jpg",
-        "format": "image/jpeg"
+        "url": "http://129.144.24.140:8080/cultura/mam/41Indigenas1924.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
       }
     ],
-    "rights": [
+    "creator": ["Jean Charlot"],
+    "datecreated": {
+      "format": "iso8601",
+      "value": "1924"
+    },
+    "holder": "Museo de Arte Moderno"
+  },
+  {
+    "indexcreated": "2017-12-11T03:00:21.00Z",
+    "identifier": [
       {
-        "type": "",
-        "url": "http://alin.inali.gob.mx:80/xmlui/bitstream/123456789/677/5/license.txt",
-        "title": "",
-        "description": "",
-        "holder": ""
+        "type": "internal",
+        "value": "1093157",
+        "preferred": true
       }
     ],
-    "creator": [
-      "Embriz Osorio, Arnulfo"
+    "resourcestats": {
+      "views":0
+    },
+    "resourcetype": ["UTENSILIO"],
+    "recordtitle": [
+      {
+        "type":"main",
+        "value":"RELOJ DE BOLSILLO"
+      }
+    ],
+    "digitalobject": [
+      {
+        "url": "http://129.144.24.140:8080/cultura/mnh/DSC7226.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
+      },
+      {
+        "url": "http://localhost:8080/cultura/mnh/DSC7227.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
+      },
+      {
+        "url": "http://localhost:8080/cultura/mnh/DSC7229.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
+      },
+      {
+        "url": "http://localhost:8080/cultura/mnh/DSC7231.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
+      },
+      {
+        "url": "http://localhost:8080/cultura/mnh/DSC7232.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
+      }
+    ],
+    "creator": [],
+    "periodcreated" : {
+      "name": "SIGLO XIX (SEGUNDA MITAD)"
+    },
+    "holder": "Museo Nacional de Historia"
+  },
+  {
+    "indexcreated": "2017-12-18T03:00:21.00Z",
+    "identifier": [
+      {
+        "type": "internal",
+        "value": "10611409",
+        "preferred": true
+      }
+    ],
+    "resourcestats": {
+      "views":0
+    },
+    "resourcetype": ["PINTURA"],
+    "recordtitle": [
+      {
+        "type":"main",
+        "value":"MIGUEL HIDALGO Y COSTILLA"
+      }
+    ],
+    "digitalobject": [
+      {
+        "url": "http://129.144.24.140:8080/cultura/mnh/10611409retrato_de_don_miguel_hidalgo_y_costilla_pagina_seis_primera_foto.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
+      }
+    ],
+    "creator": ["J. M. GARCIA"],
+    "periodcreated" : {
+      "name": "SIGLO XIX"
+    },
+    "holder": "Museo Nacional de Historia"
+  },
+  {
+    "indexcreated": "2017-11-18T03:00:21.00Z",
+    "identifier": [
+      {
+        "type": "internal",
+        "value": "10137694",
+        "preferred": true
+      }
+    ],
+    "resourcestats": {
+      "views":0
+    },
+    "resourcetype": ["PINTURA"],
+    "recordtitle": [
+      {
+        "type":"main",
+        "value":"PORFIRIO DIAZ"
+      }
+    ],
+    "digitalobject": [
+      {
+        "url": "http://129.144.24.140:8080/cultura/mnh/10137694_PORFIRIO_DIAZ_SALA_10.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
+      }
+    ],
+    "creator": [],
+    "periodcreated" : {
+      "name": "SIGLO XIX"
+    },
+    "holder": "Museo Nacional de Historia"
+  },
+  {
+    "indexcreated": "2017-12-18T03:00:21.00Z",
+    "identifier": [
+      {
+        "type": "internal",
+        "value": "10130914",
+        "preferred": true
+      }
+    ],
+    "resourcestats": {
+      "views":0
+    },
+    "resourcetype": ["PINTURA"],
+    "recordtitle": [
+      {
+        "type":"main",
+        "value":"GUADALUPE VICTORIA"
+      }
+    ],
+    "digitalobject": [
+      {
+        "url": "http://129.144.24.140:8080/cultura/mnh/10130914GuadalupeVictoria.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
+      }
+    ],
+    "creator": [],
+    "periodcreated" : {
+      "name": "SIGLO XIX 1825"
+    },
+    "holder": "Museo Nacional de Historia"
+  },
+  {
+    "indexcreated": "2017-11-17T03:00:21.00Z",
+    "identifier": [
+      {
+        "type": "internal",
+        "value": "10150912",
+        "preferred": true
+      }
+    ],
+    "resourcestats": {
+      "views":0
+    },
+    "resourcetype": ["ENSER DOMESTICO"],
+    "recordtitle": [
+      {
+        "type":"main",
+        "value":"RELOJ FRANCES CON CAPELO"
+      }
+    ],
+    "digitalobject": [
+      {
+        "url": "http://129.144.24.140:8080/cultura/mnh/10150912.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
+      }
+    ],
+    "creator": [],
+    "periodcreated" : {
+      "name": "SIGLO XIX"
+    },
+    "holder": "Museo Nacional de Historia"
+  },
+  {
+    "indexcreated": "2017-12-18T04:00:21.00Z",
+    "identifier": [
+      {
+        "type": "SIGROA",
+        "value": "50942",
+        "preferred": true
+      }
+    ],
+    "resourcestats": {
+      "views":0
+    },
+    "resourcetype": ["Óleo sobre tela"],
+    "recordtitle": [
+      {
+        "type":"main",
+        "value":"La niña"
+      }
+    ],
+    "digitalobject": [
+      {
+        "url": "http://129.144.24.140:8080/cultura/sancarlos/50942_La_niña.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
+      }
+    ],
+    "creator": ["Germán Gedovius, México, 1867 - 1937"],
+    "holder": "Museo Nacional de San Carlos"
+  },
+  {
+    "indexcreated": "2017-12-18T04:00:21.00Z",
+    "identifier": [
+      {
+        "type": "SIGROA",
+        "value": "3994",
+        "preferred": true
+      }
+    ],
+    "resourcestats": {
+      "views":0
+    },
+    "resourcetype": ["Óleo sobre tela"],
+    "recordtitle": [
+      {
+        "type":"main",
+        "value":"Bacante"
+      }
+    ],
+    "digitalobject": [
+      {
+        "url": "http://129.144.24.140:8080/cultura/sancarlos/3994_Bacante.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
+      }
+    ],
+    "creator": ["Adolphe René Lefèvre, La Ferlésous-Jouarre, 1834 - París, 1868"],
+    "holder": "Museo Nacional de San Carlos"
+  },
+  {
+    "indexcreated": "2017-12-18T04:00:21.00Z",
+    "identifier": [
+      {
+        "type": "SIGROA",
+        "value": "8964",
+        "preferred": true
+      }
+    ],
+    "resourcestats": {
+      "views":0
+    },
+    "resourcetype": ["Óleo sobre tela"],
+    "recordtitle": [
+      {
+        "type":"main",
+        "value":"Santa Águeda"
+      }
+    ],
+    "digitalobject": [
+      {
+        "url": "http://129.144.24.140:8080/cultura/sancarlos/8964_Santa_Agueda.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
+      }
     ],
     "datecreated": {
       "format": "iso8601",
-      "value": "2016-11-28"
+      "value": "1655"
     },
-    "holder": "Acervo de Lenguas Indígenas Nacionales"
+    "creator": ["Andrea Vaccaro, Nápoles, 1598 - 1670"],
+    "holder": "Museo Nacional de San Carlos"
+  },
+  {
+    "indexcreated": "2017-12-18T04:00:21.00Z",
+    "identifier": [
+      {
+        "type": "SIGROA",
+        "value": "6166",
+        "preferred": true
+      }
+    ],
+    "resourcestats": {
+      "views":0
+    },
+    "resourcetype": ["Óleo sobre tabla"],
+    "recordtitle": [
+      {
+        "type":"main",
+        "value":"Retablo de la Encarnación"
+      }
+    ],
+    "digitalobject": [
+      {
+        "url": "http://129.144.24.140:8080/cultura/sancarlos/6166_Retablo_de_la_Encarnacion.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
+      }
+    ],
+    "datecreated": {
+      "format": "iso8601",
+      "value": "1465"
+    },
+    "creator": ["Pere Espallargués, Villa de Molina, Cataluña, 1425 - 1495 (atribución)"],
+    "holder": "Museo Nacional de San Carlos"
+  },
+  {
+    "indexcreated": "2017-12-18T04:00:21.00Z",
+    "identifier": [
+      {
+        "type": "SIGROA",
+        "value": "6036",
+        "preferred": true
+      }
+    ],
+    "resourcestats": {
+      "views":0
+    },
+    "resourcetype": ["Óleo sobre tela"],
+    "recordtitle": [
+      {
+        "type":"main",
+        "value":"San Juan Bautista niño"
+      }
+    ],
+    "digitalobject": [
+      {
+        "url": "http://129.144.24.140:8080/cultura/sancarlos/6036_San_Juan_Bautista_niño.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
+      }
+    ],
+    "datecreated": {
+      "format": "iso8601",
+      "value": "1855"
+    },
+    "creator": ["Jean Auguste Dominique Ingres, Montauban, 1780 - París, 1867 (Atribución)"],
+    "holder": "Museo Nacional de San Carlos"
+  },
+  {
+    "indexcreated": "2017-12-18T04:00:21.00Z",
+    "identifier": [
+      {
+        "type": "SIGROA",
+        "value": "6799",
+        "preferred": true
+      }
+    ],
+    "resourcestats": {
+      "views":0
+    },
+    "resourcetype": ["Óleo sobre tabla"],
+    "recordtitle": [
+      {
+        "type":"main",
+        "value":"La Virgen enseñando a escribir al Niño Jesús"
+      }
+    ],
+    "digitalobject": [
+      {
+        "url": "http://129.144.24.140:8080/cultura/sancarlos/23_6799_La_Virgen_enseñando_a_escribir_al_niño_Jesus.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
+      }
+    ],
+    "creator": ["Luis de Morales, el Divino, Badajoz, ca. 1515 - 1586"],
+    "holder": "Museo Nacional de San Carlos"
+  },
+  {
+    "indexcreated": "2017-12-18T04:00:21.00Z",
+    "identifier": [
+      {
+        "type": "SIGROA",
+        "value": "6862",
+        "preferred": true
+      }
+    ],
+    "resourcestats": {
+      "views":0
+    },
+    "resourcetype": ["Óleo sobre tela"],
+    "recordtitle": [
+      {
+        "type":"main",
+        "value":"Garden Party (Nocturno)"
+      }
+    ],
+    "digitalobject": [
+      {
+        "url": "http://129.144.24.140:8080/cultura/sancarlos/6862_Garden_Party.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
+      }
+    ],
+    "datecreated": {
+      "format": "iso8601",
+      "value": "1909"
+    },
+    "creator": ["Eduardo Chicharro y Agüera, Madrid, 1873 - 1949"],
+    "holder": "Museo Nacional de San Carlos"
+  },
+  {
+    "indexcreated": "2017-12-18T04:00:21.00Z",
+    "identifier": [
+      {
+        "type": "SIGROA",
+        "value": "8687",
+        "preferred": true
+      }
+    ],
+    "resourcestats": {
+      "views":0
+    },
+    "resourcetype": ["Mármol"],
+    "recordtitle": [
+      {
+        "type":"main",
+        "value":"París y Helena"
+      }
+    ],
+    "digitalobject": [
+      {
+        "url": "http://129.144.24.140:8080/cultura/sancarlos/8687_Paris_y_Helena.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
+      }
+    ],
+    "datecreated": {
+      "format": "iso8601",
+      "value": "1840"
+    },
+    "creator": ["Antonio Solá Llansas, Barcelona, 1780 - Roma, 1861"],
+    "holder": "Museo Nacional de San Carlos"
+  },
+  {
+    "indexcreated": "2017-12-18T04:00:21.00Z",
+    "identifier": [
+      {
+        "type": "SIGROA",
+        "value": "7076",
+        "preferred": true
+      }
+    ],
+    "resourcestats": {
+      "views":0
+    },
+    "resourcetype": ["Óleo sobre tela"],
+    "recordtitle": [
+      {
+        "type":"main",
+        "value":"Odalisca"
+      }
+    ],
+    "digitalobject": [
+      {
+        "url": "http://129.144.24.140:8080/cultura/sancarlos/7076_Odalisca.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
+      }
+    ],
+    "datecreated": {
+      "format": "iso8601",
+      "value": "1837"
+    },
+    "creator": ["Henri Decaisne, Bruselas, 1799 - París, 1852"],
+    "holder": "Museo Nacional de San Carlos"
+  },
+  {
+    "indexcreated": "2017-12-18T04:00:21.00Z",
+    "identifier": [
+      {
+        "type": "SIGROA",
+        "value": "6562",
+        "preferred": true
+      }
+    ],
+    "resourcestats": {
+      "views":0
+    },
+    "resourcetype": ["Óleo sobre tabla"],
+    "recordtitle": [
+      {
+        "type":"main",
+        "value":"Adán y Eva"
+      }
+    ],
+    "digitalobject": [
+      {
+        "url": "http://129.144.24.140:8080/cultura/sancarlos/6562_Adan_y_Eva_MNSC.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
+      }
+    ],
+    "datecreated": {
+      "format": "iso8601",
+      "value": "1530"
+    },
+    "creator": ["Lucas Cranach, el viejo, Kronach, 1472 - Weimar, 1553"],
+    "holder": "Museo Nacional de San Carlos"
   }
 ]

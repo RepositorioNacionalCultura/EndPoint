@@ -22,8 +22,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: com.github.RepositorioNacionalCultura:Commons:master-1d80d42009-1" level="project" />
-    <orderEntry type="library" name="Maven: com.github.SWBForms:SWBDataManager:master-1.0-SNAPSHOT-g1a5f0a4-7" level="project" />
+    <orderEntry type="library" name="Maven: com.github.RepositorioNacionalCultura:Commons:master-0eee787eed-1" level="project" />
+    <orderEntry type="library" name="Maven: com.github.SWBForms:SWBDataManager:master-1.0-SNAPSHOT-g362e8de-8" level="project" />
     <orderEntry type="library" name="Maven: org.mongodb:mongo-java-driver:3.5.0" level="project" />
     <orderEntry type="library" name="Maven: org.dizitart:nitrite:2.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.21" level="project" />

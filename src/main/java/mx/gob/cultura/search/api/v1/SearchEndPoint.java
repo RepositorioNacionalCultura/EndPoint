@@ -38,12 +38,16 @@ import java.util.HashMap;
 @Path("/search")
 public class SearchEndPoint {
     private final RestHighLevelClient elastic;
+    private static String indexName;
+    public static final String REPO_INDEX = "cultura";
+    public static final String REPO_INDEX_TEST = "cultura_test";
 
     /**
      * Constructor. Creates a new instance of {@link SearchEndPoint}.
      */
     public SearchEndPoint() {
         elastic = Util.DB.getElasticClient();
+        indexName = getIndexName();
     }
 
     /**
@@ -90,7 +94,7 @@ public class SearchEndPoint {
     public void addView(@PathParam("objectId") String oId) {
         JSONObject ret = new JSONObject();
         if (null != oId && !oId.isEmpty()) {
-            UpdateRequest req = new UpdateRequest("cultura", "bic", oId);
+            UpdateRequest req = new UpdateRequest(indexName, "bic", oId);
             Script inline = new Script(ScriptType.INLINE, "painless", "ctx._source.resourcestats.views += 1", new HashMap<>());
 
             req.script(inline);
@@ -163,7 +167,7 @@ public class SearchEndPoint {
      */
     private JSONObject getObjectById(String id) {
         JSONObject ret = new JSONObject();
-        GetRequest req = new GetRequest("cultura", "bic", id);
+        GetRequest req = new GetRequest(indexName, "bic", id);
 
         try {
             GetResponse response = elastic.get(req);
@@ -189,7 +193,7 @@ public class SearchEndPoint {
         JSONObject ret = new JSONObject();
 
         //Create search request
-        SearchRequest sr = new SearchRequest("cultura");
+        SearchRequest sr = new SearchRequest(indexName);
 
         //Create queryString query
         SearchSourceBuilder ssb = new SearchSourceBuilder();
@@ -267,5 +271,19 @@ public class SearchEndPoint {
         }
 
         return ret;
+    }
+
+    /**
+     * Gets index name to work with according to environment configuration.
+     * @return Name of index to use.
+     */
+    public static final String getIndexName() {
+        if (Util.ENV_DEVELOPMENT.equals(Util.getEnvironmentName())) {
+            indexName = REPO_INDEX_TEST;
+        } else {
+            indexName = REPO_INDEX;
+        }
+
+        return indexName;
     }
 }
