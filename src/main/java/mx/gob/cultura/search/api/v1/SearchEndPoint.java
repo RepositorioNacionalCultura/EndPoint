@@ -23,7 +23,6 @@ import org.elasticsearch.search.aggregations.bucket.histogram.Histogram;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
-import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -71,7 +70,7 @@ public class SearchEndPoint {
         if (null == id || id.isEmpty()) {
             if (null == q) q = "*";
 
-            int f = -1, s = -1;
+            int f = -1, s = 100;
             if (null != from && !from.isEmpty()) {
                 f = Integer.parseInt(from);
             }
