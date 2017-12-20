@@ -1,6 +1,5 @@
 package mx.gob.cultura.search;
 
-import com.mongodb.util.JSON;
 import mx.gob.cultura.commons.Util;
 import mx.gob.cultura.search.api.v1.SearchEndPoint;
 import org.apache.http.HttpEntity;
