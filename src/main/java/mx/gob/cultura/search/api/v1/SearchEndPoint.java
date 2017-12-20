@@ -23,6 +23,8 @@ import org.elasticsearch.search.aggregations.bucket.histogram.Histogram;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.search.sort.SortBuilders;
+import org.elasticsearch.search.sort.SortOrder;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -46,7 +48,7 @@ public class SearchEndPoint {
      * Constructor. Creates a new instance of {@link SearchEndPoint}.
      */
     public SearchEndPoint() {
-        elastic = Util.DB.getElasticClient();
+        elastic = Util.ELASTICSEARCH.getElasticClient();
         indexName = getIndexName();
     }
 
@@ -63,6 +65,7 @@ public class SearchEndPoint {
         String q = params.getFirst("q");
         String from = params.getFirst("from");
         String size = params.getFirst("size");
+        String sort = params.getFirst("sort");
 
         JSONObject ret;
         if (null == id || id.isEmpty()) {
@@ -77,7 +80,7 @@ public class SearchEndPoint {
                 s = Integer.parseInt(size);
             }
 
-            ret = searchByKeyword(q, f, s);
+            ret = searchByKeyword(q, f, s, sort);
         } else {
             ret = getObjectById(id);
         }
@@ -189,7 +192,7 @@ public class SearchEndPoint {
      * @param size Number of records to retrieve
      * @return JSONObject wrapping search results.
      */
-    private JSONObject searchByKeyword(String q, int from, int size) {
+    private JSONObject searchByKeyword(String q, int from, int size, String sortParams) {
         JSONObject ret = new JSONObject();
 
         //Create search request
@@ -202,6 +205,21 @@ public class SearchEndPoint {
         //Set paging parameters
         if (from > -1) ssb.from(from);
         if (size > 0) ssb.size(size);
+
+        //Set sort parameters
+        if (null != sortParams && ! sortParams.isEmpty()) {
+            String[] sp = new String[1];
+            if (sortParams.contains(",")) {
+                sp = sortParams.split(",");
+            } else {
+                sp[0] = sortParams;
+            }
+
+            for (String param : sp) {
+                boolean desc = param.startsWith("-");
+                ssb.sort(param.replace("-", ""), desc?SortOrder.DESC:SortOrder.ASC);
+            }
+        }
 
         //Build aggregations for faceted search
         TermsAggregationBuilder holdersAgg = AggregationBuilders.terms("holders")
@@ -277,7 +295,7 @@ public class SearchEndPoint {
      * Gets index name to work with according to environment configuration.
      * @return Name of index to use.
      */
-    public static final String getIndexName() {
+    public static String getIndexName() {
         if (Util.ENV_DEVELOPMENT.equals(Util.getEnvironmentName())) {
             indexName = REPO_INDEX_TEST;
         } else {

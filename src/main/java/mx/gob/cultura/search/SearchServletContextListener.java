@@ -35,7 +35,7 @@ public class SearchServletContextListener implements ServletContextListener {
      * Constructor. Creates a new instance of {@link SearchServletContextListener}.
      */
     public SearchServletContextListener () {
-        c = Util.DB.getElasticClient();
+        c = Util.ELASTICSEARCH.getElasticClient();
         indexName = SearchEndPoint.getIndexName();
         envName = Util.getEnvironmentName();
     }
@@ -69,7 +69,7 @@ public class SearchServletContextListener implements ServletContextListener {
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
         //Close clients
-        Util.DB.closeElasticClients();
+        Util.ELASTICSEARCH.closeElasticClients();
     }
 
     /**
@@ -103,6 +103,7 @@ public class SearchServletContextListener implements ServletContextListener {
                 JSONArray data = new JSONArray(jsonString);
                 for (int i = 0; i < data.length(); i++) {
                     JSONObject o = data.getJSONObject(i);
+                    o.put("indexcreated", System.currentTimeMillis());
                     IndexRequest request = new IndexRequest(indexName, "bic");
                     request.source(o.toString(), XContentType.JSON);
 
