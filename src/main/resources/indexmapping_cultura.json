@@ -123,7 +123,10 @@
         "creator": {
           "type" : "text",
           "analyzer": "spanish",
-          "search_analyzer": "spanish"
+          "search_analyzer": "spanish",
+          "fields" : {
+            "raw" : { "type" : "keyword" }
+          }
         },
         "datecreated": {
           "properties": {

@@ -371,7 +371,7 @@
     ],
     "digitalobject": [
       {
-        "url": "http://129.144.24.140:8080/cultura/sancarlos/50942_La_niña.jpg",
+        "url": "http://129.144.24.140:8080/cultura/sancarlos/50942_La_nina.jpg",
         "mediatype": {
           "name" : "Imagen JPG",
           "mime" : "image/jpeg"
@@ -507,7 +507,7 @@
     ],
     "digitalobject": [
       {
-        "url": "http://129.144.24.140:8080/cultura/sancarlos/6036_San_Juan_Bautista_niño.jpg",
+        "url": "http://129.144.24.140:8080/cultura/sancarlos/6036_San_Juan_Bautista_nino.jpg",
         "mediatype": {
           "name" : "Imagen JPG",
           "mime" : "image/jpeg"
@@ -543,7 +543,7 @@
     ],
     "digitalobject": [
       {
-        "url": "http://129.144.24.140:8080/cultura/sancarlos/23_6799_La_Virgen_enseñando_a_escribir_al_niño_Jesus.jpg",
+        "url": "http://129.144.24.140:8080/cultura/sancarlos/23_6799_La_Virgen_ensenando_a_escribir_al_nino_Jesus.jpg",
         "mediatype": {
           "name" : "Imagen JPG",
           "mime" : "image/jpeg"
