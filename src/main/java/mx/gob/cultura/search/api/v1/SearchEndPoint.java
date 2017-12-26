@@ -1,7 +1,7 @@
 package mx.gob.cultura.search.api.v1;
 
-import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.LoadingCache;
 import mx.gob.cultura.commons.Util;
 import org.elasticsearch.action.DocWriteResponse;
 import org.elasticsearch.action.get.GetRequest;
@@ -41,11 +41,15 @@ import java.util.concurrent.TimeUnit;
  */
 @Path("/search")
 public class SearchEndPoint {
-    private final RestHighLevelClient elastic;
+    private static RestHighLevelClient elastic;
     private static String indexName;
     public static final String REPO_INDEX = "cultura";
     public static final String REPO_INDEX_TEST = "cultura_test";
-    private Cache<String, JSONObject> objectCache;
+    private static final LoadingCache<String, JSONObject> objectCache = Caffeine.newBuilder()
+            .expireAfterWrite(10, TimeUnit.MINUTES)
+            .refreshAfterWrite(5, TimeUnit.MINUTES)
+            .maximumSize(100000L)
+            .build(k -> getObjectById(k));
 
     /**
      * Constructor. Creates a new instance of {@link SearchEndPoint}.
@@ -53,10 +57,6 @@ public class SearchEndPoint {
     public SearchEndPoint() {
         elastic = Util.ELASTICSEARCH.getElasticClient();
         indexName = getIndexName();
-        objectCache = Caffeine.newBuilder()
-                .expireAfterWrite(5, TimeUnit.MINUTES)
-                .maximumSize(100000)
-                .build();
     }
 
     /**
@@ -99,7 +99,7 @@ public class SearchEndPoint {
 
             ret = searchByKeyword(q, f, s, sp);
         } else {
-            ret = getObjectById(id);
+            ret = searchById(id);
         }
 
         return Response.ok(ret.toString()).build();
@@ -181,27 +181,31 @@ public class SearchEndPoint {
     }
 
     /**
+     * Gets an object from cache using document identifier. If object is nt in cache it is retrieved from ElasticSearch.
+     * @param id Identifier of document to retrieve.
+     * @return JSONObject wrapping document information.
+     */
+    private JSONObject searchById(String id) {
+        return objectCache.get(id);
+    }
+
+    /**
      * Gets an object from ElasticSearch using document identifier.
      * @param id Identifier of document to retrieve from index.
      * @return JSONObject wrapping document information.
      */
-    private JSONObject getObjectById(String id) {
-        JSONObject ret = objectCache.getIfPresent(id);
+    private static JSONObject getObjectById (String id) {
+        JSONObject ret = null;
+        GetRequest req = new GetRequest(indexName, "bic", id);
 
-        if (null == ret) {
-            ret = new JSONObject();
-            GetRequest req = new GetRequest(indexName, "bic", id);
-
-            try {
-                GetResponse response = elastic.get(req);
-                if (response.isExists()) {
-                    ret = new JSONObject(response.getSourceAsString());
-                    ret.put("_id", response.getId());
-                    objectCache.put(response.getId(), ret);
-                }
-            } catch (IOException ioex) {
-                ioex.printStackTrace();
+        try {
+            GetResponse response = elastic.get(req);
+            if (response.isExists()) {
+                ret = new JSONObject(response.getSourceAsString());
+                ret.put("_id", response.getId());
             }
+        } catch (IOException ioex) {
+            ioex.printStackTrace();
         }
 
         return ret;
