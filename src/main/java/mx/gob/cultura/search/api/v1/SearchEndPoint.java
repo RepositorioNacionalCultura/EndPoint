@@ -1,5 +1,7 @@
 package mx.gob.cultura.search.api.v1;
 
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import mx.gob.cultura.commons.Util;
 import org.elasticsearch.action.DocWriteResponse;
 import org.elasticsearch.action.get.GetRequest;
@@ -31,6 +33,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 /**
  * REST EndPoint to manage search requests.
@@ -42,6 +45,7 @@ public class SearchEndPoint {
     private static String indexName;
     public static final String REPO_INDEX = "cultura";
     public static final String REPO_INDEX_TEST = "cultura_test";
+    private Cache<String, JSONObject> objectCache;
 
     /**
      * Constructor. Creates a new instance of {@link SearchEndPoint}.
@@ -49,6 +53,10 @@ public class SearchEndPoint {
     public SearchEndPoint() {
         elastic = Util.ELASTICSEARCH.getElasticClient();
         indexName = getIndexName();
+        objectCache = Caffeine.newBuilder()
+                .expireAfterWrite(5, TimeUnit.MINUTES)
+                .maximumSize(100000)
+                .build();
     }
 
     /**
@@ -178,17 +186,22 @@ public class SearchEndPoint {
      * @return JSONObject wrapping document information.
      */
     private JSONObject getObjectById(String id) {
-        JSONObject ret = new JSONObject();
-        GetRequest req = new GetRequest(indexName, "bic", id);
+        JSONObject ret = objectCache.getIfPresent(id);
 
-        try {
-            GetResponse response = elastic.get(req);
-            if (response.isExists()) {
-                ret = new JSONObject(response.getSourceAsString());
-                ret.put("_id", response.getId());
+        if (null == ret) {
+            ret = new JSONObject();
+            GetRequest req = new GetRequest(indexName, "bic", id);
+
+            try {
+                GetResponse response = elastic.get(req);
+                if (response.isExists()) {
+                    ret = new JSONObject(response.getSourceAsString());
+                    ret.put("_id", response.getId());
+                    objectCache.put(response.getId(), ret);
+                }
+            } catch (IOException ioex) {
+                ioex.printStackTrace();
             }
-        } catch (IOException ioex) {
-            ioex.printStackTrace();
         }
 
         return ret;
