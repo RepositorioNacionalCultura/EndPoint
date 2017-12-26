@@ -79,7 +79,17 @@ public class SearchEndPoint {
                 s = Integer.parseInt(size);
             }
 
-            ret = searchByKeyword(q, f, s, sort);
+            //Get sort parameters
+            String[] sp = new String[1];
+            if (null != sort && ! sort.isEmpty()) {
+                if (sort.contains(",")) {
+                    sp = sort.split(",");
+                } else {
+                    sp[0] = sort;
+                }
+            }
+
+            ret = searchByKeyword(q, f, s, sp);
         } else {
             ret = getObjectById(id);
         }
@@ -189,9 +199,10 @@ public class SearchEndPoint {
      * @param q Query string
      * @param from Number of record to start from
      * @param size Number of records to retrieve
+     * @param sortParams Array of sort parameters, sort will be processed in array order.
      * @return JSONObject wrapping search results.
      */
-    private JSONObject searchByKeyword(String q, int from, int size, String sortParams) {
+    private JSONObject searchByKeyword(String q, int from, int size, String[] sortParams) {
         JSONObject ret = new JSONObject();
 
         //Create search request
@@ -206,19 +217,17 @@ public class SearchEndPoint {
         if (size > 0) ssb.size(size);
 
         //Set sort parameters
-        if (null != sortParams && ! sortParams.isEmpty()) {
-            String[] sp = new String[1];
-            if (sortParams.contains(",")) {
-                sp = sortParams.split(",");
-            } else {
-                sp[0] = sortParams;
-            }
-
-            for (String param : sp) {
+        if (null != sortParams) {
+            for (String param : sortParams) {
                 boolean desc = param.startsWith("-");
                 ssb.sort(param.replace("-", ""), desc?SortOrder.DESC:SortOrder.ASC);
             }
         }
+
+        /*BoolQueryBuilder filters = QueryBuilders.boolQuery();
+        filters.must().add(QueryBuilders.matchQuery("field", "name"));
+        filters.must().add(QueryBuilders.matchQuery("field", "name"));
+        ssb.postFilter(filters);*/
 
         //Build aggregations for faceted search
         TermsAggregationBuilder holdersAgg = AggregationBuilders.terms("holders")
