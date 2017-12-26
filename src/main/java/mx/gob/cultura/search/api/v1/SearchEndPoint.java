@@ -74,7 +74,7 @@ public class SearchEndPoint {
         String size = params.getFirst("size");
         String sort = params.getFirst("sort");
 
-        JSONObject ret;
+        JSONObject ret = null;
         if (null == id || id.isEmpty()) {
             if (null == q) q = "*";
 
@@ -102,7 +102,11 @@ public class SearchEndPoint {
             ret = searchById(id);
         }
 
-        return Response.ok(ret.toString()).build();
+        if (null == ret) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        } else {
+            return Response.ok(ret.toString()).build();
+        }
     }
 
     /**
