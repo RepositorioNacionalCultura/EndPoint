@@ -89,7 +89,7 @@ public class SearchEndPoint {
 
             //Get sort parameters
             String[] sp = new String[1];
-            if (null != sort && ! sort.isEmpty()) {
+            if (null != sort && !sort.isEmpty()) {
                 if (sort.contains(",")) {
                     sp = sort.split(",");
                 } else {
@@ -232,8 +232,10 @@ public class SearchEndPoint {
         //Set sort parameters
         if (null != sortParams) {
             for (String param : sortParams) {
-                boolean desc = param.startsWith("-");
-                ssb.sort(param.replace("-", ""), desc?SortOrder.DESC:SortOrder.ASC);
+                if (null != param) {
+                    boolean desc = param.startsWith("-");
+                    ssb.sort(param.replace("-", ""), desc ? SortOrder.DESC : SortOrder.ASC);
+                }
             }
         }
 
