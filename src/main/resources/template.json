@@ -1,0 +1,71 @@
+[
+  {
+  "identifier": [
+    {
+      "type": "",
+      "value": "",
+      "preferred": false
+    }
+  ],
+  "type": [
+    "",
+    ""
+  ],
+  "title": [
+    {
+      "type": "",
+      "value": ""
+    }
+  ],
+  "description": "",
+  "digitalobject": [
+    {
+      "title":"",
+      "rights": [
+        {
+          "type": "",
+          "url": "",
+          "title": "",
+          "description": "",
+          "holder": ""
+        }
+      ],
+      "url": "",
+      "format": ""
+    }
+  ],
+  "rights": [
+    {
+      "type": "",
+      "url": "",
+      "title": "",
+      "description": "",
+      "holder": ""
+    }
+  ],
+  "creator": [
+    "",
+    ""
+  ],
+  "datecreated": {
+    "format": "",
+    "value": "",
+    "datevalue": ""
+  },
+  "periodcreated": {
+    "name": "",
+    "datestart": {
+      "format": "",
+      "value": "",
+      "datevalue": ""
+    },
+    "dateend": {
+      "format": "",
+      "value": "",
+      "datevalue": ""
+    }
+  },
+  "holder": "",
+  "catchall": ""
+  }
+]

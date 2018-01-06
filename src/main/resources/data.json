@@ -1,0 +1,701 @@
+[
+  {
+    "indexcreated": "2017-12-18T03:00:21.00Z",
+    "identifier": [
+      {
+        "type": "SIGROPAM",
+        "value": "10243",
+        "preferred": true
+      }
+    ],
+    "resourcestats": {
+      "views":0
+    },
+    "resourcetype": ["Óleo sobre cartón"],
+    "recordtitle": [
+      {
+        "type":"main",
+        "value":"La chica de la Ventana"
+      }
+    ],
+    "digitalobject": [
+      {
+        "url": "http://129.144.24.140:8080/cultura/mam/17La_chica_de_la ventana1923.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
+      }
+    ],
+    "creator": ["Abraham Ángel"],
+    "datecreated": {
+      "format": "iso8601",
+      "value": "1923"
+    },
+    "holder": "Museo de Arte Moderno"
+  },
+  {
+    "indexcreated": "2017-12-17T03:00:21.00Z",
+    "identifier": [
+      {
+        "type": "SIGROPAM",
+        "value": "13157",
+        "preferred": true
+      }
+    ],
+    "resourcestats": {
+      "views":0
+    },
+    "resourcetype": ["Óleo sobre tela"],
+    "recordtitle": [
+      {
+        "type":"main",
+        "value":"Las dos Fridas"
+      }
+    ],
+    "digitalobject": [
+      {
+        "url": "http://129.144.24.140:8080/cultura/mam/28Las_dos Fridas1939copia.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
+      }
+    ],
+    "creator": ["Frida Kahlo"],
+    "datecreated": {
+      "format": "iso8601",
+      "value": "1939"
+    },
+    "holder": "Museo de Arte Moderno"
+  },
+  {
+    "indexcreated": "2017-12-15T03:00:21.00Z",
+    "identifier": [
+      {
+        "type": "SIGROPAM",
+        "value": "11587",
+        "preferred": true
+      }
+    ],
+    "resourcestats": {
+      "views":0
+    },
+    "resourcetype": ["Óleo sobre masonite"],
+    "recordtitle": [
+      {
+        "type":"main",
+        "value":"La huida"
+      }
+    ],
+    "digitalobject": [
+      {
+        "url": "http://129.144.24.140:8080/cultura/mam/49La_huida1962copia.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
+      }
+    ],
+    "creator": ["Remedios Varo"],
+    "datecreated": {
+      "format": "iso8601",
+      "value": "1961"
+    },
+    "holder": "Museo de Arte Moderno"
+  },
+  {
+    "indexcreated": "2017-12-11T03:00:21.00Z",
+    "identifier": [
+      {
+        "type": "SIGROPAM",
+        "value": "14613",
+        "preferred": true
+      }
+    ],
+    "resourcestats": {
+      "views":0
+    },
+    "resourcetype": ["Óleo sobre tela"],
+    "recordtitle": [
+      {
+        "type":"main",
+        "value":"Indígenas"
+      }
+    ],
+    "digitalobject": [
+      {
+        "url": "http://129.144.24.140:8080/cultura/mam/41Indigenas1924.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
+      }
+    ],
+    "creator": ["Jean Charlot"],
+    "datecreated": {
+      "format": "iso8601",
+      "value": "1924"
+    },
+    "holder": "Museo de Arte Moderno"
+  },
+  {
+    "indexcreated": "2017-12-11T03:00:21.00Z",
+    "identifier": [
+      {
+        "type": "internal",
+        "value": "1093157",
+        "preferred": true
+      }
+    ],
+    "resourcestats": {
+      "views":0
+    },
+    "resourcetype": ["UTENSILIO"],
+    "recordtitle": [
+      {
+        "type":"main",
+        "value":"RELOJ DE BOLSILLO"
+      }
+    ],
+    "digitalobject": [
+      {
+        "url": "http://129.144.24.140:8080/cultura/mnh/DSC7226.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
+      },
+      {
+        "url": "http://localhost:8080/cultura/mnh/DSC7227.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
+      },
+      {
+        "url": "http://localhost:8080/cultura/mnh/DSC7229.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
+      },
+      {
+        "url": "http://localhost:8080/cultura/mnh/DSC7231.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
+      },
+      {
+        "url": "http://localhost:8080/cultura/mnh/DSC7232.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
+      }
+    ],
+    "creator": [],
+    "periodcreated" : {
+      "name": "SIGLO XIX (SEGUNDA MITAD)"
+    },
+    "holder": "Museo Nacional de Historia"
+  },
+  {
+    "indexcreated": "2017-12-18T03:00:21.00Z",
+    "identifier": [
+      {
+        "type": "internal",
+        "value": "10611409",
+        "preferred": true
+      }
+    ],
+    "resourcestats": {
+      "views":0
+    },
+    "resourcetype": ["PINTURA"],
+    "recordtitle": [
+      {
+        "type":"main",
+        "value":"MIGUEL HIDALGO Y COSTILLA"
+      }
+    ],
+    "digitalobject": [
+      {
+        "url": "http://129.144.24.140:8080/cultura/mnh/10611409retrato_de_don_miguel_hidalgo_y_costilla_pagina_seis_primera_foto.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
+      }
+    ],
+    "creator": ["J. M. GARCIA"],
+    "periodcreated" : {
+      "name": "SIGLO XIX"
+    },
+    "holder": "Museo Nacional de Historia"
+  },
+  {
+    "indexcreated": "2017-11-18T03:00:21.00Z",
+    "identifier": [
+      {
+        "type": "internal",
+        "value": "10137694",
+        "preferred": true
+      }
+    ],
+    "resourcestats": {
+      "views":0
+    },
+    "resourcetype": ["PINTURA"],
+    "recordtitle": [
+      {
+        "type":"main",
+        "value":"PORFIRIO DIAZ"
+      }
+    ],
+    "digitalobject": [
+      {
+        "url": "http://129.144.24.140:8080/cultura/mnh/10137694_PORFIRIO_DIAZ_SALA_10.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
+      }
+    ],
+    "creator": [],
+    "periodcreated" : {
+      "name": "SIGLO XIX"
+    },
+    "holder": "Museo Nacional de Historia"
+  },
+  {
+    "indexcreated": "2017-12-18T03:00:21.00Z",
+    "identifier": [
+      {
+        "type": "internal",
+        "value": "10130914",
+        "preferred": true
+      }
+    ],
+    "resourcestats": {
+      "views":0
+    },
+    "resourcetype": ["PINTURA"],
+    "recordtitle": [
+      {
+        "type":"main",
+        "value":"GUADALUPE VICTORIA"
+      }
+    ],
+    "digitalobject": [
+      {
+        "url": "http://129.144.24.140:8080/cultura/mnh/10130914GuadalupeVictoria.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
+      }
+    ],
+    "creator": [],
+    "periodcreated" : {
+      "name": "SIGLO XIX 1825"
+    },
+    "holder": "Museo Nacional de Historia"
+  },
+  {
+    "indexcreated": "2017-11-17T03:00:21.00Z",
+    "identifier": [
+      {
+        "type": "internal",
+        "value": "10150912",
+        "preferred": true
+      }
+    ],
+    "resourcestats": {
+      "views":0
+    },
+    "resourcetype": ["ENSER DOMESTICO"],
+    "recordtitle": [
+      {
+        "type":"main",
+        "value":"RELOJ FRANCES CON CAPELO"
+      }
+    ],
+    "digitalobject": [
+      {
+        "url": "http://129.144.24.140:8080/cultura/mnh/10150912.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
+      }
+    ],
+    "creator": [],
+    "periodcreated" : {
+      "name": "SIGLO XIX"
+    },
+    "holder": "Museo Nacional de Historia"
+  },
+  {
+    "indexcreated": "2017-12-18T04:00:21.00Z",
+    "identifier": [
+      {
+        "type": "SIGROA",
+        "value": "50942",
+        "preferred": true
+      }
+    ],
+    "resourcestats": {
+      "views":0
+    },
+    "resourcetype": ["Óleo sobre tela"],
+    "recordtitle": [
+      {
+        "type":"main",
+        "value":"La niña"
+      }
+    ],
+    "digitalobject": [
+      {
+        "url": "http://129.144.24.140:8080/cultura/sancarlos/50942_La_nina.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
+      }
+    ],
+    "creator": ["Germán Gedovius, México, 1867 - 1937"],
+    "holder": "Museo Nacional de San Carlos"
+  },
+  {
+    "indexcreated": "2017-12-18T04:00:21.00Z",
+    "identifier": [
+      {
+        "type": "SIGROA",
+        "value": "3994",
+        "preferred": true
+      }
+    ],
+    "resourcestats": {
+      "views":0
+    },
+    "resourcetype": ["Óleo sobre tela"],
+    "recordtitle": [
+      {
+        "type":"main",
+        "value":"Bacante"
+      }
+    ],
+    "digitalobject": [
+      {
+        "url": "http://129.144.24.140:8080/cultura/sancarlos/3994_Bacante.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
+      }
+    ],
+    "creator": ["Adolphe René Lefèvre, La Ferlésous-Jouarre, 1834 - París, 1868"],
+    "holder": "Museo Nacional de San Carlos"
+  },
+  {
+    "indexcreated": "2017-12-18T04:00:21.00Z",
+    "identifier": [
+      {
+        "type": "SIGROA",
+        "value": "8964",
+        "preferred": true
+      }
+    ],
+    "resourcestats": {
+      "views":0
+    },
+    "resourcetype": ["Óleo sobre tela"],
+    "recordtitle": [
+      {
+        "type":"main",
+        "value":"Santa Águeda"
+      }
+    ],
+    "digitalobject": [
+      {
+        "url": "http://129.144.24.140:8080/cultura/sancarlos/8964_Santa_Agueda.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
+      }
+    ],
+    "datecreated": {
+      "format": "iso8601",
+      "value": "1655"
+    },
+    "creator": ["Andrea Vaccaro, Nápoles, 1598 - 1670"],
+    "holder": "Museo Nacional de San Carlos"
+  },
+  {
+    "indexcreated": "2017-12-18T04:00:21.00Z",
+    "identifier": [
+      {
+        "type": "SIGROA",
+        "value": "6166",
+        "preferred": true
+      }
+    ],
+    "resourcestats": {
+      "views":0
+    },
+    "resourcetype": ["Óleo sobre tabla"],
+    "recordtitle": [
+      {
+        "type":"main",
+        "value":"Retablo de la Encarnación"
+      }
+    ],
+    "digitalobject": [
+      {
+        "url": "http://129.144.24.140:8080/cultura/sancarlos/6166_Retablo_de_la_Encarnacion.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
+      }
+    ],
+    "datecreated": {
+      "format": "iso8601",
+      "value": "1465"
+    },
+    "creator": ["Pere Espallargués, Villa de Molina, Cataluña, 1425 - 1495 (atribución)"],
+    "holder": "Museo Nacional de San Carlos"
+  },
+  {
+    "indexcreated": "2017-12-18T04:00:21.00Z",
+    "identifier": [
+      {
+        "type": "SIGROA",
+        "value": "6036",
+        "preferred": true
+      }
+    ],
+    "resourcestats": {
+      "views":0
+    },
+    "resourcetype": ["Óleo sobre tela"],
+    "recordtitle": [
+      {
+        "type":"main",
+        "value":"San Juan Bautista niño"
+      }
+    ],
+    "digitalobject": [
+      {
+        "url": "http://129.144.24.140:8080/cultura/sancarlos/6036_San_Juan_Bautista_nino.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
+      }
+    ],
+    "datecreated": {
+      "format": "iso8601",
+      "value": "1855"
+    },
+    "creator": ["Jean Auguste Dominique Ingres, Montauban, 1780 - París, 1867 (Atribución)"],
+    "holder": "Museo Nacional de San Carlos"
+  },
+  {
+    "indexcreated": "2017-12-18T04:00:21.00Z",
+    "identifier": [
+      {
+        "type": "SIGROA",
+        "value": "6799",
+        "preferred": true
+      }
+    ],
+    "resourcestats": {
+      "views":0
+    },
+    "resourcetype": ["Óleo sobre tabla"],
+    "recordtitle": [
+      {
+        "type":"main",
+        "value":"La Virgen enseñando a escribir al Niño Jesús"
+      }
+    ],
+    "digitalobject": [
+      {
+        "url": "http://129.144.24.140:8080/cultura/sancarlos/23_6799_La_Virgen_ensenando_a_escribir_al_nino_Jesus.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
+      }
+    ],
+    "creator": ["Luis de Morales, el Divino, Badajoz, ca. 1515 - 1586"],
+    "holder": "Museo Nacional de San Carlos"
+  },
+  {
+    "indexcreated": "2017-12-18T04:00:21.00Z",
+    "identifier": [
+      {
+        "type": "SIGROA",
+        "value": "6862",
+        "preferred": true
+      }
+    ],
+    "resourcestats": {
+      "views":0
+    },
+    "resourcetype": ["Óleo sobre tela"],
+    "recordtitle": [
+      {
+        "type":"main",
+        "value":"Garden Party (Nocturno)"
+      }
+    ],
+    "digitalobject": [
+      {
+        "url": "http://129.144.24.140:8080/cultura/sancarlos/6862_Garden_Party.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
+      }
+    ],
+    "datecreated": {
+      "format": "iso8601",
+      "value": "1909"
+    },
+    "creator": ["Eduardo Chicharro y Agüera, Madrid, 1873 - 1949"],
+    "holder": "Museo Nacional de San Carlos"
+  },
+  {
+    "indexcreated": "2017-12-18T04:00:21.00Z",
+    "identifier": [
+      {
+        "type": "SIGROA",
+        "value": "8687",
+        "preferred": true
+      }
+    ],
+    "resourcestats": {
+      "views":0
+    },
+    "resourcetype": ["Mármol"],
+    "recordtitle": [
+      {
+        "type":"main",
+        "value":"París y Helena"
+      }
+    ],
+    "digitalobject": [
+      {
+        "url": "http://129.144.24.140:8080/cultura/sancarlos/8687_Paris_y_Helena.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
+      }
+    ],
+    "datecreated": {
+      "format": "iso8601",
+      "value": "1840"
+    },
+    "creator": ["Antonio Solá Llansas, Barcelona, 1780 - Roma, 1861"],
+    "holder": "Museo Nacional de San Carlos"
+  },
+  {
+    "indexcreated": "2017-12-18T04:00:21.00Z",
+    "identifier": [
+      {
+        "type": "SIGROA",
+        "value": "7076",
+        "preferred": true
+      }
+    ],
+    "resourcestats": {
+      "views":0
+    },
+    "resourcetype": ["Óleo sobre tela"],
+    "recordtitle": [
+      {
+        "type":"main",
+        "value":"Odalisca"
+      }
+    ],
+    "digitalobject": [
+      {
+        "url": "http://129.144.24.140:8080/cultura/sancarlos/7076_Odalisca.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
+      }
+    ],
+    "datecreated": {
+      "format": "iso8601",
+      "value": "1837"
+    },
+    "creator": ["Henri Decaisne, Bruselas, 1799 - París, 1852"],
+    "holder": "Museo Nacional de San Carlos"
+  },
+  {
+    "indexcreated": "2017-12-18T04:00:21.00Z",
+    "identifier": [
+      {
+        "type": "SIGROA",
+        "value": "6562",
+        "preferred": true
+      }
+    ],
+    "resourcestats": {
+      "views":0
+    },
+    "resourcetype": ["Óleo sobre tabla"],
+    "recordtitle": [
+      {
+        "type":"main",
+        "value":"Adán y Eva"
+      }
+    ],
+    "digitalobject": [
+      {
+        "url": "http://129.144.24.140:8080/cultura/sancarlos/6562_Adan_y_Eva_MNSC.jpg",
+        "mediatype": {
+          "name" : "Imagen JPG",
+          "mime" : "image/jpeg"
+        },
+        "rights": []
+      }
+    ],
+    "datecreated": {
+      "format": "iso8601",
+      "value": "1530"
+    },
+    "creator": ["Lucas Cranach, el viejo, Kronach, 1472 - Weimar, 1553"],
+    "holder": "Museo Nacional de San Carlos"
+  }
+]
