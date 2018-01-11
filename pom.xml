@@ -3,11 +3,11 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>mx.gob.cultura</groupId>
-    <artifactId>search</artifactId>
+    <artifactId>endpoint</artifactId>
     <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
 
-    <name>Search EndPoint</name>
+    <name>EndPoint</name>
     <url>http://maven.apache.org</url>
 
     <properties>
@@ -69,7 +69,7 @@
     </dependencies>
 
     <build>
-        <finalName>Search</finalName>
+        <finalName>EndPoint</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

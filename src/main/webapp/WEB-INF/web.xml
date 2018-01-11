@@ -6,7 +6,7 @@
     <display-name>Archetype Created Web Application</display-name>
     
     <listener>
-        <listener-class>mx.gob.cultura.search.SearchServletContextListener</listener-class>
+        <listener-class>mx.gob.cultura.commons.servlet.ElasticServletContextListener</listener-class>
     </listener>
 
     <servlet>

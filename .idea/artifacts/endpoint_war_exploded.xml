@@ -1,13 +1,13 @@
 <component name="ArtifactManager">
-  <artifact type="exploded-war" name="Search:war exploded">
-    <output-path>$PROJECT_DIR$/target/Search</output-path>
+  <artifact type="exploded-war" name="endpoint:war exploded">
+    <output-path>$PROJECT_DIR$/target/EndPoint</output-path>
     <root id="root">
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
-          <element id="module-output" name="Search" />
+          <element id="module-output" name="endpoint" />
         </element>
         <element id="directory" name="lib">
-          <element id="library" level="project" name="Maven: com.github.RepositorioNacionalCultura:Commons:master-9a36ebe86e-1" />
+          <element id="library" level="project" name="Maven: com.github.RepositorioNacionalCultura:Commons:master-aab3a7c524-1" />
           <element id="library" level="project" name="Maven: com.github.SWBForms:SWBDataManager:master-1.0-SNAPSHOT-g362e8de-8" />
           <element id="library" level="project" name="Maven: org.mongodb:mongo-java-driver:3.5.0" />
           <element id="library" level="project" name="Maven: org.dizitart:nitrite:2.0.0" />
@@ -80,9 +80,9 @@
         </element>
       </element>
       <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/target/Search/META-INF/MANIFEST.MF" />
+        <element id="file-copy" path="$PROJECT_DIR$/target/EndPoint/META-INF/MANIFEST.MF" />
       </element>
-      <element id="javaee-facet-resources" facet="Search/web/Web" />
+      <element id="javaee-facet-resources" facet="endpoint/web/Web" />
     </root>
   </artifact>
 </component>
