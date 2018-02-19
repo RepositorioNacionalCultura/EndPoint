@@ -5,9 +5,9 @@
 <web-app>
     <display-name>Archetype Created Web Application</display-name>
     
-    <listener>
+<!--    <listener>
         <listener-class>mx.gob.cultura.search.SearchServletContextListener</listener-class>
-    </listener>
+    </listener>-->
 
     <servlet>
         <servlet-name>Search REST Service</servlet-name>
