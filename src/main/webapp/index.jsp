@@ -12,7 +12,7 @@
 <%@ page import="java.util.List" %>
 <%
     String ontNS = "https://cultura.gob.mx/";
-    URL url = this.getClass().getClassLoader().getResource("ontsc.owl");
+    URL url = this.getClass().getClassLoader().getResource("onto.owl");
     OntologyManager mgr = new OntologyManager(ontNS);
     if (null != url) {
         mgr.loadFromURL(url, OntModelSpec.OWL_MEM_TRANS_INF);
