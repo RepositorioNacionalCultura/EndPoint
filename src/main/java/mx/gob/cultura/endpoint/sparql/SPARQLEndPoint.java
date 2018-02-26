@@ -54,7 +54,7 @@ public class SPARQLEndPoint {
      * Gets {@link Model} to execute queries against.
      * @return
      */
-    static Model getModel() {
+    public static Model getModel() {
         if(model==null)
         {
             try
@@ -66,7 +66,7 @@ public class SPARQLEndPoint {
                 //            //model=new ModelCom(new SWBTSGraphCache(new SWBTSGraph(new GraphImp("swb",params)),1000));
                 //            model=new ModelCom(new SWBTSGraph(new GraphImp("swb",params)));
 
-                String directory = "/data/tdb" ;
+                String directory = "/Users/hasdai/data/tdb" ;
                 dataset = TDBFactory.createDataset(directory) ;
                 model = dataset.getDefaultModel();
                 prologue=new Prologue(model.getGraph().getPrefixMapping());
