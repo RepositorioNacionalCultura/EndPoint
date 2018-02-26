@@ -27,7 +27,7 @@
                                 <h2>SPARQL Endpoint</h2>
                                 <hr class="red" style="margin: 10px 0px 30px;">
                             </header>                             
-                            <p>SPARQL es un lenguaje de consulta para RDF basado en comparación de patrones de triplas. Un patrón de triplas es similar a una tripleta RDF, excepto que cada sujeto, predicado y objeto puede ser una variable.</P>
+                            <p>SPARQL es un lenguaje de consulta para RDF basado en comparaciï¿½n de patrones de triplas. Un patrï¿½n de triplas es similar a una tripleta RDF, excepto que cada sujeto, predicado y objeto puede ser una variable.</P>
                             <p>Favor de consultar los <a href="/ejemplos.jsp">ejemplos</a> y la <a href="http://www.w3.org/TR/sparql11-query/">documentacion</a> del SPARQL 1.1 Query Language. </p>
                             
                             <header>
@@ -51,10 +51,9 @@ LIMIT 100
                                 <input type="submit">
                                 &nbsp;&nbsp;&nbsp;&nbsp;Formato:    
                                 <select name="format">
-                                    <option value="JSON">JSON</option>
-                                    <option value="XML">XML</option>
-                                    <option value="CSV">CSV</option>
-                                    <option value="RDF">RDF</option>
+                                    <option value="json">JSON</option>
+                                    <option value="xml">XML</option>
+                                    <option value="csv">CSV</option>
                                 </select>                                   
                             </form>  
                             
@@ -66,7 +65,7 @@ LIMIT 100
                                 <b>Sintaxis y clausulas SPARQL:</b>
                                 <ul>
                                     <li>
-                                        <b>Variables:</b> El nombre de una variable es precedido por el signo de interrogación "?". Identifica a la misma variable en cualquier lugar de una consulta.<br/>
+                                        <b>Variables:</b> El nombre de una variable es precedido por el signo de interrogaciï¿½n "?". Identifica a la misma variable en cualquier lugar de una consulta.<br/>
                                         Ejemplos: ?codigo, ?recurso.
                                     </li>
                                     <li>
@@ -76,19 +75,19 @@ LIMIT 100
                                     <li>
                                         <b>Formas de consulta:</b> SPARQL tiene cuatro formas de consulta.<br/>
                                         <ul style="padding-left:20px;">
-                                            <li><b>SELECT:</b> Devuelve todo, o un subconjunto de las variables vinculadas en una concordancia con un patrón de búsqueda.</li>
-                                            <li><b>CONSTRUCT:</b> Devuelve un grafo RDF construido mediante la sustitución de variables en un conjunto de plantillas de tripleta.</li>
-                                            <li><b>ASK:</b> Devuelve una variable booleana indicando si la combinación Sujeto-Predicado-Objeto de consulta existe en la ontología RDF consultada.</li>
+                                            <li><b>SELECT:</b> Devuelve todo, o un subconjunto de las variables vinculadas en una concordancia con un patrï¿½n de bï¿½squeda.</li>
+                                            <li><b>CONSTRUCT:</b> Devuelve un grafo RDF construido mediante la sustituciï¿½n de variables en un conjunto de plantillas de tripleta.</li>
+                                            <li><b>ASK:</b> Devuelve una variable booleana indicando si la combinaciï¿½n Sujeto-Predicado-Objeto de consulta existe en la ontologï¿½a RDF consultada.</li>
                                             <li><b>DESCRIBE:</b> Devuelve un grafo RDF que describe los recursos encontrados.</li>
                                         </ul>
                                     </li>
                                     <li>
                                         <b>Clausulas:</b>
                                         <ul style="padding-left:20px;">
-                                            <li><b>WHERE:</b> patrón de la consulta con una o más tripletas encerradas entre {}.</li>
+                                            <li><b>WHERE:</b> patrï¿½n de la consulta con una o mï¿½s tripletas encerradas entre {}.</li>
                                             <li><b>DISTINCT:</b> asegura la unicidad de los resultados.</li>
-                                            <li><b>FILTER:</b> permite imponer constricciones adicionales al patrón de búsqueda.</li>
-                                            <li><b>ORDER BY:</b> permite ordenar los resultados obtenidos de acuerdo a parámetros específicos.</li>
+                                            <li><b>FILTER:</b> permite imponer constricciones adicionales al patrï¿½n de bï¿½squeda.</li>
+                                            <li><b>ORDER BY:</b> permite ordenar los resultados obtenidos de acuerdo a parï¿½metros especï¿½ficos.</li>
                                             <li><b>LIMIT n:</b> permite limitar los resultados obtenidos a n triplas.</li>
                                             <li><b>OFFSET m:</b> permite retornar resultados a partir del registro m.</li>
                                         </ul>
@@ -96,7 +95,7 @@ LIMIT 100
                                 </ul>
                             </p> 
                             <p>
-                                <b>Namespaces útiles:</b></br>
+                                <b>Namespaces ï¿½tiles:</b></br>
                                 </br>PREFIX rncti:  &lt;http:&#47;&#47;sparql.repositorionacionalcti.mx&#47;ontology.owl#&gt;
                                 </br>PREFIX rdfs: &lt;http:&#47;&#47;www.w3.org&#47;2000&#47;01&#47;rdf-schema#&gt;
                                 </br>PREFIX rdf:  &lt;http:&#47;&#47;www.w3.org&#47;1999&#47;02&#47;22-rdf-syntax-ns#&gt;
