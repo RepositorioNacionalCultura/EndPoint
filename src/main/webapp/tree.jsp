@@ -7,17 +7,10 @@
 <%@page import="java.util.HashMap"%>
 <%@page import="com.hp.hpl.jena.ontology.OntProperty"%>
 <%@page import="com.hp.hpl.jena.rdf.model.Statement"%>
-<%@page import="java.util.ArrayList"%>
 <%@page import="org.json.JSONArray"%>
 <%@page import="java.io.IOException"%>
-<%@page import="java.io.FileReader"%>
-<%@page import="java.io.BufferedReader"%>
-<%@page import="java.io.InputStream"%>
-<%@page import="java.io.File"%>
-<%@page import="java.io.FileInputStream"%>
 <%@page import="org.json.XML"%>
 <%@page import="org.json.JSONObject"%>
-<%@page import="com.mongodb.util.JSON"%>
 <%@page pageEncoding="utf-8" %>
 <%@ page import="com.hp.hpl.jena.ontology.OntClass" %>
 <%@ page import="com.hp.hpl.jena.ontology.OntModel" %>
@@ -73,7 +66,7 @@
                 <div class="col-sm-7">
 
                     <div id_="content-wrapper">
-                        <iframe id="main_content" name="main_content" src="resource.jsp" frameborder="0" scrolling_="no" style="overflow:hidden; border:none;" width="100%"></iframe>              
+                        <iframe id="main_content" name="main_content" src="resource.jsp" frameborder="0" scrolling_="no" style="overflow:hidden; border:none;" width="100%" height="100%"></iframe>              
                     </div>
                 </div>
             </div>
@@ -91,16 +84,11 @@
                     enableLinks: true,
                     data: json
                 });
-
+                
                 $tree.treeview('collapseAll', {silent: $('#chk-expand-silent').is(':checked')});
 
-                $("a").click(function () {
-                    this.target = "main_content";
-                    //this.class = "gene";
-                });
-
                 function fix_height() {
-                    var h = 185;
+                    var h = 0;
                     $("#main_content").attr("height", (($(window).height()) - h) + "px");
                 }
                 $(window).resize(function () {
@@ -140,6 +128,7 @@
 
         try {
             jsonEntidad.put("href", "/resource.jsp?uri=" + URLEncoder.encode(clase.getNameSpace() + clase.getLocalName(), StandardCharsets.UTF_8.name()));
+            jsonEntidad.put("target","main_content");
         } catch (Exception e) {
         }
 
