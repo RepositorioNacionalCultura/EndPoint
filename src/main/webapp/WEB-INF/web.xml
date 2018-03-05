@@ -8,6 +8,9 @@
 <!--    <listener>
         <listener-class>mx.gob.cultura.search.SearchServletContextListener</listener-class>
     </listener>-->
+    <listener>
+        <listener-class>mx.gob.cultura.endpoint.SPARQLServletContextListener</listener-class>
+    </listener>
 
     <servlet>
         <servlet-name>Search REST Service</servlet-name>
