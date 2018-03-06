@@ -172,7 +172,7 @@
         "rights": []
       },
       {
-        "url": "http://localhost:8080/cultura/mnh/DSC7227.jpg",
+        "url": "http://129.144.24.140:8080/cultura/mnh/DSC7227.jpg",
         "mediatype": {
           "name" : "Imagen JPG",
           "mime" : "image/jpeg"
@@ -180,7 +180,7 @@
         "rights": []
       },
       {
-        "url": "http://localhost:8080/cultura/mnh/DSC7229.jpg",
+        "url": "http://129.144.24.140:8080/cultura/mnh/DSC7229.jpg",
         "mediatype": {
           "name" : "Imagen JPG",
           "mime" : "image/jpeg"
@@ -188,7 +188,7 @@
         "rights": []
       },
       {
-        "url": "http://localhost:8080/cultura/mnh/DSC7231.jpg",
+        "url": "http://129.144.24.140:8080/cultura/mnh/DSC7231.jpg",
         "mediatype": {
           "name" : "Imagen JPG",
           "mime" : "image/jpeg"
@@ -196,7 +196,7 @@
         "rights": []
       },
       {
-        "url": "http://localhost:8080/cultura/mnh/DSC7232.jpg",
+        "url": "http://129.144.24.140:8080/cultura/mnh/DSC7232.jpg",
         "mediatype": {
           "name" : "Imagen JPG",
           "mime" : "image/jpeg"
