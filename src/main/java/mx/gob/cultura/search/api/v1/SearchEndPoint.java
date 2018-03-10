@@ -3,6 +3,7 @@ package mx.gob.cultura.search.api.v1;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import mx.gob.cultura.commons.Util;
+import org.apache.log4j.Logger;
 import org.elasticsearch.action.DocWriteResponse;
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
@@ -41,8 +42,9 @@ import java.util.concurrent.TimeUnit;
  */
 @Path("/search")
 public class SearchEndPoint {
-    private static RestHighLevelClient elastic;
-    private static String indexName;
+    private static final Logger LOG = Logger.getLogger(SearchEndPoint.class);
+    private static RestHighLevelClient elastic = Util.ELASTICSEARCH.getElasticClient();
+    private static String indexName = getIndexName();
     public static final String REPO_INDEX = "cultura";
     public static final String REPO_INDEX_TEST = "cultura_test";
     private static final LoadingCache<String, JSONObject> objectCache = Caffeine.newBuilder()
@@ -50,14 +52,6 @@ public class SearchEndPoint {
             .refreshAfterWrite(5, TimeUnit.MINUTES)
             .maximumSize(100000L)
             .build(k -> getObjectById(k));
-
-    /**
-     * Constructor. Creates a new instance of {@link SearchEndPoint}.
-     */
-    public SearchEndPoint() {
-        elastic = Util.ELASTICSEARCH.getElasticClient();
-        indexName = getIndexName();
-    }
 
     /**
      * Processes search request by keyword or identifier.
@@ -78,7 +72,8 @@ public class SearchEndPoint {
         if (null == id || id.isEmpty()) {
             if (null == q) q = "*";
 
-            int f = -1, s = 100;
+            int f = -1;
+            int s = 100;
             if (null != from && !from.isEmpty()) {
                 f = Integer.parseInt(from);
             }
@@ -129,7 +124,7 @@ public class SearchEndPoint {
                     ret.put("_id", resp.getId());
                 }
             } catch (IOException ioex) {
-                ioex.printStackTrace();
+                LOG.error(ioex);
             }
         }
     }
@@ -145,7 +140,7 @@ public class SearchEndPoint {
         JSONArray aggs = new JSONArray();
 
         Histogram histogram = aggregations.get(aggName);
-        if (histogram.getBuckets().size() > 0) {
+        if (!histogram.getBuckets().isEmpty()) {
             for (Histogram.Bucket bucket : histogram.getBuckets()) {
                 if (bucket.getDocCount() > 0) {
                     JSONObject o = new JSONObject();
@@ -171,7 +166,7 @@ public class SearchEndPoint {
         JSONArray aggs = new JSONArray();
 
         Terms terms = aggregations.get(aggName);
-        if (terms.getBuckets().size() > 0) {
+        if (!terms.getBuckets().isEmpty()) {
             for (Terms.Bucket bucket : terms.getBuckets()) {
                 JSONObject o = new JSONObject();
                 o.put("name", bucket.getKeyAsString());
@@ -209,7 +204,7 @@ public class SearchEndPoint {
                 ret.put("_id", response.getId());
             }
         } catch (IOException ioex) {
-            ioex.printStackTrace();
+            LOG.error(ioex);
         }
 
         return ret;
@@ -291,7 +286,7 @@ public class SearchEndPoint {
 
                     //Get aggregations
                     Aggregations aggs = resp.getAggregations();
-                    if (null != aggs && aggs.asList().size() > 0) {
+                    if (null != aggs && !aggs.asList().isEmpty()) {
                         JSONArray aggsArray = new JSONArray();
                         JSONObject agg = getTermAggregation(aggs,"holders");
 
@@ -316,7 +311,7 @@ public class SearchEndPoint {
                 }
             }
         } catch (IOException ioex) {
-            ioex.printStackTrace();
+            LOG.error(ioex);
         }
 
         return ret;

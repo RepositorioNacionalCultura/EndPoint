@@ -5,8 +5,8 @@ import mx.gob.cultura.search.api.v1.SearchEndPoint;
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.nio.entity.NStringEntity;
+import org.apache.log4j.Logger;
 import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.Response;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.XContentType;
@@ -26,6 +26,7 @@ import java.util.HashMap;
  * @author Hasdai Pacheco
  */
 public class SearchServletContextListener implements ServletContextListener {
+    private static final Logger LOG = Logger.getLogger(SearchServletContextListener.class);
     private RestHighLevelClient c;
     private String indexName;
     private String envName;
@@ -41,27 +42,27 @@ public class SearchServletContextListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-        System.out.println("Starting ElasticSearch index...");
+        LOG.trace("Starting ElasticSearch index...");
 
         try {
             Response resp = c.getLowLevelClient().performRequest("HEAD", indexName);
             if(resp.getStatusLine().getStatusCode() != RestStatus.OK.getStatus()) {
                 createESIndex();
             } else {
-                System.out.println("Index "+ indexName +" already exists...");
+                LOG.info("Index "+ indexName +" already exists...");
             }
         } catch (IOException ioex) {
-            ioex.printStackTrace();
+            LOG.error(ioex);
         }
 
         try {
             //Remove test index if env is production
             if (Util.ENV_PRODUCTION.equals(envName)) {
-                System.out.println("Removing test index...");
-                Response resp = c.getLowLevelClient().performRequest("DELETE", SearchEndPoint.REPO_INDEX_TEST);
+                LOG.trace("Removing test index...");
+                c.getLowLevelClient().performRequest("DELETE", SearchEndPoint.REPO_INDEX_TEST);
             }
         } catch (IOException ioex) {
-            ioex.printStackTrace();
+            LOG.error(ioex);
         }
     }
 
@@ -77,7 +78,7 @@ public class SearchServletContextListener implements ServletContextListener {
      */
     private boolean createESIndex() {
         boolean ret = false;
-        System.out.println("Creating index "+ indexName +"...");
+        LOG.trace("Creating index "+ indexName +"...");
         InputStream is = getClass().getClassLoader().getResourceAsStream("indexmapping_cultura.json");
         if (null != is) {
             String mapping = Util.FILE.readFromStream(is, StandardCharsets.UTF_8.name());
@@ -86,16 +87,16 @@ public class SearchServletContextListener implements ServletContextListener {
 
             try {
                 Response resp = c.getLowLevelClient().performRequest("PUT", "/"+ indexName, params, body);
-                System.out.println("Index " + indexName + " created...");
+                LOG.info("Index " + indexName + " created...");
                 ret = resp.getStatusLine().getStatusCode() == RestStatus.OK.getStatus();
             } catch (IOException ioex) {
-                ioex.printStackTrace();
+                LOG.error(ioex);
             }
         }
 
         //Load test data
         if (ret && Util.ENV_DEVELOPMENT.equals(envName)) {
-            System.out.println("Loading test data");
+            LOG.info("Loading test data");
             InputStream datas = getClass().getClassLoader().getResourceAsStream("data.json");
             if (null != datas) {
                 String jsonString = Util.FILE.readFromStream(datas, StandardCharsets.UTF_8.name());
@@ -107,9 +108,9 @@ public class SearchServletContextListener implements ServletContextListener {
                     request.source(o.toString(), XContentType.JSON);
 
                     try {
-                        IndexResponse indexResponse = c.index(request);
+                        c.index(request);
                     } catch (IOException ioex) {
-                        ioex.printStackTrace();
+                        LOG.error(ioex);
                     }
                 }
             }
