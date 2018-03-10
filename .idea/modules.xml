@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/SearchEndPoint.iml" filepath="$PROJECT_DIR$/SearchEndPoint.iml" />
       <module fileurl="file://$PROJECT_DIR$/endpoint.iml" filepath="$PROJECT_DIR$/endpoint.iml" />
     </modules>
   </component>

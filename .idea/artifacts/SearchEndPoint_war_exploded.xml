@@ -1,25 +1,16 @@
 <component name="ArtifactManager">
-  <artifact type="exploded-war" name="endpoint:war exploded">
-<<<<<<< HEAD:.idea/artifacts/endpoint_war_exploded.xml
-    <output-path>$PROJECT_DIR$/target/EndPoint</output-path>
-=======
+  <artifact type="exploded-war" name="SearchEndPoint:war exploded">
     <output-path>$PROJECT_DIR$/target/SearchEndPoint</output-path>
->>>>>>> dev:.idea/artifacts/endpoint_war_exploded.xml
     <root id="root">
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
-          <element id="module-output" name="endpoint" />
+          <element id="module-output" name="SearchEndPoint" />
         </element>
         <element id="directory" name="lib">
-<<<<<<< HEAD:.idea/artifacts/endpoint_war_exploded.xml
-          <element id="library" level="project" name="Maven: com.github.RepositorioNacionalCultura:Commons:master-aab3a7c524-1" />
-          <element id="library" level="project" name="Maven: com.github.SWBForms:SWBDataManager:master-1.0-SNAPSHOT-g362e8de-8" />
-=======
-          <element id="library" level="project" name="Maven: com.github.RepositorioNacionalCultura:Commons:master-80053de797-1" />
+          <element id="library" level="project" name="Maven: com.github.RepositorioNacionalCultura:Commons:master-3e592792b1-1" />
           <element id="library" level="project" name="Maven: com.github.SWBForms:SWBDataManager:master-1.0-SNAPSHOT-g48bb1fc-12" />
           <element id="library" level="project" name="Maven: log4j:log4j:1.2.17" />
           <element id="library" level="project" name="Maven: org.freemarker:freemarker:2.3.23" />
->>>>>>> dev:.idea/artifacts/endpoint_war_exploded.xml
           <element id="library" level="project" name="Maven: org.mongodb:mongo-java-driver:3.5.0" />
           <element id="library" level="project" name="Maven: org.json:json:20160810" />
           <element id="library" level="project" name="Maven: org.glassfish.jersey.containers:jersey-container-servlet:2.25.1" />
@@ -82,13 +73,9 @@
         </element>
       </element>
       <element id="directory" name="META-INF">
-<<<<<<< HEAD:.idea/artifacts/endpoint_war_exploded.xml
-        <element id="file-copy" path="$PROJECT_DIR$/target/EndPoint/META-INF/MANIFEST.MF" />
-=======
         <element id="file-copy" path="$PROJECT_DIR$/target/SearchEndPoint/META-INF/MANIFEST.MF" />
->>>>>>> dev:.idea/artifacts/endpoint_war_exploded.xml
       </element>
-      <element id="javaee-facet-resources" facet="endpoint/web/Web" />
+      <element id="javaee-facet-resources" facet="SearchEndPoint/web/Web" />
     </root>
   </artifact>
 </component>

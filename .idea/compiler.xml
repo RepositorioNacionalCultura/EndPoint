@@ -7,10 +7,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="endpoint" />
+        <module name="SearchEndPoint" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="1.8">
       <module name="endpoint" target="1.8" />
+      <module name="SearchEndPoint" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

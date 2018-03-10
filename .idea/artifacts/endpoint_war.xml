@@ -1,7 +1,11 @@
 <component name="ArtifactManager">
   <artifact type="war" name="endpoint:war">
     <output-path>$PROJECT_DIR$/target</output-path>
+<<<<<<< HEAD
     <root id="archive" name="EndPoint.war">
+=======
+    <root id="archive" name="SearchEndPoint.war">
+>>>>>>> dev
       <element id="artifact" artifact-name="endpoint:war exploded" />
     </root>
   </artifact>

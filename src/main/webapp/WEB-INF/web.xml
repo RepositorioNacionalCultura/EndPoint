@@ -8,9 +8,8 @@
     <listener>
         <listener-class>mx.gob.cultura.commons.servlet.ElasticServletContextListener</listener-class>
     </listener>
-
     <servlet>
-        <servlet-name>Jersey REST Service</servlet-name>
+        <servlet-name>Search REST Service</servlet-name>
         <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
         <init-param>
             <param-name>jersey.config.server.provider.packages</param-name>
@@ -20,7 +19,7 @@
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>Jersey REST Service</servlet-name>
+        <servlet-name>Search REST Service</servlet-name>
         <url-pattern>/api/v1/*</url-pattern>
     </servlet-mapping>
 

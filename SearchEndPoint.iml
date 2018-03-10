@@ -22,23 +22,10 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-<<<<<<< HEAD:endpoint.iml
-    <orderEntry type="library" name="Maven: com.github.RepositorioNacionalCultura:Commons:master-aab3a7c524-1" level="project" />
-    <orderEntry type="library" name="Maven: com.github.SWBForms:SWBDataManager:master-1.0-SNAPSHOT-g362e8de-8" level="project" />
-=======
-    <orderEntry type="library" name="Maven: com.github.RepositorioNacionalCultura:Commons:master-f16b3f0995-1" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-core:7.0.1" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-analyzers-common:7.0.1" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-queryparser:7.0.1" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-spatial:7.0.1" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpclient:4.5.2" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpcore:4.4.5" level="project" />
-    <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.10" level="project" />
-    <orderEntry type="library" name="Maven: com.github.RepositorioNacionalCultura:Commons:master-80053de797-1" level="project" />
+    <orderEntry type="library" name="Maven: com.github.RepositorioNacionalCultura:Commons:master-3e592792b1-1" level="project" />
     <orderEntry type="library" name="Maven: com.github.SWBForms:SWBDataManager:master-1.0-SNAPSHOT-g48bb1fc-12" level="project" />
     <orderEntry type="library" name="Maven: log4j:log4j:1.2.17" level="project" />
     <orderEntry type="library" name="Maven: org.freemarker:freemarker:2.3.23" level="project" />
->>>>>>> dev:endpoint.iml
     <orderEntry type="library" name="Maven: org.mongodb:mongo-java-driver:3.5.0" level="project" />
     <orderEntry type="library" name="Maven: org.json:json:20160810" level="project" />
     <orderEntry type="library" name="Maven: org.glassfish.jersey.containers:jersey-container-servlet:2.25.1" level="project" />

@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="SearchEndPoint:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="SearchEndPoint.war">
+      <element id="artifact" artifact-name="SearchEndPoint:war exploded" />
+    </root>
+  </artifact>
+</component>
