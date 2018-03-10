@@ -1,17 +1,13 @@
 # Search
-APIs REST para servicio de búsqueda, SPARQL y RDF
+APIs REST para servicio de búsqueda
 
 ## Quickstart
 
 ```sh
-git clone https://github.com/RepositorioNacionalCultura/EndPoint.git
+git clone https://github.com/RepositorioNacionalCultura/SearchEndPoint.git
 cd EndPoint
 mvn clean && mvn package
-java -jar target/dependency/webapp-runner.jar target/EndPoint.war  
+java -jar target/dependency/webapp-runner.jar target/SearchEndPoint.war  
 ```
 
 Make search requests to http://localhost:8080/api/v1/search?q=XXX
-
-Make SPARQL queries posting to http://localhost:8080/sparql
-
-Make RDF queries to http://localhost:8080/rdf/
