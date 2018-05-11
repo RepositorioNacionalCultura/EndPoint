@@ -38,10 +38,12 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * REST EndPoint to manage search requests.
+ *
  * @author Hasdai Pacheco
  */
 @Path("/search")
 public class SearchEndPoint {
+
     private static final Logger LOG = Logger.getLogger(SearchEndPoint.class);
     private static RestHighLevelClient elastic = Util.ELASTICSEARCH.getElasticClient();
     private static String indexName = getIndexName();
@@ -55,6 +57,7 @@ public class SearchEndPoint {
 
     /**
      * Processes search request by keyword or identifier.
+     *
      * @param context {@link UriInfo} object with request context information.
      * @return Response object with search results
      */
@@ -67,10 +70,13 @@ public class SearchEndPoint {
         String from = params.getFirst("from");
         String size = params.getFirst("size");
         String sort = params.getFirst("sort");
+        String attr = params.getFirst("attr");
 
         JSONObject ret = null;
         if (null == id || id.isEmpty()) {
-            if (null == q) q = "*";
+            if (null == q) {
+                q = "*";
+            }
 
             int f = -1;
             int s = 100;
@@ -91,8 +97,7 @@ public class SearchEndPoint {
                     sp[0] = sort;
                 }
             }
-
-            ret = searchByKeyword(q, f, s, sp);
+            ret = searchByKeyword(q, f, s, sp, attr);
         } else {
             ret = searchById(id);
         }
@@ -106,6 +111,7 @@ public class SearchEndPoint {
 
     /**
      * Updates object view count.
+     *
      * @param oId Object ID
      */
     @Path("/hits/{objectId}")
@@ -130,8 +136,11 @@ public class SearchEndPoint {
     }
 
     /**
-     * Gets {@link Histogram} aggregation with the given @aggName as a {@link JSONObject}
-     * @param aggregations {@link Aggregations} object from {@link SearchResponse}.
+     * Gets {@link Histogram} aggregation with the given @aggName as a
+     * {@link JSONObject}
+     *
+     * @param aggregations {@link Aggregations} object from
+     * {@link SearchResponse}.
      * @param aggName Name of aggregation to get.
      * @return JSONObject with an array of aggregation names and counts.
      */
@@ -156,8 +165,11 @@ public class SearchEndPoint {
     }
 
     /**
-     * Gets {@link Terms} aggregation with the given @aggName as a {@link JSONObject}
-     * @param aggregations {@link Aggregations} object from {@link SearchResponse}.
+     * Gets {@link Terms} aggregation with the given @aggName as a
+     * {@link JSONObject}
+     *
+     * @param aggregations {@link Aggregations} object from
+     * {@link SearchResponse}.
      * @param aggName Name of aggregation to get.
      * @return JSONObject with an array of aggregation names and counts.
      */
@@ -180,7 +192,9 @@ public class SearchEndPoint {
     }
 
     /**
-     * Gets an object from cache using document identifier. If object is nt in cache it is retrieved from ElasticSearch.
+     * Gets an object from cache using document identifier. If object is nt in
+     * cache it is retrieved from ElasticSearch.
+     *
      * @param id Identifier of document to retrieve.
      * @return JSONObject wrapping document information.
      */
@@ -190,10 +204,11 @@ public class SearchEndPoint {
 
     /**
      * Gets an object from ElasticSearch using document identifier.
+     *
      * @param id Identifier of document to retrieve from index.
      * @return JSONObject wrapping document information.
      */
-    private static JSONObject getObjectById (String id) {
+    private static JSONObject getObjectById(String id) {
         JSONObject ret = null;
         GetRequest req = new GetRequest(indexName, "bic", id);
 
@@ -212,13 +227,15 @@ public class SearchEndPoint {
 
     /**
      * Gets documents from ElasticSearch matching keyword search.
+     *
      * @param q Query string
      * @param from Number of record to start from
      * @param size Number of records to retrieve
-     * @param sortParams Array of sort parameters, sort will be processed in array order.
+     * @param sortParams Array of sort parameters, sort will be processed in
+     * array order.
      * @return JSONObject wrapping search results.
      */
-    private JSONObject searchByKeyword(String q, int from, int size, String[] sortParams) {
+    private JSONObject searchByKeyword(String q, int from, int size, String[] sortParams, String attr) {
         JSONObject ret = new JSONObject();
 
         //Create search request
@@ -226,11 +243,19 @@ public class SearchEndPoint {
 
         //Create queryString query
         SearchSourceBuilder ssb = new SearchSourceBuilder();
-        ssb.query(QueryBuilders.queryStringQuery(q));
 
+        if(null!=attr){
+            ssb.query(QueryBuilders.matchQuery(attr, q));
+        } else {
+            ssb.query(QueryBuilders.queryStringQuery(q));
+        }
         //Set paging parameters
-        if (from > -1) ssb.from(from);
-        if (size > 0) ssb.size(size);
+        if (from > -1) {
+            ssb.from(from);
+        }
+        if (size > 0) {
+            ssb.size(size);
+        }
 
         //Set sort parameters
         if (null != sortParams) {
@@ -246,7 +271,6 @@ public class SearchEndPoint {
         filters.must().add(QueryBuilders.matchQuery("field", "name"));
         filters.must().add(QueryBuilders.matchQuery("field", "name"));
         ssb.postFilter(filters);*/
-
         //Build aggregations for faceted search
         TermsAggregationBuilder holdersAgg = AggregationBuilders.terms("holders")
                 .field("holder.raw");
@@ -270,7 +294,7 @@ public class SearchEndPoint {
 
                 //Get hits
                 SearchHits respHits = resp.getHits();
-                SearchHit [] hits = respHits.getHits();
+                SearchHit[] hits = respHits.getHits();
 
                 ret.put("total", respHits.getTotalHits());
 
@@ -288,18 +312,18 @@ public class SearchEndPoint {
                     Aggregations aggs = resp.getAggregations();
                     if (null != aggs && !aggs.asList().isEmpty()) {
                         JSONArray aggsArray = new JSONArray();
-                        JSONObject agg = getTermAggregation(aggs,"holders");
+                        JSONObject agg = getTermAggregation(aggs, "holders");
 
                         if (agg.length() > 0) {
                             aggsArray.put(agg);
                         }
 
-                        agg = getTermAggregation(aggs,"resourcetypes");
+                        agg = getTermAggregation(aggs, "resourcetypes");
                         if (agg.length() > 0) {
                             aggsArray.put(agg);
                         }
 
-                        agg = getDateHistogramAggregation(aggs,"dates");
+                        agg = getDateHistogramAggregation(aggs, "dates");
                         if (agg.length() > 0) {
                             aggsArray.put(agg);
                         }
@@ -319,6 +343,7 @@ public class SearchEndPoint {
 
     /**
      * Gets index name to work with according to environment configuration.
+     *
      * @return Name of index to use.
      */
     public static String getIndexName() {
