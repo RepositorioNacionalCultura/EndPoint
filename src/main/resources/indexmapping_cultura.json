@@ -2,17 +2,19 @@
   "mappings": {
     "bic" : {
       "properties": {
+                
         "indexcreated": { "type" : "date" },
         "indexupdated": { "type" : "date" },
+                "oaiid":{ "type" : "keyword" },
         "identifier": {
           "properties": {
             "type":{
-              "type": "text",
-              "index": false
+              "type": "keyword",
+              "index": true
             },
             "value":{
-              "type": "text",
-              "index": false
+              "type": "keyword",
+              "index": true
             },
             "preferred":{ "type": "boolean" }
           }
@@ -33,7 +35,7 @@
         "resourcetitle": {
           "properties": {
             "type":{
-              "type": "text",
+              "type": "keyword",
               "index": false
             },
             "value": {
@@ -43,22 +45,22 @@
             }
           }
         },
-        "digitalobejct": {
+        "digitalObject": {
           "properties":{
             "downloads": { "type" : "long"},
             "rights": {
               "properties": {
                 "type": {
-                  "type": "text",
-                  "index": false
+                  "type": "keyword",
+                  "index": true
                 },
                 "url": {
-                  "type": "text",
-                  "index": false
+                  "type": "keyword",
+                  "index": true
                 },
                 "rightstitle":{
-                  "type": "text",
-                  "index": false
+                  "type": "keyword",
+                  "index": true
                 },
                 "description": {
                   "type": "text",
@@ -90,7 +92,11 @@
                 },
                 "mime": {
                   "type": "text",
-                  "index": false
+                  "analyzer": "spanish",
+                  "search_analyzer": "spanish",
+                  "fields": {
+                    "raw": { "type":"keyword" }
+                  }
                 }
               }
             }
@@ -107,8 +113,7 @@
               "index": false
             },
             "rightstitle":{
-              "type": "text",
-              "index": false
+              "type": "text"
             },
             "description": {
               "type": "text",
@@ -180,7 +185,13 @@
             "raw": { "type": "keyword" }
           }
         },
+        "collection":{"type":"text"},
+        "lang":{"type":"keyword"},
+        "keywords":{"type":"text"},
+        "lugar":{"type":"text"},
+        "dimension":{"type":"text"},
         "catchall": { "type" : "text"}
+        
       }
     }
   }

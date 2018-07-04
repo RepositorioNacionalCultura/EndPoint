@@ -35,6 +35,9 @@ import javax.ws.rs.core.*;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryStringQueryBuilder;
+import org.elasticsearch.index.query.SimpleQueryStringBuilder;
 
 /**
  * REST EndPoint to manage search requests.
@@ -72,6 +75,9 @@ public class SearchEndPoint {
         String sort = params.getFirst("sort");
         String attr = params.getFirst("attr");
 
+        /* For filtering previous query by one or more properties  */
+        String filter = params.getFirst("filter");
+
         JSONObject ret = null;
         if (null == id || id.isEmpty()) {
             if (null == q) {
@@ -97,7 +103,7 @@ public class SearchEndPoint {
                     sp[0] = sort;
                 }
             }
-            ret = searchByKeyword(q, f, s, sp, attr);
+            ret = searchByKeyword(q, f, s, sp, attr, filter);
         } else {
             ret = searchById(id);
         }
@@ -235,7 +241,7 @@ public class SearchEndPoint {
      * array order.
      * @return JSONObject wrapping search results.
      */
-    private JSONObject searchByKeyword(String q, int from, int size, String[] sortParams, String attr) {
+    private JSONObject searchByKeyword(String q, int from, int size, String[] sortParams, String attr, String filter) {
         JSONObject ret = new JSONObject();
 
         //Create search request
@@ -244,8 +250,78 @@ public class SearchEndPoint {
         //Create queryString query
         SearchSourceBuilder ssb = new SearchSourceBuilder();
 
-        if(null!=attr){
-            ssb.query(QueryBuilders.matchQuery(attr, q));
+        BoolQueryBuilder qb = QueryBuilders.boolQuery();
+
+        if (null != attr) {
+            if (attr.equalsIgnoreCase("oaiid")) {
+                ssb.query(QueryBuilders.termQuery(attr, q));
+            } else {
+                ssb.query(QueryBuilders.matchQuery(attr, q));
+            }
+        } else if (null != filter) {
+            //System.out.println("Filtros....");
+            String[] filters = null;
+            if (null != filter && filter.contains(",")) {
+                filters = new String[filter.split(",").length];
+                filters = filter.split(",");
+//                for (String myf : filters) {
+//                    System.out.println("==>" + myf);
+//                }
+            } else {
+                filters = new String[1];
+                filters[0] = filter;
+            }
+            qb.should(QueryBuilders.queryStringQuery(q)); //must equivale AND; should equivale OR
+            String startDate ="";
+            String endDate = "";
+            for (String myfilter : filters) {
+                String[] propVal = myfilter.split(":");
+                //System.out.println("===>" + propVal[0]);
+
+                if (propVal.length == 2) {
+                    switch (propVal[0].toLowerCase()) {
+                        case "holder":
+                            propVal[0] = "holder.raw";
+                            break;
+                        case "resourcetype":
+                            propVal[0] = "resourcetype.raw";
+                            break;
+                        case "datecreated":
+                            propVal[0] = "datecreated.value";
+                            break;
+                        case "rights":
+                            propVal[0] = "digitalObject.rights.rightstitle";
+                            break;
+                        case "mediatype":
+                            propVal[0] = "digitalObject.mediatype.mime.raw";
+                            break;
+                        case "language":
+                            propVal[0] = "lang";
+                            break;
+                        case "datestart":
+                            propVal[0] = "datecreated.value";
+                            startDate = propVal[1]+"-01-01T00:00:00.000Z";
+                            continue;
+                            //break;
+                        case "dateend":
+                            propVal[0] = "datecreated.value";
+                            endDate = propVal[1]+"-12-31T23:59:59.999Z";
+                            continue;
+                            //break;
+                        
+
+                    }
+                    //System.out.println("add filter===>" + propVal[0] + " | " + propVal[1]);
+                    qb.filter(QueryBuilders.termQuery(propVal[0], propVal[1]));
+                } else {
+                    continue;
+                }
+            }
+            if(!startDate.equals("")&&!endDate.equals("")){
+                qb.filter(QueryBuilders.rangeQuery("datecreated.value").from(startDate).to(endDate));
+            }
+            //System.out.println("\n\nQUERY:\n\n" + qb.toString() + "\n\n==============================================\n\n");
+            ssb.query(qb);
         } else {
             ssb.query(QueryBuilders.queryStringQuery(q));
         }
@@ -278,10 +354,19 @@ public class SearchEndPoint {
                 .field("resourcetype.raw");
         DateHistogramAggregationBuilder datesAgg = AggregationBuilders.dateHistogram("dates")
                 .field("datecreated.value").dateHistogramInterval(DateHistogramInterval.YEAR);
+        TermsAggregationBuilder rigthsAgg = AggregationBuilders.terms("rights")
+                .field("digitalObject.rights.rightstitle");
+        TermsAggregationBuilder mediaAgg = AggregationBuilders.terms("mediastype")
+                .field("digitalObject.mediatype.mime.raw");
+        TermsAggregationBuilder languagesAgg = AggregationBuilders.terms("languages")
+                .field("lang");
 
         ssb.aggregation(holdersAgg);
         ssb.aggregation(typesAgg);
         ssb.aggregation(datesAgg);
+        ssb.aggregation(rigthsAgg);
+        ssb.aggregation(mediaAgg);
+        ssb.aggregation(languagesAgg);
 
         //Add source builder to request
         sr.source(ssb);
@@ -324,6 +409,21 @@ public class SearchEndPoint {
                         }
 
                         agg = getDateHistogramAggregation(aggs, "dates");
+                        if (agg.length() > 0) {
+                            aggsArray.put(agg);
+                        }
+
+                        agg = getTermAggregation(aggs, "rights");
+                        if (agg.length() > 0) {
+                            aggsArray.put(agg);
+                        }
+
+                        agg = getTermAggregation(aggs, "mediastype");
+                        if (agg.length() > 0) {
+                            aggsArray.put(agg);
+                        }
+
+                        agg = getTermAggregation(aggs, "languages");
                         if (agg.length() > 0) {
                             aggsArray.put(agg);
                         }

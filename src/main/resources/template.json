@@ -66,6 +66,9 @@
     }
   },
   "holder": "",
+  "collection":{"type":"text"},
+  "lang":{"type":"text"},
+  "keywords":{"type":"text"},
   "catchall": ""
   }
 ]
