@@ -33,11 +33,14 @@ import org.json.JSONObject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryStringQueryBuilder;
-import org.elasticsearch.index.query.SimpleQueryStringBuilder;
+import org.elasticsearch.index.query.Operator;
 
 /**
  * REST EndPoint to manage search requests.
@@ -109,9 +112,9 @@ public class SearchEndPoint {
         }
 
         if (null == ret) {
-            return Response.status(Response.Status.NOT_FOUND).build();
+            return Response.status(Response.Status.NOT_FOUND).encoding("utf8").build();
         } else {
-            return Response.ok(ret.toString()).build();
+            return Response.ok(ret.toString()).encoding("utf8").build();
         }
     }
 
@@ -251,6 +254,26 @@ public class SearchEndPoint {
         SearchSourceBuilder ssb = new SearchSourceBuilder();
 
         BoolQueryBuilder qb = QueryBuilders.boolQuery();
+        BoolQueryBuilder boolfilters = QueryBuilders.boolQuery();
+
+        Map<String, Float> fieldsweight = new HashMap();
+        fieldsweight.put("recordtitle.value", 10f);
+        fieldsweight.put("creator.raw", 10f);
+        fieldsweight.put("creator", 10f);
+        fieldsweight.put("keywords", 8f);
+        fieldsweight.put("description", 6f);
+        fieldsweight.put("collection", 4f);
+        fieldsweight.put("holder.raw", 4f);
+        fieldsweight.put("generator.keyword", 4f);
+        fieldsweight.put("lang", 4f);
+        fieldsweight.put("gprlang", 4f);
+        fieldsweight.put("lugar", 4f);
+        fieldsweight.put("oaiid", 4f);
+        fieldsweight.put("publisher", 4f);
+        fieldsweight.put("resourcetype.raw", 4f);
+        fieldsweight.put("rights.media.mime.keyword", 4f);
+        fieldsweight.put("state", 4f);
+        
 
         if (null != attr) {
             if (attr.equalsIgnoreCase("oaiid")) {
@@ -259,11 +282,13 @@ public class SearchEndPoint {
                 ssb.query(QueryBuilders.matchQuery(attr, q));
             }
         } else if (null != filter) {
+            HashMap<String, List<String>> hmfilters = new HashMap();
+            List<String> listVals = null;
             //System.out.println("Filtros....");
             String[] filters = null;
-            if (null != filter && filter.contains(",")) {
-                filters = new String[filter.split(",").length];
-                filters = filter.split(",");
+            if (null != filter && filter.contains(";;")) {
+                filters = new String[filter.split(";;").length];
+                filters = filter.split(";;");
 //                for (String myf : filters) {
 //                    System.out.println("==>" + myf);
 //                }
@@ -271,59 +296,88 @@ public class SearchEndPoint {
                 filters = new String[1];
                 filters[0] = filter;
             }
-            qb.should(QueryBuilders.queryStringQuery(q)); //must equivale AND; should equivale OR
-            String startDate ="";
+
+            qb.must(QueryBuilders.queryStringQuery(q).defaultOperator(Operator.OR).fields(fieldsweight)); //must equivale AND; should equivale OR
+            String startDate = "";
             String endDate = "";
             for (String myfilter : filters) {
                 String[] propVal = myfilter.split(":");
-                //System.out.println("===>" + propVal[0]);
-
                 if (propVal.length == 2) {
-                    switch (propVal[0].toLowerCase()) {
-                        case "holder":
-                            propVal[0] = "holder.raw";
-                            break;
-                        case "resourcetype":
-                            propVal[0] = "resourcetype.raw";
-                            break;
-                        case "datecreated":
-                            propVal[0] = "datecreated.value";
-                            break;
-                        case "rights":
-                            propVal[0] = "digitalObject.rights.rightstitle";
-                            break;
-                        case "mediatype":
-                            propVal[0] = "digitalObject.mediatype.mime.raw";
-                            break;
-                        case "language":
-                            propVal[0] = "lang";
-                            break;
-                        case "datestart":
-                            propVal[0] = "datecreated.value";
-                            startDate = propVal[1]+"-01-01T00:00:00.000Z";
-                            continue;
-                            //break;
-                        case "dateend":
-                            propVal[0] = "datecreated.value";
-                            endDate = propVal[1]+"-12-31T23:59:59.999Z";
-                            continue;
-                            //break;
-                        
-
+                    String key = propVal[0].toLowerCase();
+                    if (hmfilters.get(key) == null) {
+                        listVals = new ArrayList<String>();
+                        listVals.add(propVal[1]);
+                        hmfilters.put(key, listVals);
+                    } else {
+                        listVals = hmfilters.get(key);
+                        listVals.add(propVal[1]);
                     }
-                    //System.out.println("add filter===>" + propVal[0] + " | " + propVal[1]);
-                    qb.filter(QueryBuilders.termQuery(propVal[0], propVal[1]));
                 } else {
                     continue;
                 }
             }
-            if(!startDate.equals("")&&!endDate.equals("")){
-                qb.filter(QueryBuilders.rangeQuery("datecreated.value").from(startDate).to(endDate));
+
+            if (!hmfilters.isEmpty()) {
+                Iterator<String> it = hmfilters.keySet().iterator();
+                while (it.hasNext()) {
+                    String filterKey = it.next();
+                    listVals = hmfilters.get(filterKey);
+                    switch (filterKey) {
+                        case "holder":
+                            filterKey = "holder.raw";
+                            break;
+                        case "resourcetype":
+                            filterKey = "resourcetype.raw";
+                            break;
+                        case "datecreated":
+                            filterKey = "datecreated.value";
+                            break;
+                        case "rights":
+                            filterKey = "digitalObject.rights.rightstitle";
+                            break;
+                        case "mediatype":
+                            filterKey = "digitalObject.mediatype.mime.raw";
+                            break;
+                        case "language":
+                            filterKey = "lang";
+                            break;
+                        case "datestart":
+
+                            startDate = listVals.get(0) + "-01-01T00:00:00.000Z";
+                            //hmfilters.remove("datestart");
+                            continue;
+                        //break;
+                        case "dateend":
+
+                            endDate = listVals.get(0) + "-12-31T23:59:59.999Z";
+                            //hmfilters.remove("dateend");
+                            continue;
+                        //break;
+
+                    }
+                    if (listVals.size() > 1 && !filterKey.equals("datestart") && !filterKey.equals("dateend")) {
+                        for (String fval : listVals) {
+                            boolfilters.should().add(QueryBuilders.matchQuery(filterKey, fval));
+                        }
+                    } else if (!filterKey.equals("datestart") && !filterKey.equals("dateend")) {
+                        boolfilters.must().add(QueryBuilders.matchQuery(filterKey, listVals.get(0)));
+                    }
+
+                }
             }
-            //System.out.println("\n\nQUERY:\n\n" + qb.toString() + "\n\n==============================================\n\n");
+
+            if (!startDate.equals("") && !endDate.equals("")) {
+                boolfilters.must().add(QueryBuilders.rangeQuery("datecreated.value").from(startDate).to(endDate));
+                //qb.filter(QueryBuilders.rangeQuery("datecreated.value").from(startDate).to(endDate));
+            }
+//            System.out.println("\n\nQUERY:\n\n" + qb.toString() + "\n\n==============================================\n\n");
             ssb.query(qb);
         } else {
-            ssb.query(QueryBuilders.queryStringQuery(q));
+            ssb.query(QueryBuilders.queryStringQuery(q).defaultOperator(Operator.OR).fields(fieldsweight));
+
+            //ssb.query(QueryBuilders.simpleQueryStringQuery(q).defaultOperator(Operator.AND).fields(fieldsweight));
+
+            //ssb.query(QueryBuilders.multiMatchQuery(q,"recordtitle.value").type("phrase").slop(1).operator(Operator.AND));
         }
         //Set paging parameters
         if (from > -1) {
@@ -342,11 +396,12 @@ public class SearchEndPoint {
                 }
             }
         }
-
+        //System.out.println("\n\n\n===============================\n\n"+ssb.toString());
         /*BoolQueryBuilder filters = QueryBuilders.boolQuery();
         filters.must().add(QueryBuilders.matchQuery("field", "name"));
-        filters.must().add(QueryBuilders.matchQuery("field", "name"));
-        ssb.postFilter(filters);*/
+        filters.must().add(QueryBuilders.matchQuery("field", "name"));*/
+//        System.out.println("\n\nFILTERS:\n\n" + boolfilters.toString() + "\n\n==============================================\n\n");
+        ssb.postFilter(boolfilters);
         //Build aggregations for faceted search
         TermsAggregationBuilder holdersAgg = AggregationBuilders.terms("holders")
                 .field("holder.raw");
@@ -368,6 +423,8 @@ public class SearchEndPoint {
         ssb.aggregation(mediaAgg);
         ssb.aggregation(languagesAgg);
 
+        System.out.println("\n\n\n===============================\n\n"+ssb.toString());
+        
         //Add source builder to request
         sr.source(ssb);
 
