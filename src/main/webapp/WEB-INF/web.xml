@@ -17,12 +17,23 @@
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
-
+    <servlet>
+        <servlet-name>Open Services</servlet-name>
+        <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+        <init-param>
+            <param-name>jersey.config.server.provider.packages</param-name>
+            <param-value>mx.gob.cultura.endpoint</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Search REST Service</servlet-name>
         <url-pattern>/api/v1/*</url-pattern>
     </servlet-mapping>
-
+    <servlet-mapping>
+        <servlet-name>Open Services</servlet-name>
+        <url-pattern>/open/*</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
