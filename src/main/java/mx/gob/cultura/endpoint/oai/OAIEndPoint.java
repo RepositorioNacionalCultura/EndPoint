@@ -53,7 +53,7 @@ import org.w3c.dom.Node;
  *
  * @author rene.jara
  */
-@Path("/oai-pmh")
+@Path("/oaipmh")
 public class OAIEndPoint {
 
     private static final Logger LOGGER = Logger.getLogger(OAIEndPoint.class);
@@ -78,7 +78,7 @@ public class OAIEndPoint {
     public Response getOAIXMLRequest(@Context UriInfo context, @Context javax.servlet.http.HttpServletRequest request ) {
         MultivaluedMap<String, String> params = context.getQueryParameters();
         String serverUrl = request.getScheme() + "://" + request.getServerName() + ((request.getServerPort() != 80) ? (":" + request.getServerPort()) : "");
-        serverUrl += "/open/oai-pmh";
+        serverUrl += "/open/oaipmh";
         String queryString="?"+request.getQueryString();
 //System.out.println("servletUrl:"+serverUrl);
         Document doc = createOAIPMHEnvelope(serverUrl+queryString);
@@ -264,17 +264,18 @@ public class OAIEndPoint {
         //rootElementTag = "ListRecords";
         //transformer = new ElasticOAIDCRecordTransformer();
         ElasticOAIRecordTrasformer OAIRecord= new ElasticOAIRecordTrasformer(prefix,onlyIdentifier);
-        JSONArray jarray = result.getJSONArray("records");
+        if(result.has("records")){
+            JSONArray jarray = result.getJSONArray("records");
 
-        for (Object j : jarray){
-            JSONObject record=(JSONObject)j;
-            Node e = doc.importNode((Node) OAIRecord.transform(record), true);
-            if (null != e) {
-                records.add(e);
-            }            
+            for (Object j : jarray){
+                JSONObject record=(JSONObject)j;
+                Node e = doc.importNode((Node) OAIRecord.transform(record), true);
+                if (null != e) {
+                    records.add(e);
+                }            
+            }
+
         }
-
-        
         if (!records.isEmpty()) {
             Element listRecords = doc.createElement(rootElementTag);
             doc.getDocumentElement().appendChild(listRecords);
@@ -292,7 +293,7 @@ public class OAIEndPoint {
                 listRecords.appendChild(token);
             }
         } else {
-            createErrorNode(doc, "noRecordsMatch", "");
+            createErrorNode(doc, "noRecordsMatch", "The combination of the values of the from, until, set and metadataPrefix arguments results in an empty list.");
         }
     }
      
@@ -303,22 +304,24 @@ public class OAIEndPoint {
 
         result = getElasticObject(oaiid);
         ElasticOAIRecordTrasformer OAIRecord= new ElasticOAIRecordTrasformer(prefix,false);
-        JSONArray jarray = result.getJSONArray("records");
+        if(result.has("records")){
+            JSONArray jarray = result.getJSONArray("records");
 
-        if (jarray.length()>0){
-            JSONObject record=(JSONObject)jarray.get(0);
-            Node e = doc.importNode((Node) OAIRecord.transform(record), true);
-            if (null != e) {
-                records.add(e);
-            }            
-        } 
+            if (jarray.length()>0){
+                JSONObject record=(JSONObject)jarray.get(0);
+                Node e = doc.importNode((Node) OAIRecord.transform(record), true);
+                if (null != e) {
+                    records.add(e);
+                }            
+            } 
+        }    
         if (!records.isEmpty()) {
             Element getRecord = doc.createElement(rootElementTag);
             doc.getDocumentElement().appendChild(getRecord);
 
             getRecord.appendChild(records.get(0));
         } else {
-            createErrorNode(doc, "idDoesNotExist", "");
+            createErrorNode(doc, "idDoesNotExist", "The value of the identifier argument is unknown or illegal in this repository.");
         }
     }
     
@@ -371,7 +374,10 @@ public class OAIEndPoint {
         root.appendChild(protocolVersion);            
 
         Element earliestDatestamp = doc.createElement("earliestDatestamp");
-        earliestDatestamp.setTextContent(sdf.format(getElasticEarliestDate()));
+        Date earliest=getElasticEarliestDate();
+        if(earliest!=null){
+            earliestDatestamp.setTextContent(sdf.format(earliest));
+        }
         root.appendChild(earliestDatestamp);
 
         Element deletedRecord = doc.createElement("deletedRecord");
