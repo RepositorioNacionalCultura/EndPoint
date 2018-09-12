@@ -255,9 +255,11 @@ public class SearchEndPoint {
 
         BoolQueryBuilder qb = QueryBuilders.boolQuery();
         BoolQueryBuilder boolfilters = QueryBuilders.boolQuery();
+        BoolQueryBuilder boolshould = QueryBuilders.boolQuery();
+        
 
         Map<String, Float> fieldsweight = new HashMap();
-        fieldsweight.put("recordtitle.value", 10f);
+        fieldsweight.put("recordtitle.value", 12f);
         fieldsweight.put("creator.raw", 10f);
         fieldsweight.put("creator", 10f);
         fieldsweight.put("keywords", 8f);
@@ -270,7 +272,11 @@ public class SearchEndPoint {
         fieldsweight.put("lugar", 4f);
         fieldsweight.put("oaiid", 4f);
         fieldsweight.put("publisher", 4f);
-        fieldsweight.put("resourcetype.raw", 4f);
+        fieldsweight.put("serie", 4f);
+        fieldsweight.put("collection", 4f);
+        fieldsweight.put("reccollection", 4f);
+        //fieldsweight.put("resourcetype.raw", 4f);
+        fieldsweight.put("resourcetype", 4f);
         fieldsweight.put("rights.media.mime.keyword", 4f);
         fieldsweight.put("state", 4f);
         
@@ -327,7 +333,8 @@ public class SearchEndPoint {
                             filterKey = "holder.raw";
                             break;
                         case "resourcetype":
-                            filterKey = "resourcetype.raw";
+                            //filterKey = "resourcetype.raw";
+                            filterKey = "resourcetype";
                             break;
                         case "datecreated":
                             filterKey = "datecreated.value";
@@ -341,6 +348,12 @@ public class SearchEndPoint {
                         case "language":
                             filterKey = "lang";
                             break;
+                        case "serie":
+                            filterKey = "serie";
+                            break;
+                        case "collection":
+                            filterKey = "reccollection";
+                            break;
                         case "datestart":
 
                             startDate = listVals.get(0) + "-01-01T00:00:00.000Z";
@@ -352,24 +365,34 @@ public class SearchEndPoint {
                             endDate = listVals.get(0) + "-12-31T23:59:59.999Z";
                             //hmfilters.remove("dateend");
                             continue;
+                        
                         //break;
 
                     }
                     if (listVals.size() > 1 && !filterKey.equals("datestart") && !filterKey.equals("dateend")) {
+                        //BoolQueryBuilder boolshould = QueryBuilders.boolQuery();
                         for (String fval : listVals) {
-                            boolfilters.should().add(QueryBuilders.matchQuery(filterKey, fval));
+                            boolshould.should().add(QueryBuilders.matchQuery(filterKey, fval).operator(Operator.AND));
+                            //boolfilters.should().add(QueryBuilders.termQuery(filterKey, fval));
                         }
+                        //boolfilters.must().add(boolshould);
                     } else if (!filterKey.equals("datestart") && !filterKey.equals("dateend")) {
-                        boolfilters.must().add(QueryBuilders.matchQuery(filterKey, listVals.get(0)));
+                        //boolfilters.must().add(QueryBuilders.matchQuery(filterKey, listVals.get(0)).operator(Operator.AND));
+                        //boolfilters.should().add(QueryBuilders.matchQuery(filterKey, listVals.get(0)));
+                        //boolfilters.must().add(QueryBuilders.termQuery(filterKey, listVals.get(0)));
+                        boolshould.should().add(QueryBuilders.matchQuery(filterKey, listVals.get(0)).operator(Operator.AND));
                     }
 
                 }
             }
+            
 
             if (!startDate.equals("") && !endDate.equals("")) {
-                boolfilters.must().add(QueryBuilders.rangeQuery("datecreated.value").from(startDate).to(endDate));
+                boolfilters.must().add(QueryBuilders.rangeQuery("timelinedate.value").from(startDate).to(endDate));
+                //boolshould.must().add(QueryBuilders.rangeQuery("datecreated.value").from(startDate).to(endDate));
                 //qb.filter(QueryBuilders.rangeQuery("datecreated.value").from(startDate).to(endDate));
             }
+            boolfilters.must().add(boolshould);
 //            System.out.println("\n\nQUERY:\n\n" + qb.toString() + "\n\n==============================================\n\n");
             ssb.query(qb);
         } else {
@@ -423,7 +446,7 @@ public class SearchEndPoint {
         ssb.aggregation(mediaAgg);
         ssb.aggregation(languagesAgg);
 
-        System.out.println("\n\n\n===============================\n\n"+ssb.toString());
+//        System.out.println("\n\n\n===============================\n\n"+ssb.toString());
         
         //Add source builder to request
         sr.source(ssb);
