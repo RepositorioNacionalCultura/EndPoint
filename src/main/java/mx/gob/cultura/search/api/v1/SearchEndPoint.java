@@ -278,6 +278,8 @@ public class SearchEndPoint {
         //fieldsweight.put("resourcetype.raw", 4f);
         fieldsweight.put("resourcetype", 4f);
         fieldsweight.put("rights.media.mime.keyword", 4f);
+        fieldsweight.put("digitalObject.mediatype.mime.raw", 4f);
+//        fieldsweight.put("timelinedate.value", 4f);
         fieldsweight.put("state", 4f);
         
 
@@ -337,7 +339,8 @@ public class SearchEndPoint {
                             filterKey = "resourcetype";
                             break;
                         case "datecreated":
-                            filterKey = "datecreated.value";
+//                            filterKey = "datecreated.value";
+                            filterKey = "timelinedate.value";
                             break;
                         case "rights":
                             filterKey = "digitalObject.rights.rightstitle";
@@ -427,11 +430,11 @@ public class SearchEndPoint {
         ssb.postFilter(boolfilters);
         //Build aggregations for faceted search
         TermsAggregationBuilder holdersAgg = AggregationBuilders.terms("holders")
-                .field("holder.raw");
+                .field("holder.raw"); // holder.raw
         TermsAggregationBuilder typesAgg = AggregationBuilders.terms("resourcetypes")
                 .field("resourcetype.raw");
         DateHistogramAggregationBuilder datesAgg = AggregationBuilders.dateHistogram("dates")
-                .field("datecreated.value").dateHistogramInterval(DateHistogramInterval.YEAR);
+                .field("timelinedate.value").dateHistogramInterval(DateHistogramInterval.YEAR);
         TermsAggregationBuilder rigthsAgg = AggregationBuilders.terms("rights")
                 .field("digitalObject.rights.rightstitle");
         TermsAggregationBuilder mediaAgg = AggregationBuilders.terms("mediastype")
