@@ -1,198 +1,603 @@
 {
-  "mappings": {
-    "bic" : {
-      "properties": {
-                
-        "indexcreated": { "type" : "date" },
-        "indexupdated": { "type" : "date" },
-                "oaiid":{ "type" : "keyword" },
-        "identifier": {
-          "properties": {
-            "type":{
-              "type": "keyword",
-              "index": true
+    "settings": {
+        "analysis": {
+            "filter": {
+                "spanish_stop": {
+                    "type": "stop",
+                    "stopwords": "_spanish_" 
+                },
+                "spanish_stemmer": {
+                    "type": "stemmer",
+                    "language": "light_spanish"
+                }
             },
-            "value":{
-              "type": "keyword",
-              "index": true
-            },
-            "preferred":{ "type": "boolean" }
-          }
-        },
-        "resourcestats": {
-          "properties": {
-            "views": { "type" : "long" }
-          }
-        },
-        "resourcetype": {
-          "type":"text",
-          "analyzer": "spanish",
-          "search_analyzer": "spanish",
-          "fields": {
-            "raw": { "type":"keyword" }
-          }
-        },
-        "resourcetitle": {
-          "properties": {
-            "type":{
-              "type": "keyword",
-              "index": false
-            },
-            "value": {
-              "type":"text",
-              "analyzer": "spanish",
-              "search_analyzer": "spanish"
+            "analyzer": {
+                "spanish": {
+                    "tokenizer": "standard",
+                    "filter": [
+                        "lowercase",
+                        "spanish_stop",
+                        "spanish_stemmer"
+                    ]
+                }
             }
-          }
-        },
-        "digitalObject": {
-          "properties":{
-            "downloads": { "type" : "long"},
-            "rights": {
-              "properties": {
-                "type": {
-                  "type": "keyword",
-                  "index": true
+        }
+    },
+    "mappings": {
+        "bic": {
+            "properties": {
+                "indexcreated": {
+                    "type": "date"
                 },
-                "url": {
-                  "type": "keyword",
-                  "index": true
+                "indexupdated": {
+                    "type": "date"
                 },
-                "rightstitle":{
-                  "type": "keyword",
-                  "index": true
+                "oaiid": {
+                    "type": "keyword"
+                },
+                "identifier": {
+                    "properties": {
+                        "type": {
+                            "type": "keyword",
+                            "index": true
+                        },
+                        "value": {
+                            "type": "keyword",
+                            "index": true
+                        },
+                        "preferred": {
+                            "type": "boolean"
+                        },
+                        "identifiertypeid": {
+                            "type": "keyword",
+                            "index": false
+                        },
+                        "identifiertype": {
+                            "type": "keyword",
+                            "index": true
+                        },
+                        "note": {
+                            "type": "text",
+                            "index": true
+                        }
+                    }
+                },
+                "resourcestats": {
+                    "properties": {
+                        "views": {
+                            "type": "long"
+                        }
+                    }
+                },
+                "resourcetype": {
+                    "type": "text",
+                    "analyzer": "spanish",
+                    "search_analyzer": "spanish",
+                    "fields": {
+                        "raw": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "recordtitle": {
+                    "properties": {
+                        "type": {
+                            "type": "keyword",
+                            "index": false
+                        },
+                        "value": {
+                            "type": "text",
+                            "analyzer": "spanish",
+                            "search_analyzer": "spanish"
+                        }
+                    }
                 },
                 "description": {
-                  "type": "text",
-                  "index": false
+                    "type": "text",
+                    "analyzer": "spanish",
+                    "search_analyzer": "spanish"
+                },
+                "digitalObject": {
+                    "properties": {
+                        "downloads": {
+                            "type": "long"
+                        },
+                        "rights": {
+                            "properties": {
+                                "type": {
+                                    "type": "keyword",
+                                    "index": true
+                                },
+                                "url": {
+                                    "type": "keyword",
+                                    "index": true
+                                },
+                                "rightstitle": {
+                                    "type": "keyword",
+                                    "index": true
+                                },
+                                "description": {
+                                    "type": "text",
+                                    "index": false
+                                },
+                                "holder": {
+                                    "type": "text",
+                                    "index": false
+                                }
+                            }
+                        },
+                        "digitalobjecttitle": {
+                            "type": "text",
+                            "index": false
+                        },
+                        "digitalobjecttitleoriginal": {
+                            "type": "text",
+                            "index": false
+                        },
+                        "url": {
+                            "type": "text",
+                            "index": false
+                        },
+                        "mediatype": {
+                            "properties": {
+                                "name": {
+                                    "type": "text",
+                                    "analyzer": "spanish",
+                                    "search_analyzer": "spanish",
+                                    "fields": {
+                                        "raw": {
+                                            "type": "keyword"
+                                        }
+                                    }
+                                },
+                                "mime": {
+                                    "type": "text",
+                                    "analyzer": "spanish",
+                                    "search_analyzer": "spanish",
+                                    "fields": {
+                                        "raw": {
+                                            "type": "keyword"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "rights": {
+                    "properties": {
+                        "type": {
+                            "type": "text",
+                            "index": false
+                        },
+                        "url": {
+                            "type": "text",
+                            "index": false
+                        },
+                        "rightstitle": {
+                            "type": "text"
+                        },
+                        "description": {
+                            "type": "text",
+                            "index": false
+                        },
+                        "holder": {
+                            "type": "text",
+                            "index": false
+                        }
+                    }
+                },
+                "creator": {
+                    "type": "text",
+                    "analyzer": "spanish",
+                    "search_analyzer": "spanish",
+                    "fields": {
+                        "raw": {
+                            "type": "text"
+                        }
+                    }
+                },
+                "creatornote": {
+                    "type": "text",
+                    "analyzer": "spanish",
+                    "search_analyzer": "spanish"
+                },
+                "creatorgroup": {
+                    "type": "text",
+                    "analyzer": "spanish",
+                    "search_analyzer": "spanish"
+                },
+                "datecreated": {
+                    "properties": {
+                        "format": {
+                            "type": "text",
+                            "index": false
+                        },
+                        "value": {
+                            "type": "date",
+                            "fields": {
+                                "textvalue": {
+                                    "type": "text"
+                                }
+                            }
+                        },
+                        "note": {
+                            "type": "text"
+                        }
+                    }
+                },
+                "datedigital": {
+                    "properties": {
+                        "format": {
+                            "type": "text",
+                            "index": false
+                        },
+                        "value": {
+                            "type": "text"
+                        }
+                    }
+                },
+                "dateupload": {
+                    "properties": {
+                        "format": {
+                            "type": "text",
+                            "index": false
+                        },
+                        "value": {
+                            "type": "text"
+                        }
+                    }
+                },
+                "periodcreated": {
+                    "properties": {
+                        "name": {
+                            "type": "text",
+                            "analyzer": "spanish",
+                            "search_analyzer": "spanish",
+                            "fields": {
+                                "raw": {
+                                    "type": "keyword"
+                                }
+                            }
+                        },
+                        "datestart": {
+                            "properties": {
+                                "format": {
+                                    "type": "text",
+                                    "index": false
+                                },
+                                "value": {
+                                    "type": "date"
+                                }
+                            }
+                        },
+                        "dateend": {
+                            "properties": {
+                                "format": {
+                                    "type": "text",
+                                    "index": false
+                                },
+                                "value": {
+                                    "type": "date"
+                                }
+                            }
+                        }
+                    }
                 },
                 "holder": {
-                  "type": "text",
-                  "index": false
+                    "type": "text",
+                    "analyzer": "spanish",
+                    "search_analyzer": "spanish",
+                    "fields": {
+                        "raw": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "holderid": {
+                    "type": "keyword"
+                },
+                "holdernote": {
+                    "type": "text",
+                    "analyzer": "spanish",
+                    "search_analyzer": "spanish"
+                },
+                "publisher": {
+                    "type": "text",
+                    "analyzer": "spanish",
+                    "search_analyzer": "spanish",
+                    "fields": {
+                        "raw": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "collection": {
+                    "type": "text",
+                    "analyzer": "spanish",
+                    "search_analyzer": "spanish"
+                },
+                "reccollection": {
+                    "type": "text",
+                    "analyzer": "spanish",
+                    "search_analyzer": "spanish"
+                },
+                "lang": {
+                    "type": "keyword"
+                },
+                "grplang": {
+                    "type": "keyword"
+                },
+                "keywords": {
+                    "type": "keyword"
+                },
+                "lugar": {
+                    "type": "text",
+                    "analyzer": "spanish",
+                    "search_analyzer": "spanish"
+                },
+                "state": {
+                    "type": "text",
+                    "analyzer": "spanish",
+                    "search_analyzer": "spanish"
+                },
+                "dimension": {
+                    "type": "text"
+                },
+                "dimensionid": {
+                    "type": "keyword"
+                },
+                "dimensiontype": {
+                    "type": "keyword"
+                },
+                "unidad": {
+                    "type": "keyword"
+                },
+                "unidadid": {
+                    "type": "keyword"
+                },
+                "unidadtype": {
+                    "type": "keyword"
+                },
+                "serie": {
+                    "type": "text",
+                    "analyzer": "spanish",
+                    "search_analyzer": "spanish"
+                },
+                "chapter": {
+                    "type": "text",
+                    "analyzer": "spanish",
+                    "search_analyzer": "spanish"
+                },
+                "episode": {
+                    "type": "text",
+                    "analyzer": "spanish",
+                    "search_analyzer": "spanish"
+                },
+                "credits": {
+                    "type": "text",
+                    "analyzer": "spanish",
+                    "search_analyzer": "spanish"
+                },
+                "encabezamiento": {
+                    "type": "text",
+                    "analyzer": "spanish",
+                    "search_analyzer": "spanish"
+                },
+                "availableformats": {
+                    "type": "text",
+                    "analyzer": "spanish",
+                    "search_analyzer": "spanish"
+                },
+                "resourcethumbnail": {
+                    "type": "keyword",
+                    "index": false
+                },
+                "timelinethumbnail": {
+                    "type": "text",
+                    "index": false
+                },
+                "timelinedate": {
+                    "properties": {
+                        "format": {
+                            "type": "text",
+                            "index": false
+                        },
+                        "value": {
+                            "type": "date",
+                            "fields": {
+                                "textvalue": {
+                                    "type": "text"
+                                }
+                            }
+                        }
+                    }
+                },
+                "bictype": {
+                    "type": "text",
+                    "analyzer": "spanish",
+                    "search_analyzer": "spanish"
+                },
+                "bictypeid": {
+                    "type": "keyword"
+                },
+                "bictypeidnote": {
+                    "type": "keyword"
+                },
+                "bicnoteid": {
+                    "type": "text"
+                },
+                "bicnotedate": {
+                    "type": "text"
+                },
+                "path": {
+                    "type": "text",
+                    "index": false
+                },
+                "destacado": {
+                    "type": "boolean"
+                },
+                "reference": {
+                    "type": "text",
+                    "index": false
+                },
+                "documentalfund": {
+                    "type": "text"
+                },
+                "direction": {
+                    "type": "text"
+                },
+                "production": {
+                    "type": "text"
+                },
+                "music": {
+                    "type": "text"
+                },
+                "libretto": {
+                    "type": "text"
+                },
+                "musicdirection": {
+                    "type": "text"
+                },
+                "knownarea": {
+                    "type": "text",
+                    "index": false
+                },
+                "compatiblecompu": {
+                    "type": "boolean",
+                    "index": false
+                },
+                "compatiblesphone": {
+                    "type": "boolean",
+                    "index": false
+                },
+                "compatibletablet": {
+                    "type": "boolean",
+                    "index": false
+                },
+                "metadata": {
+                    "type": "text",
+                    "index": false
+                },
+                "biccustodyentity": {
+                    "type": "text"
+                },
+                "youtubeurl": {
+                    "type": "keyword",
+                    "index": false
+                },
+                "director": {
+                    "type": "text"
+                },
+                "producer": {
+                    "type": "text"
+                },
+                "screenplay": {
+                    "type": "text"
+                },
+                "distribution": {
+                    "type": "text"
+                },
+                "number": {
+                    "type": "text",
+                    "index": false
+                },
+                "subtitle": {
+                    "type": "text"
+                },
+                "editorial": {
+                    "type": "keyword"
+                },
+                "miniature": {
+                    "type": "keyword"
+                },
+                "technique": {
+                    "type": "keyword"
+                },
+                "material": {
+                    "type": "keyword"
+                },
+                "discipline": {
+                    "type": "keyword"
+                },
+                "mediaid": {
+                    "type": "keyword",
+                    "index": false
+                },
+                "formatid": {
+                    "type": "keyword",
+                    "index": false
+                },
+                "invited": {
+                    "type": "keyword"
+                },
+                "theme": {
+                    "type": "keyword"
+                },
+                "synopsis": {
+                    "type": "keyword"
+                },
+                "programurl": {
+                    "type": "keyword",
+                    "index": false
+                },
+                "fundid": {
+                    "type": "keyword",
+                    "index": false
+                },
+                "producerid": {
+                    "type": "keyword",
+                    "index": false
+                },
+                "folio": {
+                    "type": "keyword"
+                },
+                "supportid": {
+                    "type": "keyword",
+                    "index": false
+                },
+                "colorid": {
+                    "type": "keyword",
+                    "index": false
+                },
+                "conservationstate": {
+                    "type": "text"
+                },
+                "characters": {
+                    "type": "text",
+                    "analyzer": "spanish",
+                    "search_analyzer": "spanish"
+                },
+                "observations": {
+                    "type": "text",
+                    "analyzer": "spanish",
+                    "search_analyzer": "spanish"
+                },
+                "labels": {
+                    "type": "text",
+                    "analyzer": "spanish",
+                    "search_analyzer": "spanish"
+                },
+                "userid": {
+                    "type": "keyword",
+                    "index": false
+                },
+                "no_sobre": {
+                    "type": "keyword",
+                    "index": false
+                },
+                "catalog": {
+                    "type": "keyword",
+                    "index": false
+                },
+
+                "forIndex": {
+                    "type": "boolean"
+                },
+                "catchall": {
+                    "type": "text"
                 }
-              }
-            },
-            "digitalobjecttitle":{
-              "type": "text",
-              "index": false
-            },
-            "url":{
-              "type": "text",
-              "index": false
-            },
-            "mediatype": {
-              "properties": {
-                "name" : {
-                  "type": "text",
-                  "analyzer": "spanish",
-                  "search_analyzer": "spanish",
-                  "fields": {
-                    "raw": { "type":"keyword" }
-                  }
-                },
-                "mime": {
-                  "type": "text",
-                  "analyzer": "spanish",
-                  "search_analyzer": "spanish",
-                  "fields": {
-                    "raw": { "type":"keyword" }
-                  }
-                }
-              }
             }
-          }
-        },
-        "rights": {
-          "properties": {
-            "type": {
-              "type": "text",
-              "index": false
-            },
-            "url": {
-              "type": "text",
-              "index": false
-            },
-            "rightstitle":{
-              "type": "text"
-            },
-            "description": {
-              "type": "text",
-              "index": false
-            },
-            "holder": {
-              "type": "text",
-              "index": false
-            }
-          }
-        },
-        "creator": {
-          "type" : "text",
-          "analyzer": "spanish",
-          "search_analyzer": "spanish",
-          "fields" : {
-            "raw" : { "type" : "keyword" }
-          }
-        },
-        "datecreated": {
-          "properties": {
-            "format": {
-              "type": "text",
-              "index": false
-            },
-            "value": {
-              "type": "date",
-              "fields": {
-                "textvalue": { "type" : "text" }
-              }
-            }
-          }
-        },
-        "periodcreated": {
-          "properties": {
-            "name": {
-              "type": "text",
-              "analyzer": "spanish",
-              "search_analyzer": "spanish",
-              "fields": {
-                "raw": { "type":"keyword" }
-              }
-            },
-            "datestart": {
-              "properties": {
-                "format": {
-                  "type": "text",
-                  "index": false
-                },
-                "value": { "type": "date" }
-              }
-            },
-            "dateend": {
-              "properties": {
-                "format": {
-                  "type": "text",
-                  "index": false
-                },
-                "value": { "type": "date" }
-              }
-            }
-          }
-        },
-        "holder" : {
-          "type" : "text",
-          "analyzer": "spanish",
-          "search_analyzer": "spanish",
-          "fields": {
-            "raw": { "type": "keyword" }
-          }
-        },
-        "collection":{"type":"text"},
-        "lang":{"type":"keyword"},
-        "keywords":{"type":"text"},
-        "lugar":{"type":"text"},
-        "dimension":{"type":"text"},
-        "catchall": { "type" : "text"}
-        
-      }
+        }
     }
-  }
 }
