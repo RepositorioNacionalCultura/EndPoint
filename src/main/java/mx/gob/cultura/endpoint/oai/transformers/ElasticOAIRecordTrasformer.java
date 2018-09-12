@@ -16,9 +16,11 @@ public class ElasticOAIRecordTrasformer implements OAITransformer<JSONObject, El
     private static final Logger LOGGER = Logger.getLogger(ElasticOAIRecordTrasformer.class);
     private DocumentBuilder builder = null;
     private String metadataPrefix;
+    private boolean onlyIdentifier;
 
-    public ElasticOAIRecordTrasformer(String metadataPrefix) {
+    public ElasticOAIRecordTrasformer(String metadataPrefix, boolean onlyIdentifier) {
         this.metadataPrefix = metadataPrefix;
+        this.onlyIdentifier = onlyIdentifier;
         try {
             builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         } catch (ParserConfigurationException ex) {
@@ -62,29 +64,29 @@ public class ElasticOAIRecordTrasformer implements OAITransformer<JSONObject, El
         // @todo colecciones
         root.appendChild(header);
 
-        //Element metadata = doc.createElement("metadata");
-        OAITransformer transformer = null;
+        if(!onlyIdentifier){
+            OAITransformer transformer = null;
 
-        Element metadata = doc.createElement("metadata");
+            Element metadata = doc.createElement("metadata");
 //System.out.println(metadataPrefix);        
-        switch (metadataPrefix) {
-            case "oai_dc":
-                transformer = new ElasticOAIDCMetaTransformer();
-                break;
-            case "mods":
-                // @todo transformer = new ElasticMODSMetaTransformer();         
-                break;
-        }
+            switch (metadataPrefix) {
+                case "oai_dc":
+                    transformer = new ElasticOAIDCMetaTransformer();
+                    break;
+                case "mods":
+                    // @todo transformer = new ElasticMODSMetaTransformer();         
+                    break;
+            }
 //System.out.println(transformer);        
-        if (transformer != null) {
-            Node e = doc.importNode((Node) transformer.transform(source), true);
-            metadata.appendChild((Node) e);
-        } else {
-            metadata.appendChild(doc.createTextNode("unsupported prefix:" + metadataPrefix));
+            if (transformer != null) {
+                Node e = doc.importNode((Node) transformer.transform(source), true);
+                metadata.appendChild((Node) e);
+            } else {
+                metadata.appendChild(doc.createTextNode("unsupported prefix:" + metadataPrefix));
+            }
+    //System.out.println(metadata);         
+            root.appendChild(metadata);
         }
-//System.out.println(metadata);         
-        root.appendChild(metadata);
-
 //System.out.println(root);
         return root;
 
