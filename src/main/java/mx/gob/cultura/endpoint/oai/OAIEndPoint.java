@@ -8,8 +8,6 @@ package mx.gob.cultura.endpoint.oai;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -37,6 +35,7 @@ import org.apache.log4j.Logger;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.rest.RestStatus;
 import org.elasticsearch.search.SearchHit;
@@ -48,6 +47,9 @@ import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import java.util.Base64;
+import org.elasticsearch.search.aggregations.AggregationBuilders;
+import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
 
 /**
  *
@@ -62,6 +64,8 @@ public class OAIEndPoint {
     public static final String REPO_INDEX = "cultura";
     public static final String REPO_INDEX_TEST = "cultura_test";
     private static final int RECORD_LIMIT = 100;
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private static final SimpleDateFormat DATETIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
     public OAIEndPoint() {
     }
     public static final Map<String, Map> METADATA_FORMAT = new HashMap<>();
@@ -80,7 +84,6 @@ public class OAIEndPoint {
         String serverUrl = request.getScheme() + "://" + request.getServerName() + ((request.getServerPort() != 80) ? (":" + request.getServerPort()) : "");
         serverUrl += "/open/oaipmh";
         String queryString="?"+request.getQueryString();
-//System.out.println("servletUrl:"+serverUrl);
         Document doc = createOAIPMHEnvelope(serverUrl+queryString);
         int page = 0;
 
@@ -93,9 +96,6 @@ public class OAIEndPoint {
         String sUntil = params.getFirst("until");       
         Date from = null;
         Date until = null;       
-
-        //SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd['T'HH:mm:ss'Z']");
         
         boolean hasVerb = null != verb && !verb.isEmpty();
         boolean hasToken = null != token && !token.isEmpty();
@@ -104,46 +104,62 @@ public class OAIEndPoint {
         boolean hasIdentifier = null != oaiid && !oaiid.isEmpty();
         boolean hasFrom = null != sFrom; 
         boolean hasUntil = null != sUntil;
-        
-//System.out.println(hasFrom+" "+sFrom);
-//System.out.println(hasUntil+" "+sUntil);
+ 
         // @todo quitar esta validacion cuando se implemente la funcionalidad
-        if (hasSet) {
+       /*if (hasSet) {
             createErrorNode(doc, "noSetHierarchy", "The repository does not support sets");
             return Response.ok(documentToString(doc, false)).build();
-        }
-        if (hasFrom||hasUntil) {
+        }*/
+        /*if (hasFrom||hasUntil) {
             createErrorNode(doc, "badArgument", "The repository does not support selective harvesting");
             return Response.ok(documentToString(doc, false)).build();
-        }
+        }*/
         if (hasToken) {
-            try{
-                metadataPrefix = token.substring(0, token.lastIndexOf("_"));
-                page = Integer.parseInt(token.substring(token.lastIndexOf("_") + 1, token.length()));
-            }catch(Exception ex){
-                createErrorNode(doc, "badResumptionToken", "The value of the resumptionToken argument is invalid");
-                return Response.ok(documentToString(doc, false)).build();
-            }
-            if (hasMetadataPrefix ||hasIdentifier || hasFrom || hasUntil) {
+            if (hasMetadataPrefix ||hasSet ||hasIdentifier || hasFrom || hasUntil) {
                 createErrorNode(doc, "badArgument", "ResumptionToken cannot be sent together with from, until, metadataPrefix or set parameters");
+                return Response.ok(documentToString(doc, false)).build();
+            }            
+            try{
+                //metadataPrefix = token.substring(0, token.lastIndexOf("_"));
+                //page = Integer.parseInt(token.substring(token.lastIndexOf("_") + 1, token.length()));             
+                byte[] decodedBytes = Base64.getDecoder().decode(token);
+                String[] tkel= (new String(decodedBytes)).split("\\|");
+                for(String s:tkel)System.out.println(s);
+                metadataPrefix=tkel[0];
+                hasMetadataPrefix=true;
+                page=Integer.parseInt(tkel[1]);
+                if(!" ".equals(tkel[2]))
+                    set=tkel[2];
+                if(!" ".equals(tkel[3]))
+                    from=DATETIME_FORMAT.parse(tkel[3]);
+                if(!" ".equals(tkel[4]))
+                    until=DATETIME_FORMAT.parse(tkel[4]);
+            }catch(Exception ex){
+                ex.printStackTrace();
+                createErrorNode(doc, "badResumptionToken", "The value of the resumptionToken argument is invalid");
                 return Response.ok(documentToString(doc, false)).build();
             }
         }
         if(hasFrom){
             try {
-                     
-                ZonedDateTime zdt = ZonedDateTime.parse(sFrom, fmt);
-                from = Date.from(zdt.toInstant());
-            } catch (Exception e) {
+                from =DATE_FORMAT.parse(sFrom);
+                from =DATETIME_FORMAT.parse(sFrom);                
+            } catch (Exception ignore) {
+                //ex.printStackTrace();
+            } 
+            if(from==null){
                 createErrorNode(doc, "badArgument", "The value of the from argument is invalid:"+sFrom);
-                return Response.ok(documentToString(doc, false)).build();                
-            }       
+                return Response.ok(documentToString(doc, false)).build();                            
+            }
         }
         if(hasUntil){
             try {
-                ZonedDateTime zdt = ZonedDateTime.parse(sUntil, fmt);
-                until = Date.from(zdt.toInstant());
-            } catch (Exception e) {
+                until =DATE_FORMAT.parse(sUntil);
+                until =DATETIME_FORMAT.parse(sUntil);                
+            } catch (Exception ignore) {
+                //ex.printStackTrace();
+            } 
+            if(until==null){
                 createErrorNode(doc, "badArgument", "The value of the until argument is invalid:"+sUntil);
                 return Response.ok(documentToString(doc, false)).build();                
             }       
@@ -153,19 +169,6 @@ public class OAIEndPoint {
             createErrorNode(doc, "badVerb", "Illegal verb");
             return Response.ok(documentToString(doc, false)).build();
         } 
-        //@ todo re hacer validaciones
-        /*
-        
-        else if (!hasToken && !hasMetadataPrefix) {
-            createErrorNode(doc, "badArgument", verb + " must receive the metadataPrefix");
-            return Response.ok(documentToString(doc, false)).build();
-        }
-
-        if (hasToken && hasMetadataPrefix) {
-            createErrorNode(doc, "badArgument", "ResumptionToken cannot be sent together with from, until, metadataPrefix or set parameters");
-            return Response.ok(documentToString(doc, false)).build();
-        }
-*/
         switch (verb) {
             case "Identify":
                 if(hasIdentifier||hasMetadataPrefix||hasToken){
@@ -182,14 +185,18 @@ public class OAIEndPoint {
                 listMetadata(doc);
                 break;
             case "ListSets":
-                
+                createErrorNode(doc, "badArgument", "Not implemented");
+                /* no implementado
+                if(hasMetadataPrefix ||hasSet ||hasIdentifier || hasFrom || hasUntil){
+                    createErrorNode(doc, "badArgument ", "The request includes illegal arguments");
+                    return Response.ok(documentToString(doc, false)).build();                
+                }
+                listSets(doc);*/
                 break;    
             case "ListIdentifiers":
-                if (hasToken ){
-                    if(hasMetadataPrefix||hasIdentifier) {
-                        createErrorNode(doc, "badArgument", "ResumptionToken cannot be sent together with from, until, metadataPrefix or set parameters");
-                        return Response.ok(documentToString(doc, false)).build();
-                    }    
+                if(hasIdentifier){
+                    createErrorNode(doc, "badArgument", " The request includes illegal arguments or is missing required arguments.");
+                    return Response.ok(documentToString(doc, false)).build();
                 }else{
                     if(!hasMetadataPrefix){
                         createErrorNode(doc, "badArgument ", "The request includes illegal arguments or is missing required arguments.");
@@ -201,21 +208,12 @@ public class OAIEndPoint {
                         return Response.ok(documentToString(doc, false)).build(); 
                     }
                 } 
-                getListObjects(doc, metadataPrefix, set, page, true);
+                getListObjects(doc, metadataPrefix,set, from, until, page, true);
                 break;
             case "ListRecords":
-                /*
-                badArgument - The request includes illegal arguments or is missing required arguments.
-                badResumptionToken - The value of the resumptionToken argument is invalid or expired.
-                cannotDisseminateFormat - The value of the metadataPrefix argument is not supported by the repository.
-                noRecordsMatch - The combination of the values of the from, until, set and metadataPrefix arguments results in an empty list.
-                noSetHierarchy - The repository does not support sets.                
-                */
-                if (hasToken ){
-                    if(hasMetadataPrefix||hasIdentifier) {
-                        createErrorNode(doc, "badArgument", "ResumptionToken cannot be sent together with from, until, metadataPrefix or set parameters");
-                        return Response.ok(documentToString(doc, false)).build();
-                    }    
+                if(hasIdentifier){
+                    createErrorNode(doc, "badArgument", " The request includes illegal arguments or is missing required arguments.");
+                    return Response.ok(documentToString(doc, false)).build();
                 }else{
                     if(!hasMetadataPrefix){
                         createErrorNode(doc, "badArgument ", "The request includes illegal arguments or is missing required arguments.");
@@ -227,14 +225,10 @@ public class OAIEndPoint {
                         return Response.ok(documentToString(doc, false)).build(); 
                     }
                 }    
-                getListObjects(doc, metadataPrefix, set, page, false);
+                getListObjects(doc, metadataPrefix, set, from, until, page, false);
                 break;
             case "GetRecord":
-                /**if (!hasIdentifier) {
-                    createErrorNode(doc, "badArgument", "GetRecord verb requires the use of the parameters - identifier and metadataPrefix");
-                    return Response.ok(documentToString(doc, false)).build();
-                }   */
-                if(!hasMetadataPrefix||!hasIdentifier||hasToken){
+                if(!hasMetadataPrefix||!hasIdentifier||hasToken||hasSet|hasFrom||hasUntil){
                     createErrorNode(doc, "badArgument ", "The request includes illegal arguments or is missing required arguments.");
                     return Response.ok(documentToString(doc, false)).build(); 
 
@@ -248,21 +242,17 @@ public class OAIEndPoint {
             default:
                 createErrorNode(doc, "badVerb", "Illegal verb");
                 return Response.ok(documentToString(doc, false)).build();                
-                //break;
         }
 
         return Response.ok(documentToString(doc, false)).build();
     }
 
-     private void getListObjects(Document doc, String prefix, String setSpec, int page, boolean onlyIdentifier) {
+     private void getListObjects(Document doc, String prefix, String set,Date from, Date until, int page, boolean onlyIdentifier) {
         ArrayList<Node> records = new ArrayList<>();
         String rootElementTag = "ListRecords";
-        //OAITransformer transformer;
         JSONObject result;
 
-        result = getElasticObjects(setSpec, RECORD_LIMIT, page);
-        //rootElementTag = "ListRecords";
-        //transformer = new ElasticOAIDCRecordTransformer();
+        result = getElasticObjects(set, from, until, RECORD_LIMIT, page);
         ElasticOAIRecordTrasformer OAIRecord= new ElasticOAIRecordTrasformer(prefix,onlyIdentifier);
         if(result.has("records")){
             JSONArray jarray = result.getJSONArray("records");
@@ -285,11 +275,34 @@ public class OAIEndPoint {
             }
 
             if ((page * RECORD_LIMIT + records.size()) < result.getLong("total")) {
+                StringBuilder sb=new StringBuilder(64);
                 Element token = doc.createElement("resumptionToken");
-                token.setTextContent(prefix+"_"+String.valueOf(page + 1));
+                sb.append(prefix);
+                sb.append("|");
+                sb.append(String.valueOf(page + 1));
+                sb.append("|");
+                if(set!=null){
+                    sb.append(set);
+                }else{
+                    sb.append(" ");
+                }
+                sb.append("|");
+                if(from!=null){
+                    sb.append(DATETIME_FORMAT.format(from));
+                }else{
+                    sb.append(" ");
+                }
+                sb.append("|");
+                if(until!=null){
+                    sb.append(DATETIME_FORMAT.format(until));
+                }else{
+                    sb.append(" ");
+                }
+                
+                byte[] encodedBytes = Base64.getEncoder().encode(sb.toString().getBytes());
+                token.setTextContent(new String(encodedBytes));
                 token.setAttribute("completeListSize", String.valueOf( result.getLong("total")));
-                token.setAttribute("cursor", String.valueOf(page * RECORD_LIMIT + records.size()));
-
+                token.setAttribute("cursor", String.valueOf(page * RECORD_LIMIT + records.size()));          
                 listRecords.appendChild(token);
             }
         } else {
@@ -432,7 +445,51 @@ public class OAIEndPoint {
 
         return doc;
     }
-    
+    // @todo no esta probado
+    private void listSets(Document doc) {
+        /*    
+<ListSets>
+  <set>
+    <setSpec>music</setSpec>
+    <setName>Music collection</setName>
+  </set>
+
+ </ListSets>
+        
+        */
+        ArrayList<Node> records = new ArrayList<>();
+        String rootElementTag = "ListSets";
+        
+        JSONObject result;
+
+        result = getElasticObjectsSets();
+        
+        if(result.has("records")){
+            JSONArray jarray = result.getJSONArray("records");
+
+            for (Object j : jarray){
+                JSONObject record=(JSONObject)j;
+//                Node e = doc.importNode((Node) OAIRecord.transform(record), true);
+//                if (null != e) {
+//                    records.add(e);
+//                }            
+            }
+
+        }
+        if (!records.isEmpty()) {// @rgjs
+            Element listRecords = doc.createElement(rootElementTag);
+            doc.getDocumentElement().appendChild(listRecords);
+
+            for (Node n : records) {
+                listRecords.appendChild(n);
+            }
+
+            
+        } else {// @rgjs
+            createErrorNode(doc, "noRecordsMatch", "The combination of the values of the from, until, set and metadataPrefix arguments results in an empty list.");
+        }
+    }
+
     private void createErrorNode(Document doc, String errCode, String errDesc) {
         Element err = doc.createElement("error");
         err.setAttribute("code", errCode);
@@ -459,17 +516,29 @@ public class OAIEndPoint {
 
         return ret;
     }
-    private JSONObject getElasticObjects(String setSpec,int limit, int page) {
-//System.out.println("---------getElasticObjects---------------------------------------------"+limit+","+page);        
+    
+    private JSONObject getElasticObjects(String set,Date from, Date until,int limit, int page) {
         JSONObject ret = new JSONObject();
-        // @todo implementar las colecciones setSpec
         //Create search request
         SearchRequest sr = new SearchRequest(indexName);
 
         //Create queryString query
         SearchSourceBuilder ssb = new SearchSourceBuilder();
-        ssb.query(QueryBuilders.matchAllQuery());
-
+        if(set==null&&from==null&&until==null){
+            ssb.query(QueryBuilders.matchAllQuery());
+        }else{
+            BoolQueryBuilder query= QueryBuilders.boolQuery();
+            if(set!=null&&!set.isEmpty()){
+                query.must(QueryBuilders.matchQuery("collection", set));
+            }
+            if(from!=null){
+                query.must(QueryBuilders.rangeQuery("indexcreated").from(from.getTime()));
+            }        
+            if(until!=null){
+                query.must(QueryBuilders.rangeQuery("indexcreated").to(until.getTime()));
+            }      
+            ssb.query(query);
+        }
         //Set paging parameters
         ssb.from(page*RECORD_LIMIT);
         ssb.size(RECORD_LIMIT);
@@ -479,8 +548,6 @@ public class OAIEndPoint {
 
         //Add source builder to request
         sr.source(ssb);
-
-//System.out.println("---------try---------------------------------------------");        
         try {
             //Perform search
             SearchResponse resp = ELASTIC.search(sr);
@@ -497,27 +564,21 @@ public class OAIEndPoint {
                     //Get records
                     JSONArray recs = new JSONArray();
                     for (SearchHit hit : hits) {
-//System.out.println("---------for---------------------------------------------");                                
-//System.out.println(hit.getSourceAsString());                        
                         JSONObject o = new JSONObject(hit.getSourceAsString());
                         o.put("_id", hit.getId());
                         recs.put(o);
                     }
                     ret.put("records", recs);
-
                 }
             }
         } catch (IOException ex) {
             LOGGER.error("Getting elastic objects",ex);
         }
-//System.out.println(ret);
        return ret;
     }
     
     private JSONObject getElasticObject(String id) {
-//System.out.println("---------getElasticObject---------------------------------------------"+id);        
         JSONObject ret = new JSONObject();
-        // @todo implementar las colecciones setSpec
         //Create search request
         SearchRequest sr = new SearchRequest(indexName);
 
@@ -528,7 +589,6 @@ public class OAIEndPoint {
         //Add source builder to request
         sr.source(ssb);
 
-//System.out.println("---------try---------------------------------------------");        
         try {
             //Perform search
             SearchResponse resp = ELASTIC.search(sr);
@@ -550,14 +610,68 @@ public class OAIEndPoint {
         } catch (IOException ex) {
             LOGGER.error("Getting elastic object",ex);
         }
+       return ret;
+       
+    }
+    private JSONObject getElasticObjectsSets() {
+    /*
+    @todo
+    hay que corregir el indice
+
+https://www.elastic.co/guide/en/elasticsearch/reference/current/fielddata.html
+
+    */
+
+        JSONObject ret = new JSONObject();
+        //Create search request
+        SearchRequest sr = new SearchRequest(indexName);
+
+        //Create queryString query
+        SearchSourceBuilder ssb = new SearchSourceBuilder();
+
+        //Build aggregations for faceted search
+        TermsAggregationBuilder setAgg = AggregationBuilders.terms("setspc")
+                .field("collection");
+        ssb.aggregation(setAgg);        
+        
+        //Add source builder to request
+        sr.source(ssb);
+System.out.println("-----------------------------------------------------\n"+sr);        
+        try {
+            //Perform search
+            SearchResponse resp = ELASTIC.search(sr);
+            if (resp.status().getStatus() == RestStatus.OK.getStatus()) {
+                ret.put("took", resp.getTook().toString());
+                //Get hits
+                SearchHits respHits = resp.getHits();
+                SearchHit [] hits = respHits.getHits();
+
+                ret.put("total", respHits.getTotalHits());
+                ret.put("hits", hits.length);
+                
+                if (hits.length > 0) {
+                    //Get records
+                    JSONArray recs = new JSONArray();
+                    for (SearchHit hit : hits) {
+System.out.println("---------for---------------------------------------------");                                
+System.out.println(hit.getSourceAsString());                        
+                        JSONObject o = new JSONObject(hit.getSourceAsString());
+                        recs.put(o);
+                    }
+                    ret.put("records", recs);
+
+                }
+            }
+        } catch (IOException ex) {
+            LOGGER.error("Getting elastic objects sets",ex);
+        }
 //System.out.println(ret);
        return ret;
     }
+        
     private Date getElasticEarliestDate() {
-//System.out.println("---------getElasticObject---------------------------------------------"+id); 
         Date date =null;
         JSONObject ret = new JSONObject();
-        // @todo implementar las colecciones setSpec
         //Create search request
         SearchRequest sr = new SearchRequest(indexName);
 
@@ -575,7 +689,6 @@ public class OAIEndPoint {
         //Add source builder to request
         sr.source(ssb);
 
-//System.out.println("---------try---------------------------------------------");        
         try {
             //Perform search
             SearchResponse resp = ELASTIC.search(sr);
@@ -585,13 +698,9 @@ public class OAIEndPoint {
                 SearchHits respHits = resp.getHits();
                 SearchHit [] hits = respHits.getHits();
 
-                if (hits.length > 0) {
-                    //JSONArray recs = new JSONArray();
+                if (hits.length > 0) {                    
                     //Get record
                     JSONObject o = new JSONObject(hits[0].getSourceAsString());
-                    //o.put("_id", hits[0].getId());
-                    //recs.put(o);
-                    //ret.put("records", recs);
                     if(o.has("indexcreated")){
                         date = new Date(o.getLong("indexcreated"));
                     }
@@ -600,7 +709,6 @@ public class OAIEndPoint {
         } catch (IOException ex) {
             LOGGER.error("Getting earlies object",ex);
         }
-//System.out.println(ret);
        return date;
     }
     

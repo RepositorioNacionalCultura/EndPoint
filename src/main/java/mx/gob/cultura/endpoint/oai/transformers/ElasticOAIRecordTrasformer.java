@@ -6,6 +6,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.apache.log4j.Logger;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -60,8 +61,21 @@ public class ElasticOAIRecordTrasformer implements OAITransformer<JSONObject, El
         Element datestamp = doc.createElement("datestamp");
         datestamp.appendChild(doc.createTextNode(sdf.format(new Date(source.getLong("indexcreated")))));
 
-        header.appendChild(datestamp);
-        // @todo colecciones
+        header.appendChild(datestamp);        
+        if(source.has("collection")){
+            JSONArray jcollectiona = source.getJSONArray("collection");
+            if (jcollectiona != null && jcollectiona.length() > 0) {
+                for (Object obj : jcollectiona) {
+                    String value = (String) obj;
+                    if (value != null && !value.isEmpty()) {
+                        Element setSpec = doc.createElement("setSpec");
+                        header.appendChild(setSpec);
+                        setSpec.appendChild(doc.createTextNode(value.trim()));
+                    }
+                }
+            }
+        }      
+        
         root.appendChild(header);
 
         if(!onlyIdentifier){
