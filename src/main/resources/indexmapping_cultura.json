@@ -514,6 +514,9 @@
                 "technique": {
                     "type": "keyword"
                 },
+                "hiperonimo": {
+                    "type": "keyword"
+                },
                 "material": {
                     "type": "keyword"
                 },
@@ -550,7 +553,8 @@
                     "index": false
                 },
                 "folio": {
-                    "type": "keyword"
+                    "type": "keyword",
+                    "index":false
                 },
                 "supportid": {
                     "type": "keyword",
@@ -589,6 +593,98 @@
                 "catalog": {
                     "type": "keyword",
                     "index": false
+                },
+                "period": {
+                    "type": "text",
+                    "analyzer": "spanish",
+                    "search_analyzer": "spanish"
+                },
+                "curaduria": {
+                    "type": "text",
+                    "analyzer": "spanish",
+                    "search_analyzer": "spanish"
+                },
+                "inscripcion": {
+                    "type": "text",
+                    "analyzer": "spanish",
+                    "search_analyzer": "spanish"
+                },
+                "cultura": {
+                    "type": "text",
+                    "analyzer": "spanish",
+                    "search_analyzer": "spanish"
+                },
+                "origin": {
+                    "type": "text",
+                    "analyzer": "spanish",
+                    "search_analyzer": "spanish"
+                },
+                 "acervo": {
+                    "type": "text",
+                    "analyzer": "spanish",
+                    "search_analyzer": "spanish"
+                },
+                "techmaterial": {
+                    "type": "text",
+                    "analyzer": "spanish",
+                    "search_analyzer": "spanish"
+                },
+                "inscripcionobra": {
+                    "type": "text",
+                    "analyzer": "spanish",
+                    "search_analyzer": "spanish"
+                },
+                "formato": {
+                    "type": "text"
+                },
+                "media": {
+                    "type": "text"
+                },
+                "clasification": {
+                    "type": "text",
+                    "analyzer": "spanish",
+                    "search_analyzer": "spanish"
+                },
+                "genre": {
+                    "type": "text",
+                    "analyzer": "spanish",
+                    "search_analyzer": "spanish"
+                },
+                "movs": {
+                    "type": "text",
+                    "analyzer": "spanish",
+                    "search_analyzer": "spanish"
+                },
+                "category": {
+                    "type": "text",
+                    "analyzer": "spanish",
+                    "search_analyzer": "spanish"
+                },
+                "subcategory": {
+                    "type": "text",
+                    "analyzer": "spanish",
+                    "search_analyzer": "spanish"
+                },
+                "acts": {
+                    "type": "text",
+                    "analyzer": "spanish",
+                    "search_analyzer": "spanish"
+                },
+                "holdercustody": {
+                    "type": "text",
+                    "analyzer": "spanish",
+                    "search_analyzer": "spanish"
+                },
+                "clase": {
+                    "type": "text",
+                    "analyzer": "spanish",
+                    "search_analyzer": "spanish"
+                },
+                "important": {
+                    "type": "long"
+                },
+                "press": {
+                    "type": "text"
                 },
 
                 "forIndex": {
