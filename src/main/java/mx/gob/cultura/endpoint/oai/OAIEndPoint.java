@@ -74,7 +74,10 @@ public class OAIEndPoint {
         oai_dc.put("schema","http://www.openarchives.org/OAI/2.0/oai_dc.xsd");
         oai_dc.put("metadataNamespace","http://www.openarchives.org/OAI/2.0/oai_dc/");
         METADATA_FORMAT.put("oai_dc",oai_dc);
-                     
+        Map<String, String> vra =new HashMap<>();
+        oai_dc.put("schema","http://www.loc.gov/standards/vracore/vra-strict.xsd");
+        oai_dc.put("metadataNamespace","http://www.vraweb.org/vracore4.htm");
+        METADATA_FORMAT.put("vra",vra);                     
         //METADATA_FORMAT.put("marc", );
     }
     @GET

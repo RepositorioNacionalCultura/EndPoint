@@ -105,7 +105,7 @@ public class ElasticOAIDCMetaTransformer implements OAITransformer<JSONObject, E
                         }else{
                             Element subject = doc.createElement("dc:subject");
                             oaidc.appendChild(subject);
-                            subject.appendChild(doc.createTextNode(value));
+                            subject.appendChild(doc.createTextNode(value.trim()));
                         }
                     }                                           
                 }                                               

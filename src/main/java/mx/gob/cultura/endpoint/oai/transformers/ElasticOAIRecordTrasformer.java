@@ -44,7 +44,6 @@ public class ElasticOAIRecordTrasformer implements OAITransformer<JSONObject, El
     
      */
     @Override
-    
     public Element transform(JSONObject source) {
 //System.out.println("---------transform-oairecord-------------------------------:"+metadataPrefix);
 //System.out.println(source);
@@ -87,6 +86,9 @@ public class ElasticOAIRecordTrasformer implements OAITransformer<JSONObject, El
                 case "oai_dc":
                     transformer = new ElasticOAIDCMetaTransformer();
                     break;
+                case "vra":
+                    transformer = new ElasticVRAMetaTransformer();         
+                    break;                    
                 case "mods":
                     // @todo transformer = new ElasticMODSMetaTransformer();         
                     break;
