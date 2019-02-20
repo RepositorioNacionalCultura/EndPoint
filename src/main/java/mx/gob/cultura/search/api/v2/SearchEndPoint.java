@@ -1,4 +1,5 @@
-package mx.gob.cultura.search.api.v1;
+package mx.gob.cultura.search.api.v2;
+
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
@@ -62,7 +63,7 @@ public class SearchEndPoint {
     private static final Logger LOG = Logger.getLogger(SearchEndPoint.class);
     private static RestHighLevelClient elastic = Util.ELASTICSEARCH.getElasticClient();
     private static String indexName = SearchEndPoint.getIndexName();
-    public static final String REPO_INDEX = "cultura";
+    public static final String REPO_INDEX = "record";
     public static final String REPO_INDEX_TEST = "cultura_test";
     private static final LoadingCache<String, JSONObject> objectCache = Caffeine.newBuilder().expireAfterWrite(10L, TimeUnit.MINUTES).refreshAfterWrite(5L, TimeUnit.MINUTES).maximumSize(100000L).build(k -> SearchEndPoint.getObjectById(k));
 
@@ -273,22 +274,23 @@ public class SearchEndPoint {
         BoolQueryBuilder boolfilters = QueryBuilders.boolQuery();
         BoolQueryBuilder boolmust = QueryBuilders.boolQuery();
         Map<String, Float> fieldsweight = new HashMap();
-        fieldsweight.put("recordtitle.value", 12f);
+        fieldsweight.put("recordtitle", 12f);
         fieldsweight.put("holder.raw", 12f);
         fieldsweight.put("holdernote", 12f);
-        fieldsweight.put("creator.raw", 12f);
-        fieldsweight.put("creator", 12f);
+        fieldsweight.put("author.raw", 12f);
+        fieldsweight.put("author", 12f);
         fieldsweight.put("serie", 12f);
         fieldsweight.put("chapter", 12f);
         fieldsweight.put("episode", 12f);
         fieldsweight.put("reccollection", 12f);
         fieldsweight.put("collection", 12f);
         fieldsweight.put("resourcetype", 11f);
+        fieldsweight.put("resourcetype.raw", 11f);
         fieldsweight.put("keywords", 10f);
-        fieldsweight.put("datecreated.note", 9f);
+        fieldsweight.put("datecreatednote", 9f);
         fieldsweight.put("timelinedate.textvalue", 9f);
-        fieldsweight.put("digitalObject.mediatype.mime.raw", 9f);
-        fieldsweight.put("rights.media.mime.keyword", 9f);
+        fieldsweight.put("formato", 9f);
+        fieldsweight.put("media", 9f);
         fieldsweight.put("lugar", 8f);
         fieldsweight.put("description", 7f);
 
@@ -302,7 +304,7 @@ public class SearchEndPoint {
         fieldsweight.put("dimensiontype", 6f);
         fieldsweight.put("unidad", 6f);
         fieldsweight.put("unidadtype", 6f);
-        fieldsweight.put("rights.rightstitle", 6f);
+        fieldsweight.put("rightstitle", 6f);
         //fieldsweight.put("rights.description", 6f);
 //        fieldsweight.put("creatornote", 6f);
 //        fieldsweight.put("creatorgroup", 6f);
@@ -416,15 +418,15 @@ public class SearchEndPoint {
                             break;
                         }
                         case "rights": {
-                            filterKey = "digitalObject.rights.rightstitle";
+                            filterKey = "rightstitle";
                             break;
                         }
                         case "mediatype": {
-                            filterKey = "digitalObject.mediatype.mime.raw";
+                            filterKey = "formato";
                             break;
                         }
                         case "rightsmedia": {
-                            filterKey = "rights.media.mime.keyword";
+                            filterKey = "media";
                             break;
                         }
                         case "language": {
@@ -501,13 +503,26 @@ public class SearchEndPoint {
         } else {
             ssb.sort("important", SortOrder.DESC);
         }
+        
+        // Sacar las propiedades del datasource Record, revisar el tipo de datos que sean iscatalog == true
+        // con el tipo de dato que tiene la propiedad para agregarla en la respuesta de la búsqueda
+        
+        HashMap<String,String> hmAggs = new HashMap();
+        String strTempKey = "holder";
+        String strTempValue = "holder.raw";
+        
+        
+        
+        
+        
+        
         TermsAggregationBuilder holdersAgg = ((TermsAggregationBuilder)AggregationBuilders.terms((String)"holders").field("holder.raw")).size(10000);
         TermsAggregationBuilder typesAgg = ((TermsAggregationBuilder)AggregationBuilders.terms((String)"resourcetypes").field("resourcetype.raw")).size(10000);
         DateHistogramAggregationBuilder datesAgg = ((DateHistogramAggregationBuilder)AggregationBuilders.dateHistogram((String)"dates").field("timelinedate.value")).dateHistogramInterval(DateHistogramInterval.YEAR);
         TermsAggregationBuilder timelinedatesAgg = ((TermsAggregationBuilder)AggregationBuilders.terms((String)"timelinedates").field("timelinedate.value")).size(10000);
-        TermsAggregationBuilder rigthsAgg = ((TermsAggregationBuilder)AggregationBuilders.terms((String)"rights").field("digitalObject.rights.rightstitle")).size(10000);
-        TermsAggregationBuilder mediaAgg = ((TermsAggregationBuilder)AggregationBuilders.terms((String)"mediastype").field("digitalObject.mediatype.mime.raw")).size(10000);
-        TermsAggregationBuilder rmediaAgg = ((TermsAggregationBuilder)AggregationBuilders.terms((String)"rightsmedia").field("rights.media.mime.keyword")).size(10000);
+        TermsAggregationBuilder rigthsAgg = ((TermsAggregationBuilder)AggregationBuilders.terms((String)"rights").field("rightstitle")).size(10000);
+        TermsAggregationBuilder mediaAgg = ((TermsAggregationBuilder)AggregationBuilders.terms((String)"mediastype").field("formato")).size(10000);
+        TermsAggregationBuilder rmediaAgg = ((TermsAggregationBuilder)AggregationBuilders.terms((String)"rightsmedia").field("media")).size(10000);
         TermsAggregationBuilder languagesAgg = ((TermsAggregationBuilder)AggregationBuilders.terms((String)"languages").field("lang")).size(10000);
         ssb.aggregation((AggregationBuilder)holdersAgg);
         ssb.aggregation((AggregationBuilder)typesAgg);
