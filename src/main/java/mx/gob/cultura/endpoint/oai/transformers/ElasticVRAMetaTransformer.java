@@ -180,10 +180,7 @@ public class ElasticVRAMetaTransformer implements OAITransformer<JSONObject, Ele
     //https://www.loc.gov/standards/vracore/VRA_Core4_Element_Description.pdf
     @Override
     public Element transform(JSONObject source) {
-        System.out.println("---------transform metadata----------------------------------------");
-        System.out.println(source);
         Document doc = builder.newDocument();
-
         
         Element vra = doc.createElement("vra");
         vra.setAttribute("xmlns", "http://www.vraweb.org/vracore4.htm");
@@ -317,6 +314,17 @@ public class ElasticVRAMetaTransformer implements OAITransformer<JSONObject, Ele
         </locationSet>        
         
         */
+        if(source.has("lugar")){
+            Element locationSet = doc.createElement("locationSet");
+            record.appendChild(locationSet);
+            String value = source.getString("lugar");
+            if (value != null && !value.isEmpty()) {
+                Element lugar = doc.createElement("display");
+                lugar.appendChild(doc.createTextNode(value));
+                locationSet.appendChild(lugar);
+            }
+        }
+        
         /*
         <materialSet>
             <display>oil paint on canvas</display>
@@ -324,6 +332,16 @@ public class ElasticVRAMetaTransformer implements OAITransformer<JSONObject, Ele
             <material type="support" vocab="AAT" refid="300014078">canvas</material>
         </materialSet>        
         */
+        if(source.has("techmaterial")){
+            Element materialSet = doc.createElement("materialSet");
+            record.appendChild(materialSet);
+            String value = source.getString("techmaterial");
+            if (value != null && !value.isEmpty()) {
+                Element techmaterial = doc.createElement("dc:type");
+                techmaterial.appendChild(doc.createTextNode(value));
+                materialSet.appendChild(techmaterial);
+            }
+        }
         /*
         <measurementsSet>
             <display>Base 3 cm (H) x 36 cm (W) x 24 cm (D)</display>
@@ -332,6 +350,16 @@ public class ElasticVRAMetaTransformer implements OAITransformer<JSONObject, Ele
             <measurements type="depth" unit="cm" extent="base">24</measurements>
         </measurementsSet>        
         */
+        if(source.has("dimension")){
+            Element measurementsSet = doc.createElement("measurementsSet");
+            record.appendChild(measurementsSet);
+            String value = source.getString("dimension");
+            if (value != null && !value.isEmpty()) {
+                Element dimension = doc.createElement("display");
+                dimension.appendChild(doc.createTextNode(value));
+                measurementsSet.appendChild(dimension);
+            }
+        }
         //<relationSet/> 
         /*
         <rightsSet>

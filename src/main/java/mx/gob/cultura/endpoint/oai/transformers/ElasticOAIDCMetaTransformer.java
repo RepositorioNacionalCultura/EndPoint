@@ -48,8 +48,6 @@ public class ElasticOAIDCMetaTransformer implements OAITransformer<JSONObject, E
      */
     @Override
     public Element transform(JSONObject source) {
-        //System.out.println("---------transform metadata----------------------------------------");
-        //System.out.println(source);
         Document doc = builder.newDocument();
 
         Element oaidc = doc.createElement("oai_dc:dc");
@@ -773,13 +771,29 @@ public class ElasticOAIDCMetaTransformer implements OAITransformer<JSONObject, E
                     JSONObject jsetSpec = (JSONObject) obj;
                     if (jsetSpec != null && jsetSpec.has("keyword")){
                         String value= jsetSpec.getString("keyword");
-                        Element format = doc.createElement("dcterms:isPartOf");                        
-                        format.appendChild(doc.createTextNode(value));
-                        oaidc.appendChild(format);              
+                        Element setSpec = doc.createElement("dcterms:isPartOf");                        
+                        setSpec.appendChild(doc.createTextNode(value));
+                        oaidc.appendChild(setSpec);              
                     }
                 }
             }
-        }         
+        }  
+
+        if(source.has("collection")){
+            JSONArray jcollectiona = source.getJSONArray("collection");
+            if (jcollectiona != null && jcollectiona.length() > 0) {
+                if (jcollectiona != null && jcollectiona.length() > 0) {
+                    for (Object obj : jcollectiona) {
+                        String value = (String) obj;
+                        if (value != null && !value.isEmpty()) {
+                            Element setSpec = doc.createElement("dcterms:isPartOf");
+                            setSpec.appendChild(doc.createTextNode(value.trim()));
+                            oaidc.appendChild(setSpec); 
+                        }
+                    }
+                }
+            }
+        }
         /*creador     ya*/
         /*dimension*/
         if(source.has("dimension")){
@@ -812,7 +826,7 @@ public class ElasticOAIDCMetaTransformer implements OAITransformer<JSONObject, E
             }
         }
         /*URI
-        */           
+        */
         return oaidc;
 
     }

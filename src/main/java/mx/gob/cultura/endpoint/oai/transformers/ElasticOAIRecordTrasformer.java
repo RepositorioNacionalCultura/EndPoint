@@ -45,8 +45,6 @@ public class ElasticOAIRecordTrasformer implements OAITransformer<JSONObject, El
      */
     @Override
     public Element transform(JSONObject source) {
-//System.out.println("---------transform-oairecord-------------------------------:"+metadataPrefix);
-//System.out.println(source);
         Document doc = builder.newDocument();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
@@ -55,33 +53,27 @@ public class ElasticOAIRecordTrasformer implements OAITransformer<JSONObject, El
         Element root = doc.createElement("record");
         Element header = doc.createElement("header");
         Element identifier = doc.createElement("identifier");
-        identifier.appendChild(doc.createTextNode(source.getString("oaiid")));
+        identifier.appendChild(doc.createTextNode(source.getString("culturaoaiid")));
         header.appendChild(identifier);
         Element datestamp = doc.createElement("datestamp");
         datestamp.appendChild(doc.createTextNode(sdf.format(new Date(source.getLong("indexcreated")))));
 
         header.appendChild(datestamp);        
-        if(source.has("collection")){
-            JSONArray jcollectiona = source.getJSONArray("collection");
-            if (jcollectiona != null && jcollectiona.length() > 0) {
-                for (Object obj : jcollectiona) {
-                    String value = (String) obj;
-                    if (value != null && !value.isEmpty()) {
-                        Element setSpec = doc.createElement("setSpec");
-                        header.appendChild(setSpec);
-                        setSpec.appendChild(doc.createTextNode(value.trim()));
-                    }
-                }
+        if(source.has("holderid")){
+            String value = source.getString("holderid");
+            if (value != null && !value.isEmpty()) {
+                Element setSpec = doc.createElement("setSpec");
+                header.appendChild(setSpec);
+                setSpec.appendChild(doc.createTextNode(value.trim()));
             }
-        }      
+        }
         
         root.appendChild(header);
 
         if(!onlyIdentifier){
             OAITransformer transformer = null;
 
-            Element metadata = doc.createElement("metadata");
-//System.out.println(metadataPrefix);        
+            Element metadata = doc.createElement("metadata");      
             switch (metadataPrefix) {
                 case "oai_dc":
                     transformer = new ElasticOAIDCMetaTransformer();
@@ -92,18 +84,15 @@ public class ElasticOAIRecordTrasformer implements OAITransformer<JSONObject, El
                 case "mods":
                     // @todo transformer = new ElasticMODSMetaTransformer();         
                     break;
-            }
-//System.out.println(transformer);        
+            }       
             if (transformer != null) {
                 Node e = doc.importNode((Node) transformer.transform(source), true);
                 metadata.appendChild((Node) e);
             } else {
                 metadata.appendChild(doc.createTextNode("unsupported prefix:" + metadataPrefix));
-            }
-    //System.out.println(metadata);         
+            }        
             root.appendChild(metadata);
         }
-//System.out.println(root);
         return root;
 
     }

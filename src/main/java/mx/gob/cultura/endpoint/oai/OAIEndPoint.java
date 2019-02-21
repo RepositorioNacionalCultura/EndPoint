@@ -48,7 +48,14 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import java.util.Base64;
+import java.util.Collections;
+import java.util.List;
+import org.elasticsearch.script.Script;
+import org.elasticsearch.script.ScriptType;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
+import org.elasticsearch.search.aggregations.bucket.terms.InternalTerms;
+import org.elasticsearch.search.aggregations.bucket.terms.ParsedStringTerms;
+import org.elasticsearch.search.aggregations.bucket.terms.Terms.Bucket;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
 
 /**
@@ -108,23 +115,12 @@ public class OAIEndPoint {
         boolean hasFrom = null != sFrom; 
         boolean hasUntil = null != sUntil;
  
-        // @todo quitar esta validacion cuando se implemente la funcionalidad
-       /*if (hasSet) {
-            createErrorNode(doc, "noSetHierarchy", "The repository does not support sets");
-            return Response.ok(documentToString(doc, false)).build();
-        }*/
-        /*if (hasFrom||hasUntil) {
-            createErrorNode(doc, "badArgument", "The repository does not support selective harvesting");
-            return Response.ok(documentToString(doc, false)).build();
-        }*/
         if (hasToken) {
             if (hasMetadataPrefix ||hasSet ||hasIdentifier || hasFrom || hasUntil) {
                 createErrorNode(doc, "badArgument", "ResumptionToken cannot be sent together with from, until, metadataPrefix or set parameters");
                 return Response.ok(documentToString(doc, false)).build();
             }            
             try{
-                //metadataPrefix = token.substring(0, token.lastIndexOf("_"));
-                //page = Integer.parseInt(token.substring(token.lastIndexOf("_") + 1, token.length()));             
                 byte[] decodedBytes = Base64.getDecoder().decode(token);
                 String[] tkel= (new String(decodedBytes)).split("\\|");
                 for(String s:tkel)System.out.println(s);
@@ -188,13 +184,11 @@ public class OAIEndPoint {
                 listMetadata(doc);
                 break;
             case "ListSets":
-                createErrorNode(doc, "badArgument", "Not implemented");
-                /* no implementado
                 if(hasMetadataPrefix ||hasSet ||hasIdentifier || hasFrom || hasUntil){
                     createErrorNode(doc, "badArgument ", "The request includes illegal arguments");
                     return Response.ok(documentToString(doc, false)).build();                
                 }
-                listSets(doc);*/
+                listSets(doc);
                 break;    
             case "ListIdentifiers":
                 if(hasIdentifier){
@@ -448,8 +442,7 @@ public class OAIEndPoint {
 
         return doc;
     }
-    // @todo no esta probado
-    private void listSets(Document doc) {
+    private Document listSets(Document doc) {
         /*    
 <ListSets>
   <set>
@@ -461,36 +454,36 @@ public class OAIEndPoint {
         
         */
         ArrayList<Node> records = new ArrayList<>();
-        String rootElementTag = "ListSets";
         
         JSONObject result;
 
-        result = getElasticObjectsSets();
+        result = getElasticObjectsHolderId();
         
+        
+        Element root = doc.createElement("ListSets");
         if(result.has("records")){
             JSONArray jarray = result.getJSONArray("records");
-
             for (Object j : jarray){
                 JSONObject record=(JSONObject)j;
-//                Node e = doc.importNode((Node) OAIRecord.transform(record), true);
-//                if (null != e) {
-//                    records.add(e);
-//                }            
+                if (!"null".equals(record.getString("key"))){
+                    Element set = doc.createElement("set");
+                    root.appendChild(set);
+
+                    Element setSpec = doc.createElement("setSpec");
+                    setSpec.setTextContent(record.getString("key"));
+                    set.appendChild(setSpec); 
+
+                    Element setName = doc.createElement("setName");
+                    setName.setTextContent(record.getString("name"));
+                    set.appendChild(setName);            
+                }
             }
-
+            doc.getDocumentElement().appendChild(root);
+        } else {
+            createErrorNode(doc, "noSetHierarchy","The repository does not support sets.");
         }
-        if (!records.isEmpty()) {// @rgjs
-            Element listRecords = doc.createElement(rootElementTag);
-            doc.getDocumentElement().appendChild(listRecords);
-
-            for (Node n : records) {
-                listRecords.appendChild(n);
-            }
-
-            
-        } else {// @rgjs
-            createErrorNode(doc, "noRecordsMatch", "The combination of the values of the from, until, set and metadataPrefix arguments results in an empty list.");
-        }
+        return doc;
+        
     }
 
     private void createErrorNode(Document doc, String errCode, String errDesc) {
@@ -527,21 +520,18 @@ public class OAIEndPoint {
 
         //Create queryString query
         SearchSourceBuilder ssb = new SearchSourceBuilder();
-        if(set==null&&from==null&&until==null){
-            ssb.query(QueryBuilders.matchAllQuery());
-        }else{
-            BoolQueryBuilder query= QueryBuilders.boolQuery();
-            if(set!=null&&!set.isEmpty()){
-                query.must(QueryBuilders.matchQuery("collection", set));
-            }
-            if(from!=null){
-                query.must(QueryBuilders.rangeQuery("indexcreated").from(from.getTime()));
-            }        
-            if(until!=null){
-                query.must(QueryBuilders.rangeQuery("indexcreated").to(until.getTime()));
-            }      
-            ssb.query(query);
+        BoolQueryBuilder query= QueryBuilders.boolQuery();
+        query.must(QueryBuilders.existsQuery("culturaoaiid"));
+        if(set!=null&&!set.isEmpty()){
+            query.must(QueryBuilders.matchQuery("holderid", set));
         }
+        if(from!=null){
+            query.must(QueryBuilders.rangeQuery("indexcreated").from(from.getTime()));
+        }        
+        if(until!=null){
+            query.must(QueryBuilders.rangeQuery("indexcreated").to(until.getTime()));
+        }      
+        ssb.query(query);
         //Set paging parameters
         ssb.from(page*RECORD_LIMIT);
         ssb.size(RECORD_LIMIT);
@@ -587,7 +577,7 @@ public class OAIEndPoint {
 
         //Create queryString query
         SearchSourceBuilder ssb = new SearchSourceBuilder();
-        ssb.query(QueryBuilders.matchQuery("oaiid",id));
+        ssb.query(QueryBuilders.matchQuery("culturaoaiid",id));
 
         //Add source builder to request
         sr.source(ssb);
@@ -616,6 +606,10 @@ public class OAIEndPoint {
        return ret;
        
     }
+    /*
+    
+    deprecated
+    */
     private JSONObject getElasticObjectsSets() {
     /*
     @todo
@@ -671,6 +665,69 @@ System.out.println(hit.getSourceAsString());
 //System.out.println(ret);
        return ret;
     }
+    
+    private JSONObject getElasticObjectsHolderId() {
+
+        JSONObject ret = new JSONObject();
+        //Create search request
+        SearchRequest sr = new SearchRequest(indexName);
+
+        //Create queryString query
+        SearchSourceBuilder ssb = new SearchSourceBuilder();
+        ssb.size(0);
+        //Build aggregations for faceted search
+        TermsAggregationBuilder setAgg = AggregationBuilders.terms("setspc");
+                //.field("holderid");
+        Script script = new Script(
+                    ScriptType.INLINE,
+                    "painless",
+                    "doc['holderid'].value+'|'+doc['holder.raw'].value",
+                    Collections.emptyMap()
+            );
+        setAgg.script(script);
+        setAgg.size(1000);
+        ssb.aggregation(setAgg);        
+        //Add source builder to request
+        sr.source(ssb);
+        try {
+            //Perform search
+            SearchResponse resp = ELASTIC.search(sr);
+            if (resp.status().getStatus() == RestStatus.OK.getStatus()) {
+                ret.put("took", resp.getTook().toString());
+                //Get hits
+                SearchHits respHits = resp.getHits();
+                SearchHit [] hits = respHits.getHits();
+
+                ret.put("total", respHits.getTotalHits());
+                ret.put("hits", hits.length);
+                ParsedStringTerms pst=resp.getAggregations().get("setspc");
+                List<Bucket> buckets = (List<Bucket>) pst.getBuckets();
+                if (!buckets.isEmpty()) {
+                    //Get records
+                    JSONArray recs = new JSONArray();
+                    for (Bucket b:buckets) {
+                        try{
+                            String spec;
+                            String name;
+                            String[] split = b.getKeyAsString().split("\\|");                            
+                            spec=split[0];
+                            name=split[1];
+                            JSONObject o = new JSONObject();
+                            o.put("key",spec);
+                            o.put("name",name);
+                            recs.put(o);
+                        }catch(Exception ignored){
+                        }
+                    }
+                    ret.put("records", recs);
+
+                }
+            }
+        } catch (IOException ex) {
+            LOGGER.error("Getting elastic objects sets",ex);
+        }
+       return ret;
+    }
         
     private Date getElasticEarliestDate() {
         Date date =null;
@@ -680,7 +737,7 @@ System.out.println(hit.getSourceAsString());
 
         //Create queryString query
         SearchSourceBuilder ssb = new SearchSourceBuilder();
-        ssb.query(QueryBuilders.matchAllQuery());
+        ssb.query(QueryBuilders.existsQuery("culturaoaiid"));
 
         //Set paging parameters
 
