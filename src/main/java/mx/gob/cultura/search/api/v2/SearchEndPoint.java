@@ -1,10 +1,11 @@
-package mx.gob.cultura.search.api.v1;
+package mx.gob.cultura.search.api.v2;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,8 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import mx.gob.cultura.commons.Util;
+import mx.gob.cultura.commons.config.AppConfig;
+
 import org.apache.http.Header;
 import org.apache.log4j.Logger;
 import org.elasticsearch.action.DocWriteResponse;
@@ -51,22 +54,24 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.semanticwb.datamanager.DataObject;
 
 /**
  * REST EndPoint to manage search requests.
  *
  * @author Hasdai Pacheco
  */
-@Path(value="/search")
+@Path(value = "/search")
 public class SearchEndPoint {
+
     private static final Logger LOG = Logger.getLogger(SearchEndPoint.class);
     private static RestHighLevelClient elastic = Util.ELASTICSEARCH.getElasticClient();
     private static String indexName = SearchEndPoint.getIndexName();
-    public static final String REPO_INDEX = "cultura";
+    public static final String REPO_INDEX = "record";
     public static final String REPO_INDEX_TEST = "cultura_test";
     private static final LoadingCache<String, JSONObject> objectCache = Caffeine.newBuilder().expireAfterWrite(10L, TimeUnit.MINUTES).refreshAfterWrite(5L, TimeUnit.MINUTES).maximumSize(100000L).build(k -> SearchEndPoint.getObjectById(k));
 
-        /**
+    /**
      * Processes search request by keyword or identifier.
      *
      * @param context {@link UriInfo} object with request context information.
@@ -76,13 +81,13 @@ public class SearchEndPoint {
     @Produces(MediaType.APPLICATION_JSON)
     public Response search(@Context UriInfo context) {
         MultivaluedMap params = context.getQueryParameters();
-        String id = (String)params.getFirst((Object)"identifier");
-        String q = (String)params.getFirst((Object)"q");
-        String from = (String)params.getFirst((Object)"from");
-        String size = (String)params.getFirst((Object)"size");
-        String sort = (String)params.getFirst((Object)"sort");
-        String attr = (String)params.getFirst((Object)"attr");
-        String filter = (String)params.getFirst((Object)"filter");
+        String id = (String) params.getFirst((Object) "identifier");
+        String q = (String) params.getFirst((Object) "q");
+        String from = (String) params.getFirst((Object) "from");
+        String size = (String) params.getFirst((Object) "size");
+        String sort = (String) params.getFirst((Object) "sort");
+        String attr = (String) params.getFirst((Object) "attr");
+        String filter = (String) params.getFirst((Object) "filter");
         JSONObject ret = null;
         if (null == id || id.isEmpty()) {
             if (null == q) {
@@ -109,19 +114,19 @@ public class SearchEndPoint {
             ret = this.searchById(id);
         }
         if (null == ret) {
-            return Response.status((Response.Status)Response.Status.NOT_FOUND).encoding("utf8").build();
+            return Response.status((Response.Status) Response.Status.NOT_FOUND).encoding("utf8").build();
         }
-        return Response.ok((Object)ret.toString()).encoding("utf8").build();
+        return Response.ok((Object) ret.toString()).encoding("utf8").build();
     }
 
-       /**
+    /**
      * Updates object view count.
      *
      * @param oId Object ID
      */
     @Path("/hits/{objectId}")
     @POST
-    public void addView(@PathParam(value="objectId") String oId) {
+    public void addView(@PathParam(value = "objectId") String oId) {
         JSONObject ret = new JSONObject();
         if (null != oId && !oId.isEmpty()) {
             UpdateRequest req = new UpdateRequest(indexName, "bic", oId);
@@ -130,16 +135,15 @@ public class SearchEndPoint {
             try {
                 UpdateResponse resp = elastic.update(req, new Header[0]);
                 if (resp.getResult() == DocWriteResponse.Result.UPDATED) {
-                    ret.put("_id", (Object)resp.getId());
+                    ret.put("_id", (Object) resp.getId());
                 }
-            }
-            catch (IOException ioex) {
-                LOG.error((Object)ioex);
+            } catch (IOException ioex) {
+                LOG.error((Object) ioex);
             }
         }
     }
 
-     /**
+    /**
      * Gets {@link Histogram} aggregation with the given @aggName as a
      * {@link JSONObject}
      *
@@ -151,21 +155,23 @@ public class SearchEndPoint {
     private JSONObject getDateHistogramAggregation(Aggregations aggregations, String aggName) {
         JSONObject ret = new JSONObject();
         JSONArray aggs = new JSONArray();
-        Histogram histogram = (Histogram)aggregations.get(aggName);
+        Histogram histogram = (Histogram) aggregations.get(aggName);
         if (!histogram.getBuckets().isEmpty()) {
             for (Histogram.Bucket bucket : histogram.getBuckets()) {
-                if (bucket.getDocCount() <= 0L) continue;
+                if (bucket.getDocCount() <= 0L) {
+                    continue;
+                }
                 JSONObject o = new JSONObject();
-                o.put("name", (Object)bucket.getKeyAsString());
+                o.put("name", (Object) bucket.getKeyAsString());
                 o.put("count", bucket.getDocCount());
-                aggs.put((Object)o);
+                aggs.put((Object) o);
             }
         }
-        ret.put(aggName, (Object)aggs);
+        ret.put(aggName, (Object) aggs);
         return ret;
     }
 
-     /**
+    /**
      * Gets {@link Histogram} aggregation with the given @aggName as a
      * {@link JSONObject}
      *
@@ -177,21 +183,23 @@ public class SearchEndPoint {
     private JSONObject getHistogramAggregation(Aggregations aggregations, String aggName) {
         JSONObject ret = new JSONObject();
         JSONArray aggs = new JSONArray();
-        Histogram histogram = (Histogram)aggregations.get(aggName);
+        Histogram histogram = (Histogram) aggregations.get(aggName);
         if (!histogram.getBuckets().isEmpty()) {
             for (Histogram.Bucket bucket : histogram.getBuckets()) {
-                if (bucket.getDocCount() <= 0L) continue;
+                if (bucket.getDocCount() <= 0L) {
+                    continue;
+                }
                 JSONObject o = new JSONObject();
-                o.put("name", (Object)bucket.getKeyAsString());
+                o.put("name", (Object) bucket.getKeyAsString());
                 o.put("count", bucket.getDocCount());
-                aggs.put((Object)o);
+                aggs.put((Object) o);
             }
         }
-        ret.put(aggName, (Object)aggs);
+        ret.put(aggName, (Object) aggs);
         return ret;
     }
 
-     /**
+    /**
      * Gets {@link Terms} aggregation with the given @aggName as a
      * {@link JSONObject}
      *
@@ -203,20 +211,20 @@ public class SearchEndPoint {
     private JSONObject getTermAggregation(Aggregations aggregations, String aggName) {
         JSONObject ret = new JSONObject();
         JSONArray aggs = new JSONArray();
-        Terms terms = (Terms)aggregations.get(aggName);
+        Terms terms = (Terms) aggregations.get(aggName);
         if (!terms.getBuckets().isEmpty()) {
             for (Terms.Bucket bucket : terms.getBuckets()) {
                 JSONObject o = new JSONObject();
-                o.put("name", (Object)bucket.getKeyAsString());
+                o.put("name", (Object) bucket.getKeyAsString());
                 o.put("count", bucket.getDocCount());
-                aggs.put((Object)o);
+                aggs.put((Object) o);
             }
         }
-        ret.put(aggName, (Object)aggs);
+        ret.put(aggName, (Object) aggs);
         return ret;
     }
 
-     /**
+    /**
      * Gets an object from cache using document identifier. If object is nt in
      * cache it is retrieved from ElasticSearch.
      *
@@ -260,7 +268,6 @@ public class SearchEndPoint {
      * array order.
      * @return JSONObject wrapping search results.
      */
-
     private JSONObject searchByKeyword(String q, int from, int size, String[] sortParams, String attr, String filter) {
         JSONObject ret = new JSONObject();
         String qreplaced = "";
@@ -273,22 +280,23 @@ public class SearchEndPoint {
         BoolQueryBuilder boolfilters = QueryBuilders.boolQuery();
         BoolQueryBuilder boolmust = QueryBuilders.boolQuery();
         Map<String, Float> fieldsweight = new HashMap();
-        fieldsweight.put("recordtitle.value", 12f);
+        fieldsweight.put("recordtitle", 12f);
         fieldsweight.put("holder.raw", 12f);
         fieldsweight.put("holdernote", 12f);
-        fieldsweight.put("creator.raw", 12f);
-        fieldsweight.put("creator", 12f);
+        fieldsweight.put("author.raw", 12f);
+        fieldsweight.put("author", 12f);
         fieldsweight.put("serie", 12f);
         fieldsweight.put("chapter", 12f);
         fieldsweight.put("episode", 12f);
         fieldsweight.put("reccollection", 12f);
         fieldsweight.put("collection", 12f);
         fieldsweight.put("resourcetype", 11f);
+        fieldsweight.put("resourcetype.raw", 11f);
         fieldsweight.put("keywords", 10f);
-        fieldsweight.put("datecreated.note", 9f);
+        fieldsweight.put("datecreatednote", 9f);
         fieldsweight.put("timelinedate.textvalue", 9f);
-        fieldsweight.put("digitalObject.mediatype.mime.raw", 9f);
-        fieldsweight.put("rights.media.mime.keyword", 9f);
+        fieldsweight.put("formato", 9f);
+        fieldsweight.put("media", 9f);
         fieldsweight.put("lugar", 8f);
         fieldsweight.put("description", 7f);
 
@@ -302,7 +310,7 @@ public class SearchEndPoint {
         fieldsweight.put("dimensiontype", 6f);
         fieldsweight.put("unidad", 6f);
         fieldsweight.put("unidadtype", 6f);
-        fieldsweight.put("rights.rightstitle", 6f);
+        fieldsweight.put("rightstitle", 6f);
         //fieldsweight.put("rights.description", 6f);
 //        fieldsweight.put("creatornote", 6f);
 //        fieldsweight.put("creatorgroup", 6f);
@@ -344,12 +352,16 @@ public class SearchEndPoint {
         fieldsweight.put("acervo", 6f);
         fieldsweight.put("techmaterial", 6f);
         fieldsweight.put("inscripcionobra", 6f);
-        
+
+        //filtros definidos como facetado,
+        HashMap<String, DataObject> hmfacets = Util.getAllDSFacetProps("Record");
+        Iterator<String> itkeys = hmfacets.keySet().iterator();
+
         if (null != attr) {
             if (attr.equalsIgnoreCase("oaiid")) {
-                ssb.query((QueryBuilder)QueryBuilders.termQuery((String)attr, (String)q));
+                ssb.query((QueryBuilder) QueryBuilders.termQuery((String) attr, (String) q));
             } else {
-                ssb.query((QueryBuilder)QueryBuilders.matchQuery((String)attr, (Object)q));
+                ssb.query((QueryBuilder) QueryBuilders.matchQuery((String) attr, (Object) q));
             }
         } else if (null != filter) {
             if (q != null) {
@@ -367,25 +379,50 @@ public class SearchEndPoint {
             } else {
                 filters = new String[]{filter};
             }
-            boolshouldmain.should((QueryBuilder)QueryBuilders.queryStringQuery((String)q).defaultOperator(Operator.AND).fields(fieldsweight));
+
+            boolshouldmain.should((QueryBuilder) QueryBuilders.queryStringQuery((String) q).defaultOperator(Operator.AND).fields(fieldsweight));
             if (isReplaced) {
-                boolshouldmain.should((QueryBuilder)QueryBuilders.queryStringQuery((String)qreplaced).defaultOperator(Operator.AND).fields(fieldsweight));
+                boolshouldmain.should((QueryBuilder) QueryBuilders.queryStringQuery((String) qreplaced).defaultOperator(Operator.AND).fields(fieldsweight));
             }
             if (null != q && q.trim().indexOf(" ") > 0) {
                 String[] mstr = q.trim().split(" ");
                 String[] mstrrep = qreplaced.trim().split(" ");
                 for (int i = 0; i < mstr.length; ++i) {
-                    boolshouldmain.should((QueryBuilder)QueryBuilders.queryStringQuery((String)mstr[i]).defaultOperator(Operator.AND).fields(fieldsweight));
-                    if (!isReplaced || mstr[i].equals(mstrrep[i])) continue;
-                    boolshouldmain.should((QueryBuilder)QueryBuilders.queryStringQuery((String)mstrrep[i]).defaultOperator(Operator.AND).fields(fieldsweight));
+                    boolshouldmain.should((QueryBuilder) QueryBuilders.queryStringQuery((String) mstr[i]).defaultOperator(Operator.AND).fields(fieldsweight));
+                    if (!isReplaced || mstr[i].equals(mstrrep[i])) {
+                        continue;
+                    }
+                    boolshouldmain.should((QueryBuilder) QueryBuilders.queryStringQuery((String) mstrrep[i]).defaultOperator(Operator.AND).fields(fieldsweight));
                 }
             }
             qb.must().add(boolshouldmain);
             String startDate = "";
             String endDate = "";
             for (String myfilter : filters) {
+
+                //TODO: Validar que sean filtros definidos como facetado,
+                // Puede ser para el facetado y/o visible
+//            if(!hmfacets.containsKey(myfilter)
+                if (myfilter != null) {
+                    if (!hmfacets.containsKey(myfilter)
+                            && !myfilter.equals("holder")
+                            && !myfilter.equals("resourcetype")
+                            && !myfilter.equals("datecreated")
+                            && !myfilter.equals("rights")
+                            && !myfilter.equals("mediatype")
+                            && !myfilter.equals("rightsmedia")
+                            && !myfilter.equals("language")
+                            && !myfilter.equals("collection")
+                            && !myfilter.equals("datestart")
+                            && !myfilter.equals("dateend")) {
+                        continue;
+                    }
+                }
+
                 String[] propVal = myfilter.split(":");
-                if (propVal.length != 2) continue;
+                if (propVal.length != 2) {
+                    continue;
+                }
                 String key = propVal[0].toLowerCase();
                 if (hmfilters.get(key) == null) {
                     listVals = new ArrayList<String>();
@@ -393,15 +430,15 @@ public class SearchEndPoint {
                     hmfilters.put(key, listVals);
                     continue;
                 }
-                listVals = (List)hmfilters.get(key);
+                listVals = (List) hmfilters.get(key);
                 listVals.add(propVal[1]);
             }
             if (!hmfilters.isEmpty()) {
                 Iterator it = hmfilters.keySet().iterator();
-                block30 : while (it.hasNext()) {
+                while (it.hasNext()) {
                     BoolQueryBuilder boolshouldfilter = QueryBuilders.boolQuery();
-                    String filterKey = (String)it.next();
-                    listVals = (ArrayList<String>)hmfilters.get(filterKey);
+                    String filterKey = (String) it.next();
+                    listVals = (ArrayList<String>) hmfilters.get(filterKey);
                     switch (filterKey) {
                         case "holder": {
                             filterKey = "holder.raw";
@@ -416,23 +453,19 @@ public class SearchEndPoint {
                             break;
                         }
                         case "rights": {
-                            filterKey = "digitalObject.rights.rightstitle";
+                            filterKey = "rightstitle";
                             break;
                         }
                         case "mediatype": {
-                            filterKey = "digitalObject.mediatype.mime.raw";
+                            filterKey = "formato";
                             break;
                         }
                         case "rightsmedia": {
-                            filterKey = "rights.media.mime.keyword";
+                            filterKey = "media";
                             break;
                         }
                         case "language": {
                             filterKey = "lang";
-                            break;
-                        }
-                        case "serie": {
-                            filterKey = "serie";
                             break;
                         }
                         case "collection": {
@@ -440,29 +473,29 @@ public class SearchEndPoint {
                             break;
                         }
                         case "datestart": {
-                            startDate = (String)listVals.get(0);
-                            continue block30;
+                            startDate = (String) listVals.get(0);
+                            continue;
                         }
                         case "dateend": {
-                            endDate = (String)listVals.get(0);
-                            continue block30;
+                            endDate = (String) listVals.get(0);
+                            continue;
                         }
                     }
                     if (listVals.size() > 1 && !filterKey.equals("datestart") && !filterKey.equals("dateend")) {
                         for (String fval : listVals) {
-                            boolshouldfilter.should().add(QueryBuilders.matchQuery((String)filterKey, (Object)fval).operator(Operator.AND));
+                            boolshouldfilter.should().add(QueryBuilders.matchQuery((String) filterKey, (Object) fval).operator(Operator.AND));
                         }
                     } else if (!filterKey.equals("datestart") && !filterKey.equals("dateend")) {
-                        boolshouldfilter.should().add(QueryBuilders.matchQuery((String)filterKey, listVals.get(0)).operator(Operator.AND));
+                        boolshouldfilter.should().add(QueryBuilders.matchQuery((String) filterKey, listVals.get(0)).operator(Operator.AND));
                     }
                     boolfilters.must().add(boolshouldfilter);
                 }
             }
             if (!startDate.equals("") && !endDate.equals("")) {
-                boolfilters.must().add(QueryBuilders.rangeQuery((String)"timelinedate.value").from((Object)startDate).to((Object)endDate));
+                boolfilters.must().add(QueryBuilders.rangeQuery((String) "timelinedate.value").from((Object) startDate).to((Object) endDate));
             }
-            qb.filter((QueryBuilder)boolfilters);
-            ssb.query((QueryBuilder)qb);
+            qb.filter((QueryBuilder) boolfilters);
+            ssb.query((QueryBuilder) qb);
         } else {
             if (q != null) {
                 qreplaced = SearchEndPoint.replaceSpecialChars(q, true).toUpperCase();
@@ -470,21 +503,23 @@ public class SearchEndPoint {
                     isReplaced = true;
                 }
             }
-            boolshouldmain.should((QueryBuilder)QueryBuilders.queryStringQuery((String)q).defaultOperator(Operator.AND).fields(fieldsweight));
+            boolshouldmain.should((QueryBuilder) QueryBuilders.queryStringQuery((String) q).defaultOperator(Operator.AND).fields(fieldsweight));
             if (isReplaced) {
-                boolshouldmain.should((QueryBuilder)QueryBuilders.queryStringQuery((String)qreplaced).defaultOperator(Operator.AND).fields(fieldsweight));
+                boolshouldmain.should((QueryBuilder) QueryBuilders.queryStringQuery((String) qreplaced).defaultOperator(Operator.AND).fields(fieldsweight));
             }
             if (null != q && q.trim().indexOf(" ") > 0) {
                 String[] mstr = q.trim().split(" ");
                 String[] mstrrep = qreplaced.trim().split(" ");
                 for (int i = 0; i < mstr.length; ++i) {
-                    boolshouldmain.should((QueryBuilder)QueryBuilders.queryStringQuery((String)mstr[i]).defaultOperator(Operator.AND).fields(fieldsweight));
-                    if (!isReplaced || mstr[i].equals(mstrrep[i])) continue;
-                    boolshouldmain.should((QueryBuilder)QueryBuilders.queryStringQuery((String)mstrrep[i]).defaultOperator(Operator.AND).fields(fieldsweight));
+                    boolshouldmain.should((QueryBuilder) QueryBuilders.queryStringQuery((String) mstr[i]).defaultOperator(Operator.AND).fields(fieldsweight));
+                    if (!isReplaced || mstr[i].equals(mstrrep[i])) {
+                        continue;
+                    }
+                    boolshouldmain.should((QueryBuilder) QueryBuilders.queryStringQuery((String) mstrrep[i]).defaultOperator(Operator.AND).fields(fieldsweight));
                 }
             }
             qb.must().add(boolshouldmain);
-            ssb.query((QueryBuilder)qb);
+            ssb.query((QueryBuilder) qb);
         }
         if (from > -1) {
             ssb.from(from);
@@ -495,33 +530,88 @@ public class SearchEndPoint {
         if (null != sortParams) {
             for (String param : sortParams) {
                 boolean desc;
-                if (null == param || param.equals("nosort")) continue;
+                if (null == param || param.equals("nosort")) {
+                    continue;
+                }
                 ssb.sort(param.replace("-", ""), (desc = param.startsWith("-")) ? SortOrder.DESC : SortOrder.ASC);
             }
         } else {
             ssb.sort("important", SortOrder.DESC);
         }
-        TermsAggregationBuilder holdersAgg = ((TermsAggregationBuilder)AggregationBuilders.terms((String)"holders").field("holder.raw")).size(10000);
-        TermsAggregationBuilder typesAgg = ((TermsAggregationBuilder)AggregationBuilders.terms((String)"resourcetypes").field("resourcetype.raw")).size(10000);
-        DateHistogramAggregationBuilder datesAgg = ((DateHistogramAggregationBuilder)AggregationBuilders.dateHistogram((String)"dates").field("timelinedate.value")).dateHistogramInterval(DateHistogramInterval.YEAR);
-        TermsAggregationBuilder timelinedatesAgg = ((TermsAggregationBuilder)AggregationBuilders.terms((String)"timelinedates").field("timelinedate.value")).size(10000);
-        TermsAggregationBuilder rigthsAgg = ((TermsAggregationBuilder)AggregationBuilders.terms((String)"rights").field("digitalObject.rights.rightstitle")).size(10000);
-        TermsAggregationBuilder mediaAgg = ((TermsAggregationBuilder)AggregationBuilders.terms((String)"mediastype").field("digitalObject.mediatype.mime.raw")).size(10000);
-        TermsAggregationBuilder rmediaAgg = ((TermsAggregationBuilder)AggregationBuilders.terms((String)"rightsmedia").field("rights.media.mime.keyword")).size(10000);
-        TermsAggregationBuilder languagesAgg = ((TermsAggregationBuilder)AggregationBuilders.terms((String)"languages").field("lang")).size(10000);
-        ssb.aggregation((AggregationBuilder)holdersAgg);
-        ssb.aggregation((AggregationBuilder)typesAgg);
-        ssb.aggregation((AggregationBuilder)datesAgg);
-        ssb.aggregation((AggregationBuilder)timelinedatesAgg);
-        ssb.aggregation((AggregationBuilder)rigthsAgg);
-        ssb.aggregation((AggregationBuilder)mediaAgg);
-        ssb.aggregation((AggregationBuilder)rmediaAgg);
-        ssb.aggregation((AggregationBuilder)languagesAgg);
+
+//        TermsAggregationBuilder timelinedatesAgg = ((TermsAggregationBuilder) AggregationBuilders.terms((String) "timelinedates").field("timelinedate.value")).size(10000);
+//        ssb.aggregation((AggregationBuilder) timelinedatesAgg);
+        // Sacar las propiedades del datasource Record, revisar el tipo de datos que sean iscatalog == true
+        // con el tipo de dato que tiene la propiedad para agregarla en la respuesta de la búsqueda
+        // ["boolean", "date", "double", "float", "int", "long", "password", "select", "string", "time", "header", "section"];
+        HashMap<String, String> hmAggs = new HashMap();
+        String typeprop = null;
+        boolean isVisible = false;
+        while (itkeys.hasNext()) {
+            String next = itkeys.next();
+            //Revisar si es visible o no
+            DataObject dofacet = hmfacets.get(next);
+
+            if (null != dofacet) {
+                isVisible = dofacet.getBoolean("visible", false);
+                if (!isVisible) {
+                    continue;  // Facetador no es visible
+                }
+                typeprop = dofacet.getString("type", null);
+                if (typeprop != null) {
+                    if (typeprop.equals("header") || typeprop.equals("section")) {
+                        continue;
+                    }
+                    if (typeprop.equals("date")) {
+                        if (next.equals("timelinedate")) {
+                            hmAggs.put("dates", typeprop);
+                            DateHistogramAggregationBuilder datesAgg = ((DateHistogramAggregationBuilder) AggregationBuilders.dateHistogram((String) "dates").field("timelinedate.value")).dateHistogramInterval(DateHistogramInterval.YEAR);
+                            ssb.aggregation((AggregationBuilder) datesAgg);
+                        } else {
+                            hmAggs.put(next, typeprop);
+                            DateHistogramAggregationBuilder tempDateAgg = ((DateHistogramAggregationBuilder) AggregationBuilders.dateHistogram((String) next).field(next + ".keyword")).dateHistogramInterval(DateHistogramInterval.YEAR);
+                            ssb.aggregation((AggregationBuilder) tempDateAgg);
+                        }
+                    } else {
+                        if (next.equals("holder")) {
+                            hmAggs.put("holders", typeprop);
+                            TermsAggregationBuilder holdersAgg = ((TermsAggregationBuilder) AggregationBuilders.terms((String) "holders").field("holder.raw")).size(10000);
+                            ssb.aggregation((AggregationBuilder) holdersAgg);
+                        } else if (next.equals("resourcetype")) {
+                            hmAggs.put("resourcetypes", typeprop);
+                            TermsAggregationBuilder typesAgg = ((TermsAggregationBuilder) AggregationBuilders.terms((String) "resourcetypes").field("resourcetype.raw")).size(10000);
+                            ssb.aggregation((AggregationBuilder) typesAgg);
+                        } else if (next.equals("rights")) {
+                            hmAggs.put("rights", typeprop);
+                            TermsAggregationBuilder rigthsAgg = ((TermsAggregationBuilder) AggregationBuilders.terms((String) "rights").field("rightstitle")).size(10000);
+                            ssb.aggregation((AggregationBuilder) rigthsAgg);
+                        } else if (next.equals("formato")) {
+                            hmAggs.put("mediastype", typeprop);
+                            TermsAggregationBuilder mediaAgg = ((TermsAggregationBuilder) AggregationBuilders.terms((String) "mediastype").field("formato")).size(10000);
+                            ssb.aggregation((AggregationBuilder) mediaAgg);
+                        } else if (next.equals("media")) {
+                            hmAggs.put("rightsmedia", typeprop);
+                            TermsAggregationBuilder rmediaAgg = ((TermsAggregationBuilder) AggregationBuilders.terms((String) "rightsmedia").field("media")).size(10000);
+                            ssb.aggregation((AggregationBuilder) rmediaAgg);
+                        } else if (next.equals("lang")) {
+                            hmAggs.put("languages", typeprop);
+                            TermsAggregationBuilder languagesAgg = ((TermsAggregationBuilder) AggregationBuilders.terms((String) "languages").field("lang")).size(10000);
+                            ssb.aggregation((AggregationBuilder) languagesAgg);
+                        } else {
+                            hmAggs.put(next, typeprop);
+                            TermsAggregationBuilder tempAgg = ((TermsAggregationBuilder) AggregationBuilders.terms((String) next).field(next + ".keyword")).size(10000);
+                            ssb.aggregation((AggregationBuilder) tempAgg);
+                        }
+                    }
+                }
+            }
+        }
+
         sr.source(ssb);
         try {
             SearchResponse resp = elastic.search(sr, new Header[0]);
             if (resp.status().getStatus() == RestStatus.OK.getStatus()) {
-                ret.put("took", (Object)resp.getTook().toString());
+                ret.put("took", (Object) resp.getTook().toString());
                 SearchHits respHits = resp.getHits();
                 SearchHit[] hits = respHits.getHits();
                 ret.put("total", respHits.getTotalHits());
@@ -529,52 +619,67 @@ public class SearchEndPoint {
                     JSONArray recs = new JSONArray();
                     for (SearchHit hit : hits) {
                         JSONObject o = new JSONObject(hit.getSourceAsString());
-                        o.put("_id", (Object)hit.getId());
-                        recs.put((Object)o);
+                        o.put("_id", (Object) hit.getId());
+                        recs.put((Object) o);
                     }
-                    ret.put("records", (Object)recs);
+                    ret.put("records", (Object) recs);
                     Aggregations aggs = resp.getAggregations();
                     if (null != aggs && !aggs.asList().isEmpty()) {
                         JSONArray aggsArray = new JSONArray();
-                        JSONObject agg = this.getTermAggregation(aggs, "holders");
-                        if (agg.length() > 0) {
-                            aggsArray.put((Object)agg);
+                        JSONObject agg = null;
+
+                        Iterator<String> itAggs = hmAggs.keySet().iterator();
+                        while (itAggs.hasNext()) {
+                            String keyAgg = itAggs.next();
+                            String tipoAgg = hmAggs.get(keyAgg);
+                            if (tipoAgg.equals("date")) {
+                                agg = this.getDateHistogramAggregation(aggs, keyAgg);
+                            } else {
+                                agg = this.getTermAggregation(aggs, keyAgg);
+                            }
+                            if (agg.length() > 0) {
+                                aggsArray.put((Object) agg);
+                            }
+
                         }
-                        if ((agg = this.getTermAggregation(aggs, "resourcetypes")).length() > 0) {
-                            aggsArray.put((Object)agg);
-                        }
-                        if ((agg = this.getDateHistogramAggregation(aggs, "dates")).length() > 0) {
-                            aggsArray.put((Object)agg);
-                        }
-                        if ((agg = this.getTermAggregation(aggs, "timelinedates")).length() > 0) {
-                            aggsArray.put((Object)agg);
-                        }
-                        if ((agg = this.getTermAggregation(aggs, "rights")).length() > 0) {
-                            aggsArray.put((Object)agg);
-                        }
-                        if ((agg = this.getTermAggregation(aggs, "mediastype")).length() > 0) {
-                            aggsArray.put((Object)agg);
-                        }
-                        if ((agg = this.getTermAggregation(aggs, "rightsmedia")).length() > 0) {
-                            aggsArray.put((Object)agg);
-                        }
-                        if ((agg = this.getTermAggregation(aggs, "languages")).length() > 0) {
-                            aggsArray.put((Object)agg);
-                        }
+
+//                        if (agg.length() > 0) {
+//                            aggsArray.put((Object) agg);
+//                        }
+//                        if ((agg = this.getTermAggregation(aggs, "resourcetypes")).length() > 0) {
+//                            aggsArray.put((Object) agg);
+//                        }
+//                        if ((agg = this.getDateHistogramAggregation(aggs, "dates")).length() > 0) {
+//                            aggsArray.put((Object) agg);
+//                        }
+//                        if ((agg = this.getTermAggregation(aggs, "timelinedates")).length() > 0) {
+//                            aggsArray.put((Object) agg);
+//                        }
+//                        if ((agg = this.getTermAggregation(aggs, "rights")).length() > 0) {
+//                            aggsArray.put((Object) agg);
+//                        }
+//                        if ((agg = this.getTermAggregation(aggs, "mediastype")).length() > 0) {
+//                            aggsArray.put((Object) agg);
+//                        }
+//                        if ((agg = this.getTermAggregation(aggs, "rightsmedia")).length() > 0) {
+//                            aggsArray.put((Object) agg);
+//                        }
+//                        if ((agg = this.getTermAggregation(aggs, "languages")).length() > 0) {
+//                            aggsArray.put((Object) agg);
+//                        }
                         if (aggsArray.length() > 0) {
-                            ret.put("aggs", (Object)aggsArray);
+                            ret.put("aggs", (Object) aggsArray);
                         }
                     }
                 }
             }
-        }
-        catch (IOException ioex) {
-            LOG.error((Object)ioex);
+        } catch (IOException ioex) {
+            LOG.error((Object) ioex);
         }
         return ret;
     }
 
-        /**
+    /**
      * Gets index name to work with according to environment configuration.
      *
      * @return Name of index to use.
@@ -590,7 +695,7 @@ public class SearchEndPoint {
     }
 
     /**
-     * 
+     *
      * @param q text to be replaced special chars
      * @param letters indictes if the letters have to be replaced or not
      * @return replaced text
