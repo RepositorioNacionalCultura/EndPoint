@@ -277,22 +277,33 @@ public class ElasticOAIDCMetaTransformer implements OAITransformer<JSONObject, E
         /*Creador del BIC (Nombre)
         Creador del BIC (Apellido)      ya */
         /*Nota creador del BIC*/
-        if(source.has("creatornote")){
-            String value = source.getString("creatornote");
-            if (value != null && !value.isEmpty()) {
-                Element creatornote = doc.createElement("dc:creator");
-                creatornote.appendChild(doc.createTextNode(value));
-                oaidc.appendChild(creatornote);
+        if(source.has("creatornote")){  
+            JSONArray jcreatornotea = source.getJSONArray("creatornote");
+            if (jcreatornotea != null && jcreatornotea.length() > 0) {
+                for (Object obj : jcreatornotea) {
+                    String value = (String) obj;
+                    if (value != null && !value.isEmpty()) {
+                        Element creatornote = doc.createElement("dc:creator");                        
+                        creatornote.appendChild(doc.createTextNode(value));
+                        oaidc.appendChild(creatornote);
+                    }
+                }
             }
-        }
+        } 
+
         /*Grupo ceador del BIC*/
         if(source.has("creatorgroup")){
-            String value = source.getString("creatorgroup");
-            if (value != null && !value.isEmpty()) {
-                Element creatorgroup = doc.createElement("dc:creator");
-                creatorgroup.appendChild(doc.createTextNode(value));
-                oaidc.appendChild(creatorgroup);
-            }
+            JSONArray jcreatorgroupa = source.getJSONArray("creatorgroup");
+            if (jcreatorgroupa != null && jcreatorgroupa.length() > 0) {
+                for (Object obj : jcreatorgroupa) {
+                    String value = (String) obj;
+                    if (value != null && !value.isEmpty()) {
+                        Element creatorgroup = doc.createElement("dc:creator");
+                        creatorgroup.appendChild(doc.createTextNode(value));
+                        oaidc.appendChild(creatorgroup);
+                    }
+                }
+            }    
         }
         /*Institución creadora del BIC*/
         if(source.has("publisher")){
@@ -417,14 +428,22 @@ public class ElasticOAIDCMetaTransformer implements OAITransformer<JSONObject, E
             }    
         }
         /*Serie*/
-        if(source.has("serie")){
-            String value = source.getString("serie");
-            if (value != null && !value.isEmpty()) {
-                Element serie = doc.createElement("dcterms:isPartOf");
-                serie.appendChild(doc.createTextNode(value));
-                oaidc.appendChild(serie);
+        if(source.has("serie")){  
+            JSONArray jseriea = source.getJSONArray("serie");
+            if (jseriea != null && jseriea.length() > 0) {
+                for (Object obj : jseriea) {
+                    String value = (String) obj;
+                    if (value != null && !value.isEmpty()) {
+                        Element serie = doc.createElement("dcterms:isPartOf");                        
+                        serie.appendChild(doc.createTextNode(value));
+                        oaidc.appendChild(serie);
+                        Element serie2 = doc.createElement("dcterms:bibliographicCitation");
+                        serie2.appendChild(doc.createTextNode(value));
+                        oaidc.appendChild(serie2);
+                    }
+                }
             }
-        }  
+        }         
         /*Media*/
         if(source.has("media")){
             String value = source.getString("media");
@@ -485,15 +504,15 @@ public class ElasticOAIDCMetaTransformer implements OAITransformer<JSONObject, E
                 oaidc.appendChild(press);
             }
         }         
-        /*Serie*/
-        if(source.has("serie")){
+        /*Serie     ya*/
+        /*if(source.has("serie")){
             String value = source.getString("serie");
             if (value != null && !value.isEmpty()) {
                 Element serie = doc.createElement("dcterms:bibliographicCitation");
                 serie.appendChild(doc.createTextNode(value));
                 oaidc.appendChild(serie);
             }
-        }         
+        }*/         
         /*Descripción*/
         if(source.has("description")){
             Element description = doc.createElement("dcterms:description");
@@ -559,11 +578,16 @@ public class ElasticOAIDCMetaTransformer implements OAITransformer<JSONObject, E
         }
         /*Créditos*/
         if(source.has("credits")){
-            String value = source.getString("credits");
-            if (value != null && !value.isEmpty()) {
-                Element credits = doc.createElement("dcterms:references");
-                credits.appendChild(doc.createTextNode(value));
-                oaidc.appendChild(credits);
+            JSONArray jcreditsa = source.getJSONArray("credits");
+            if (jcreditsa != null && jcreditsa.length() > 0) {
+                for (Object obj : jcreditsa) {
+                    String value = (String) obj;
+                    if (value != null && !value.isEmpty()) {
+                        Element credits = doc.createElement("dcterms:references");
+                        credits.appendChild(doc.createTextNode(value));
+                        oaidc.appendChild(credits);
+                    }
+                }
             }
         }         
         /*Episodio*/
