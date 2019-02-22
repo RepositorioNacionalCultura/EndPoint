@@ -574,28 +574,28 @@ public class SearchEndPoint {
                         }
                     } else {
                         if (next.equals("holder")) {
-                            hmAggs.put("holders", typeprop);
-                            TermsAggregationBuilder holdersAgg = ((TermsAggregationBuilder) AggregationBuilders.terms((String) "holders").field("holder.raw")).size(10000);
+                            hmAggs.put("holder", typeprop);
+                            TermsAggregationBuilder holdersAgg = ((TermsAggregationBuilder) AggregationBuilders.terms((String) "holder").field("holder.raw")).size(10000);
                             ssb.aggregation((AggregationBuilder) holdersAgg);
                         } else if (next.equals("resourcetype")) {
                             hmAggs.put("resourcetypes", typeprop);
                             TermsAggregationBuilder typesAgg = ((TermsAggregationBuilder) AggregationBuilders.terms((String) "resourcetypes").field("resourcetype.raw")).size(10000);
                             ssb.aggregation((AggregationBuilder) typesAgg);
-                        } else if (next.equals("rights")) {
-                            hmAggs.put("rights", typeprop);
-                            TermsAggregationBuilder rigthsAgg = ((TermsAggregationBuilder) AggregationBuilders.terms((String) "rights").field("rightstitle")).size(10000);
+                        } else if (next.equals("rightstitle")) {
+                            hmAggs.put("rightstitle", typeprop);
+                            TermsAggregationBuilder rigthsAgg = ((TermsAggregationBuilder) AggregationBuilders.terms((String) "rightstitle").field("rightstitle")).size(10000);
                             ssb.aggregation((AggregationBuilder) rigthsAgg);
                         } else if (next.equals("formato")) {
-                            hmAggs.put("mediastype", typeprop);
-                            TermsAggregationBuilder mediaAgg = ((TermsAggregationBuilder) AggregationBuilders.terms((String) "mediastype").field("formato")).size(10000);
+                            hmAggs.put("formato", typeprop);
+                            TermsAggregationBuilder mediaAgg = ((TermsAggregationBuilder) AggregationBuilders.terms((String) "formato").field("formato")).size(10000);  //mediastype ... formato
                             ssb.aggregation((AggregationBuilder) mediaAgg);
                         } else if (next.equals("media")) {
-                            hmAggs.put("rightsmedia", typeprop);
-                            TermsAggregationBuilder rmediaAgg = ((TermsAggregationBuilder) AggregationBuilders.terms((String) "rightsmedia").field("media")).size(10000);
+                            hmAggs.put("media", typeprop);
+                            TermsAggregationBuilder rmediaAgg = ((TermsAggregationBuilder) AggregationBuilders.terms((String) "media").field("media")).size(10000);   //rightsmedia ... media
                             ssb.aggregation((AggregationBuilder) rmediaAgg);
                         } else if (next.equals("lang")) {
-                            hmAggs.put("languages", typeprop);
-                            TermsAggregationBuilder languagesAgg = ((TermsAggregationBuilder) AggregationBuilders.terms((String) "languages").field("lang")).size(10000);
+                            hmAggs.put("lang", typeprop);
+                            TermsAggregationBuilder languagesAgg = ((TermsAggregationBuilder) AggregationBuilders.terms((String) "lang").field("lang")).size(10000);  // languages .... lang
                             ssb.aggregation((AggregationBuilder) languagesAgg);
                         } else {
                             hmAggs.put(next, typeprop);
