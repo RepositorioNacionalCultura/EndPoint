@@ -25,6 +25,22 @@
     },
     "mappings": {
         "bic": {
+            "dynamic_templates": [
+                {
+                    "strings_as_keywords": {
+                        "match_mapping_type": "string",
+                        "mapping": {
+                            "type": "text",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword",
+                                    "ignore_above": 256
+                                }
+                            }
+                        }
+                    }
+                }
+            ],
             "properties": {
                 "indexcreated": {
                     "type": "date"
@@ -68,7 +84,7 @@
                     }
                 },
                 "recordtitle": {
-                     "type": "text",
+                    "type": "text",
                     "analyzer": "spanish",
                     "search_analyzer": "spanish",
                     "fields": {
@@ -135,8 +151,7 @@
                     }
                 },
                 "rightstitle": {
-                    "type": "text",
-                    "index": false
+                    "type": "keyword"
                 },
                 "rightsdescription": {
                     "type": "text",
@@ -186,7 +201,7 @@
                     }
                 },
                 "dateupload": {
-                     "type": "date",
+                    "type": "date",
                     "fields": {
                         "textvalue": {
                             "type": "text"
@@ -194,7 +209,7 @@
                     }
                 },
                 "perioddatestart": {
-                     "type": "date",
+                    "type": "date",
                     "fields": {
                         "textvalue": {
                             "type": "text"
@@ -562,10 +577,10 @@
                     "search_analyzer": "spanish"
                 },
                 "formato": {
-                    "type": "text"
+                    "type": "keyword"
                 },
                 "media": {
-                    "type": "text"
+                    "type": "keyword"
                 },
                 "clasification": {
                     "type": "text",
