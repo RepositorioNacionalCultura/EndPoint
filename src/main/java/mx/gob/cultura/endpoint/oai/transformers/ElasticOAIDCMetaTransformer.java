@@ -531,13 +531,20 @@ public class ElasticOAIDCMetaTransformer implements OAITransformer<JSONObject, E
         }
         /*Colección*/
         if(source.has("reccollection")){
-            String value = source.getString("reccollection");
-            if (value != null && !value.isEmpty()) {
-                Element collection = doc.createElement("dcterms:isPartOf");
-                collection.appendChild(doc.createTextNode(value));
-                oaidc.appendChild(collection);
+            JSONArray jcollectiona = source.getJSONArray("reccollection");
+            if (jcollectiona != null && jcollectiona.length() > 0) {
+                if (jcollectiona != null && jcollectiona.length() > 0) {
+                    for (Object obj : jcollectiona) {
+                        String value = (String) obj;
+                        if (value != null && !value.isEmpty()) {
+                            Element collection = doc.createElement("dcterms:isPartOf");
+                            collection.appendChild(doc.createTextNode(value));
+                            oaidc.appendChild(collection); 
+                        }
+                    }
+                }
             }
-        }  
+        }
         /*Disciplina*/
         if(source.has("discipline")){
             String value = source.getString("discipline");
