@@ -85,8 +85,6 @@
                 },
                 "recordtitle": {
                     "type": "text",
-                    "analyzer": "spanish",
-                    "search_analyzer": "spanish",
                     "fields": {
                         "raw": {
                             "type": "keyword"
@@ -94,9 +92,7 @@
                     }
                 },
                 "description": {
-                    "type": "text",
-                    "analyzer": "spanish",
-                    "search_analyzer": "spanish"
+                    "type": "text"
                 },
                 "digitalObjectURL": {
                     "type": "text",
@@ -112,8 +108,6 @@
                 },
                 "digitalObjectMime": {
                     "type": "text",
-                    "analyzer": "spanish",
-                    "search_analyzer": "spanish",
                     "fields": {
                         "raw": {
                             "type": "keyword"
@@ -134,7 +128,7 @@
                             "type": "text",
                             "index": false
                         },
-                        "﻿lastModifiedDate": {
+                        "lastModifiedDate": {
                             "type": "date"
                         },
                         "size": {
@@ -151,7 +145,12 @@
                     }
                 },
                 "rightstitle": {
-                    "type": "keyword"
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword"
+                        }
+                    }
                 },
                 "rightsdescription": {
                     "type": "text",
@@ -161,13 +160,11 @@
                     "type": "text",
                     "index": false
                 },
-                "autor": {
+                "author": {
                     "type": "text",
-                    "analyzer": "spanish",
-                    "search_analyzer": "spanish",
                     "fields": {
                         "raw": {
-                            "type": "text"
+                            "type": "keyword"
                         }
                     }
                 },
