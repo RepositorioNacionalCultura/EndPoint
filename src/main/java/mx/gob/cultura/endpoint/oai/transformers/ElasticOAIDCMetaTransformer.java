@@ -340,16 +340,30 @@ public class ElasticOAIDCMetaTransformer implements OAITransformer<JSONObject, E
             JSONObject jperiodcreated =source.getJSONObject("periodcreated");
             if(jperiodcreated!=null){
                 if(jperiodcreated.has("datestart")){
-                    String value=jperiodcreated.getString("datestart");
-                    Element created = doc.createElement("dcterms:created");                        
-                    created.appendChild(doc.createTextNode(value));
-                    oaidc.appendChild(created);
+                    JSONArray jdatestarta = source.getJSONArray("datestart");
+                    if (jdatestarta != null && jdatestarta.length() > 0) {
+                        for (Object obj : jdatestarta) {
+                            String value = (String) obj;
+                            if (value != null && !value.isEmpty()) {
+                                Element created = doc.createElement("dcterms:created");                        
+                                created.appendChild(doc.createTextNode(value));
+                                oaidc.appendChild(created);
+                            }
+                        }
+                    }        
                 }
                 if(jperiodcreated.has("dateend")){
-                    String value=jperiodcreated.getString("dateend");
-                    Element created = doc.createElement("dcterms:created");                        
-                    created.appendChild(doc.createTextNode(value));
-                    oaidc.appendChild(created);
+                    JSONArray jdateenda = source.getJSONArray("dateend");
+                    if (jdateenda != null && jdateenda.length() > 0) {
+                        for (Object obj : jdateenda) {
+                            String value = (String) obj;
+                            if (value != null && !value.isEmpty()) {
+                                Element created = doc.createElement("dcterms:created");                        
+                                created.appendChild(doc.createTextNode(value));
+                                oaidc.appendChild(created);
+                            }
+                        }
+                    }                    
                 }
             }    
         }
