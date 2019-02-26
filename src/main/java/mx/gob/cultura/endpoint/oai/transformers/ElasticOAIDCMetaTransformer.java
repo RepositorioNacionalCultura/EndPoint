@@ -340,29 +340,25 @@ public class ElasticOAIDCMetaTransformer implements OAITransformer<JSONObject, E
             JSONObject jperiodcreated =source.getJSONObject("periodcreated");
             if(jperiodcreated!=null){
                 if(jperiodcreated.has("datestart")){
-                    JSONArray jdatestarta = source.getJSONArray("datestart");
-                    if (jdatestarta != null && jdatestarta.length() > 0) {
-                        for (Object obj : jdatestarta) {
-                            String value = (String) obj;
-                            if (value != null && !value.isEmpty()) {
+                    JSONObject jdatestart = jperiodcreated.getJSONObject("datestart");
+                    if(jdatestart.has("value")){
+                        String value = jdatestart.getString("value");
+                        if (value != null && !value.isEmpty()) {
                                 Element created = doc.createElement("dcterms:created");                        
                                 created.appendChild(doc.createTextNode(value));
                                 oaidc.appendChild(created);
-                            }
                         }
                     }        
                 }
                 if(jperiodcreated.has("dateend")){
-                    JSONArray jdateenda = source.getJSONArray("dateend");
-                    if (jdateenda != null && jdateenda.length() > 0) {
-                        for (Object obj : jdateenda) {
-                            String value = (String) obj;
-                            if (value != null && !value.isEmpty()) {
-                                Element created = doc.createElement("dcterms:created");                        
-                                created.appendChild(doc.createTextNode(value));
-                                oaidc.appendChild(created);
-                            }
-                        }
+                    JSONObject jdateend = jperiodcreated.getJSONObject("dateend");
+                    if(jdateend.has("value")){
+                        String value = jdateend.getString("value");
+                        if (value != null && !value.isEmpty()) {
+                            Element created = doc.createElement("dcterms:created");                        
+                            created.appendChild(doc.createTextNode(value));
+                            oaidc.appendChild(created);
+                        }                        
                     }                    
                 }
             }    
