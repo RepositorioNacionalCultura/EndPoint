@@ -563,9 +563,9 @@ public class SearchEndPoint {
                         continue;
                     }
                     if (typeprop.equals("date")) {
-                        if (next.equals("timelinedate")) {
-                            hmAggs.put("dates", typeprop);
-                            DateHistogramAggregationBuilder datesAgg = ((DateHistogramAggregationBuilder) AggregationBuilders.dateHistogram((String) "dates").field("timelinedate.value")).dateHistogramInterval(DateHistogramInterval.YEAR);
+                        if (next.equals("datecreated")) {
+                            hmAggs.put("datecreated", typeprop);
+                            DateHistogramAggregationBuilder datesAgg = ((DateHistogramAggregationBuilder) AggregationBuilders.dateHistogram((String) "datecreated").field("datecreated")).dateHistogramInterval(DateHistogramInterval.YEAR);
                             ssb.aggregation((AggregationBuilder) datesAgg);
                         } else {
                             hmAggs.put(next, typeprop);
@@ -578,12 +578,12 @@ public class SearchEndPoint {
                             TermsAggregationBuilder holdersAgg = ((TermsAggregationBuilder) AggregationBuilders.terms((String) "holder").field("holder.raw")).size(10000);
                             ssb.aggregation((AggregationBuilder) holdersAgg);
                         } else if (next.equals("resourcetype")) {
-                            hmAggs.put("resourcetypes", typeprop);
-                            TermsAggregationBuilder typesAgg = ((TermsAggregationBuilder) AggregationBuilders.terms((String) "resourcetypes").field("resourcetype.raw")).size(10000);
+                            hmAggs.put("resourcetype", typeprop);
+                            TermsAggregationBuilder typesAgg = ((TermsAggregationBuilder) AggregationBuilders.terms((String) "resourcetype").field("resourcetype.raw")).size(10000);
                             ssb.aggregation((AggregationBuilder) typesAgg);
                         } else if (next.equals("rightstitle")) {
                             hmAggs.put("rightstitle", typeprop);
-                            TermsAggregationBuilder rigthsAgg = ((TermsAggregationBuilder) AggregationBuilders.terms((String) "rightstitle").field("rightstitle")).size(10000);
+                            TermsAggregationBuilder rigthsAgg = ((TermsAggregationBuilder) AggregationBuilders.terms((String) "rightstitle").field("rightstitle.keyword")).size(10000);
                             ssb.aggregation((AggregationBuilder) rigthsAgg);
                         } else if (next.equals("formato")) {
                             hmAggs.put("formato", typeprop);
@@ -597,7 +597,11 @@ public class SearchEndPoint {
                             hmAggs.put("lang", typeprop);
                             TermsAggregationBuilder languagesAgg = ((TermsAggregationBuilder) AggregationBuilders.terms((String) "lang").field("lang")).size(10000);  // languages .... lang
                             ssb.aggregation((AggregationBuilder) languagesAgg);
-                        } else {
+                        } else if (next.equals("timelinedate")) {
+                            hmAggs.put("timelinedate", typeprop);
+                            TermsAggregationBuilder languagesAgg = ((TermsAggregationBuilder) AggregationBuilders.terms((String) "timelinedate").field("timelinedate")).size(10000);  // languages .... lang
+                            ssb.aggregation((AggregationBuilder) languagesAgg);
+                        } else{
                             hmAggs.put(next, typeprop);
                             TermsAggregationBuilder tempAgg = ((TermsAggregationBuilder) AggregationBuilders.terms((String) next).field(next + ".keyword")).size(10000);
                             ssb.aggregation((AggregationBuilder) tempAgg);
