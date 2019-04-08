@@ -71,7 +71,7 @@ public class OAIEndPoint {
     private static String indexName = getIndexName();
     public static final String REPO_INDEX = "cultura";
     public static final String REPO_INDEX_TEST = "cultura_test";
-    private static final int RECORD_LIMIT = 25;
+    private static final int RECORD_LIMIT = 100;
     private static final long SCROLL_TIMEOUT =33;
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
     private static final SimpleDateFormat DATETIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
