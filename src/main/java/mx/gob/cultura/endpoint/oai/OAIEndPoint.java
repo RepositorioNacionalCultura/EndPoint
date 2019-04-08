@@ -50,10 +50,11 @@ import org.w3c.dom.Node;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
+import org.elasticsearch.action.search.SearchScrollRequest;
+import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.script.Script;
 import org.elasticsearch.script.ScriptType;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
-import org.elasticsearch.search.aggregations.bucket.terms.InternalTerms;
 import org.elasticsearch.search.aggregations.bucket.terms.ParsedStringTerms;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms.Bucket;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
@@ -70,7 +71,8 @@ public class OAIEndPoint {
     private static String indexName = getIndexName();
     public static final String REPO_INDEX = "cultura";
     public static final String REPO_INDEX_TEST = "cultura_test";
-    private static final int RECORD_LIMIT = 100;
+    private static final int RECORD_LIMIT = 25;
+    private static final long SCROLL_TIMEOUT =33;
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
     private static final SimpleDateFormat DATETIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
     public OAIEndPoint() {
@@ -105,7 +107,8 @@ public class OAIEndPoint {
         String sFrom = params.getFirst("from");
         String sUntil = params.getFirst("until");       
         Date from = null;
-        Date until = null;       
+        Date until = null; 
+        String scrollId = "";
         
         boolean hasVerb = null != verb && !verb.isEmpty();
         boolean hasToken = null != token && !token.isEmpty();
@@ -114,7 +117,7 @@ public class OAIEndPoint {
         boolean hasIdentifier = null != oaiid && !oaiid.isEmpty();
         boolean hasFrom = null != sFrom; 
         boolean hasUntil = null != sUntil;
- 
+        
         if (hasToken) {
             if (hasMetadataPrefix ||hasSet ||hasIdentifier || hasFrom || hasUntil) {
                 createErrorNode(doc, "badArgument", "ResumptionToken cannot be sent together with from, until, metadataPrefix or set parameters");
@@ -123,16 +126,19 @@ public class OAIEndPoint {
             try{
                 byte[] decodedBytes = Base64.getDecoder().decode(token);
                 String[] tkel= (new String(decodedBytes)).split("\\|");
-                for(String s:tkel)System.out.println(s);
+                //for(String s:tkel)System.out.println(s);
                 metadataPrefix=tkel[0];
                 hasMetadataPrefix=true;
                 page=Integer.parseInt(tkel[1]);
                 if(!" ".equals(tkel[2]))
                     set=tkel[2];
+                scrollId=tkel[3];
+                /*
                 if(!" ".equals(tkel[3]))
                     from=DATETIME_FORMAT.parse(tkel[3]);
                 if(!" ".equals(tkel[4]))
                     until=DATETIME_FORMAT.parse(tkel[4]);
+                */
             }catch(Exception ex){
                 ex.printStackTrace();
                 createErrorNode(doc, "badResumptionToken", "The value of the resumptionToken argument is invalid");
@@ -205,13 +211,13 @@ public class OAIEndPoint {
                         return Response.ok(documentToString(doc, false)).build(); 
                     }
                 } 
-                getListObjects(doc, metadataPrefix,set, from, until, page, true);
+                getListObjects(doc, metadataPrefix,set, from, until, page, scrollId, true);
                 break;
             case "ListRecords":
                 if(hasIdentifier){
                     createErrorNode(doc, "badArgument", " The request includes illegal arguments or is missing required arguments.");
                     return Response.ok(documentToString(doc, false)).build();
-                }else{
+                }else{                                       
                     if(!hasMetadataPrefix){
                         createErrorNode(doc, "badArgument ", "The request includes illegal arguments or is missing required arguments.");
                         return Response.ok(documentToString(doc, false)).build(); 
@@ -222,7 +228,7 @@ public class OAIEndPoint {
                         return Response.ok(documentToString(doc, false)).build(); 
                     }
                 }    
-                getListObjects(doc, metadataPrefix, set, from, until, page, false);
+                getListObjects(doc, metadataPrefix, set, from, until, page, scrollId, false);
                 break;
             case "GetRecord":
                 if(!hasMetadataPrefix||!hasIdentifier||hasToken||hasSet|hasFrom||hasUntil){
@@ -244,12 +250,12 @@ public class OAIEndPoint {
         return Response.ok(documentToString(doc, false)).build();
     }
 
-     private void getListObjects(Document doc, String prefix, String set,Date from, Date until, int page, boolean onlyIdentifier) {
+     private void getListObjects(Document doc, String prefix, String set,Date from, Date until, int page, String scrollId, boolean onlyIdentifier) {
         ArrayList<Node> records = new ArrayList<>();
         String rootElementTag = "ListRecords";
         JSONObject result;
 
-        result = getElasticObjects(set, from, until, RECORD_LIMIT, page);
+        result = getElasticObjects(set, from, until, scrollId);
         ElasticOAIRecordTrasformer OAIRecord= new ElasticOAIRecordTrasformer(prefix,onlyIdentifier);
         if(result.has("records")){
             JSONArray jarray = result.getJSONArray("records");
@@ -271,7 +277,8 @@ public class OAIEndPoint {
                 listRecords.appendChild(n);
             }
 
-            if ((page * RECORD_LIMIT + records.size()) < result.getLong("total")) {
+            //if ((page * RECORD_LIMIT + records.size()) < result.getLong("total")&&
+            if (result.has("scrollId")){
                 StringBuilder sb=new StringBuilder(64);
                 Element token = doc.createElement("resumptionToken");
                 sb.append(prefix);
@@ -284,7 +291,8 @@ public class OAIEndPoint {
                     sb.append(" ");
                 }
                 sb.append("|");
-                if(from!=null){
+                sb.append(result.getString("scrollId"));
+                /*if(from!=null){
                     sb.append(DATETIME_FORMAT.format(from));
                 }else{
                     sb.append(" ");
@@ -295,11 +303,14 @@ public class OAIEndPoint {
                 }else{
                     sb.append(" ");
                 }
-                
-                byte[] encodedBytes = Base64.getEncoder().encode(sb.toString().getBytes());
-                token.setTextContent(new String(encodedBytes));
+                */
+                if ((page * RECORD_LIMIT + records.size()) < result.getLong("total")){
+                    byte[] encodedBytes = Base64.getEncoder().encode(sb.toString().getBytes());
+                    token.setTextContent(new String(encodedBytes));
+                    token.setAttribute("expirationDate",DATETIME_FORMAT.format((new Date().getTime())+(SCROLL_TIMEOUT*60*1000l)));
+                }
                 token.setAttribute("completeListSize", String.valueOf( result.getLong("total")));
-                token.setAttribute("cursor", String.valueOf(page * RECORD_LIMIT + records.size()));          
+                token.setAttribute("cursor", String.valueOf(page * RECORD_LIMIT + records.size()));                          
                 listRecords.appendChild(token);
             }
         } else {
@@ -513,39 +524,56 @@ public class OAIEndPoint {
         return ret;
     }
     
-    private JSONObject getElasticObjects(String set,Date from, Date until,int limit, int page) {
+    private JSONObject getElasticObjects(String set,Date from, Date until, String scrollId){//int page) {
+
         JSONObject ret = new JSONObject();
-        //Create search request
-        SearchRequest sr = new SearchRequest(indexName);
+        SearchScrollRequest slr=null;
+        SearchRequest sr=null;
+        
+        if(null!=scrollId&&!scrollId.isEmpty()){
+            //Create search scroll request
+            slr = new SearchScrollRequest(scrollId); 
+            slr.scroll(TimeValue.timeValueMinutes(SCROLL_TIMEOUT));         
+        }else{  
+            //Create search request
+            sr = new SearchRequest(indexName);
 
-        //Create queryString query
-        SearchSourceBuilder ssb = new SearchSourceBuilder();
-        BoolQueryBuilder query= QueryBuilders.boolQuery();
-        query.must(QueryBuilders.existsQuery("culturaoaiid"));
-        if(set!=null&&!set.isEmpty()){
-            query.must(QueryBuilders.matchQuery("holderid", set));
+            //Create queryString query
+            SearchSourceBuilder ssb = new SearchSourceBuilder();
+            BoolQueryBuilder query= QueryBuilders.boolQuery();
+            query.must(QueryBuilders.existsQuery("culturaoaiid"));
+            if(set!=null&&!set.isEmpty()){
+                query.must(QueryBuilders.matchQuery("holderid", set));
+            }
+            if(from!=null){
+                query.must(QueryBuilders.rangeQuery("indexcreated").from(from.getTime()));
+            }        
+            if(until!=null){
+                query.must(QueryBuilders.rangeQuery("indexcreated").to(until.getTime()));
+            }      
+            ssb.query(query);
+            //Set paging parameters
+            //ssb.from(page*RECORD_LIMIT);
+            ssb.size(RECORD_LIMIT);
+
+            //Set sort parameters
+            ssb.sort("indexcreated", SortOrder.ASC);
+            //Add source builder to request
+            sr.scroll(TimeValue.timeValueMinutes(SCROLL_TIMEOUT));
+            sr.source(ssb);
         }
-        if(from!=null){
-            query.must(QueryBuilders.rangeQuery("indexcreated").from(from.getTime()));
-        }        
-        if(until!=null){
-            query.must(QueryBuilders.rangeQuery("indexcreated").to(until.getTime()));
-        }      
-        ssb.query(query);
-        //Set paging parameters
-        ssb.from(page*RECORD_LIMIT);
-        ssb.size(RECORD_LIMIT);
-
-        //Set sort parameters
-        ssb.sort("indexcreated", SortOrder.ASC);
-
-        //Add source builder to request
-        sr.source(ssb);
         try {
             //Perform search
-            SearchResponse resp = ELASTIC.search(sr);
-            if (resp.status().getStatus() == RestStatus.OK.getStatus()) {
+            SearchResponse resp;
+            if (slr!=null){
+                resp= ELASTIC.searchScroll(slr);
+            }else{
+                resp= ELASTIC.search(sr);
+            }
+
+            if (resp.status().getStatus() == RestStatus.OK.getStatus()) {                       
                 ret.put("took", resp.getTook().toString());
+                ret.put("scrollId", resp.getScrollId());
                 //Get hits
                 SearchHits respHits = resp.getHits();
                 SearchHit [] hits = respHits.getHits();
@@ -564,7 +592,7 @@ public class OAIEndPoint {
                     ret.put("records", recs);
                 }
             }
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             LOGGER.error("Getting elastic objects",ex);
         }
        return ret;
@@ -633,7 +661,6 @@ https://www.elastic.co/guide/en/elasticsearch/reference/current/fielddata.html
         
         //Add source builder to request
         sr.source(ssb);
-System.out.println("-----------------------------------------------------\n"+sr);        
         try {
             //Perform search
             SearchResponse resp = ELASTIC.search(sr);
@@ -650,8 +677,6 @@ System.out.println("-----------------------------------------------------\n"+sr)
                     //Get records
                     JSONArray recs = new JSONArray();
                     for (SearchHit hit : hits) {
-System.out.println("---------for---------------------------------------------");                                
-System.out.println(hit.getSourceAsString());                        
                         JSONObject o = new JSONObject(hit.getSourceAsString());
                         recs.put(o);
                     }
@@ -662,7 +687,6 @@ System.out.println(hit.getSourceAsString());
         } catch (IOException ex) {
             LOGGER.error("Getting elastic objects sets",ex);
         }
-//System.out.println(ret);
        return ret;
     }
     
