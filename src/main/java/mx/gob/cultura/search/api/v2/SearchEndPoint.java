@@ -271,8 +271,9 @@ public class SearchEndPoint {
     private JSONObject searchByKeyword(String q, int from, int size, String[] sortParams, String attr, String filter) {
         JSONObject ret = new JSONObject();
         String qreplaced = "";
-        String tmpq = "";
+        String tmpq = q;
         boolean isReplaced = false;
+        q = SearchEndPoint.removesSpecialChars(q);
         SearchRequest sr = new SearchRequest(new String[]{indexName});
         SearchSourceBuilder ssb = new SearchSourceBuilder();
         BoolQueryBuilder qb = QueryBuilders.boolQuery();
@@ -365,7 +366,7 @@ public class SearchEndPoint {
             }
         } else if (null != filter) {
             if (q != null) {
-                qreplaced = SearchEndPoint.replaceSpecialChars(q, true).toUpperCase();
+                qreplaced = SearchEndPoint.replaceSpecialChars(tmpq, true).toUpperCase();
                 if (!qreplaced.equals(q = q.toUpperCase())) {
                     isReplaced = true;
                 }
@@ -498,7 +499,7 @@ public class SearchEndPoint {
             ssb.query((QueryBuilder) qb);
         } else {
             if (q != null) {
-                qreplaced = SearchEndPoint.replaceSpecialChars(q, true).toUpperCase();
+                qreplaced = SearchEndPoint.replaceSpecialChars(tmpq, true).toUpperCase();
                 if (!qreplaced.equals(q = q.toUpperCase())) {
                     isReplaced = true;
                 }
@@ -788,6 +789,33 @@ public class SearchEndPoint {
             }
             aux = ret.toString();
         }
+        return aux;
+    }
+    
+     /**
+     * Quita signos de puntuación
+     * @param q, texto de consulta
+     * @return texto sin signos de puntuación
+     */
+     public static String removesSpecialChars(String q) {
+        StringBuilder ret = new StringBuilder();
+        String aux = q;
+        
+        //aux = aux.toLowerCase();
+
+        if (null != aux && !aux.equals("*")) {
+            int l = aux.length();
+            for (int x = 0; x < l; x++) {
+                char ch = aux.charAt(x);
+                if ((ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'z')
+                        || (ch >= 'A' && ch <= 'Z') || ch == ' ' || ch == 'á' || ch == 'é' || ch == 'í' || ch == 'ó' || ch == 'ú' || ch == 'ñ' || ch == 'ö' || ch == 'ü'
+                        || ch == 'Á' || ch == 'É' || ch == 'Í' || ch == 'Ó' || ch == 'Ú' || ch == 'Ñ' || ch == 'Ö' || ch == 'Ü') {
+                    ret.append(ch);
+                }
+            }
+            aux = ret.toString();
+        }
+         //System.out.println("removes Special Chars...:"+aux);
         return aux;
     }
 }
