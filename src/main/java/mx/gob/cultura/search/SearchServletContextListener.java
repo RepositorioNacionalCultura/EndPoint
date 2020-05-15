@@ -79,7 +79,11 @@ public class SearchServletContextListener implements ServletContextListener {
     private boolean createESIndex() {
         boolean ret = false;
         LOG.trace("Creating index "+ indexName +"...");
-        InputStream is = getClass().getClassLoader().getResourceAsStream("indexmapping_cultura.json");
+        String jsonName = "indexmapping_cultura.json";
+        if(indexName!=null&&indexName.equals("record")){
+            jsonName = "indexmapping_nodos.json";
+        }   
+        InputStream is = getClass().getClassLoader().getResourceAsStream(jsonName);
         if (null != is) {
             String mapping = Util.FILE.readFromStream(is, StandardCharsets.UTF_8.name());
             HttpEntity body = new NStringEntity(mapping, ContentType.APPLICATION_JSON);

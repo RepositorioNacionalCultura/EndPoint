@@ -25,6 +25,22 @@
     },
     "mappings": {
         "bic": {
+            "dynamic_templates": [
+                {
+                    "strings_as_keywords": {
+                        "match_mapping_type": "string",
+                        "mapping": {
+                            "type": "text",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword",
+                                    "ignore_above": 256
+                                }
+                            }
+                        }
+                    }
+                }
+            ],
             "properties": {
                 "indexcreated": {
                     "type": "date"
@@ -36,31 +52,19 @@
                     "type": "keyword"
                 },
                 "identifier": {
-                    "properties": {
-                        "type": {
-                            "type": "keyword",
-                            "index": true
-                        },
-                        "value": {
-                            "type": "keyword",
-                            "index": true
-                        },
-                        "preferred": {
-                            "type": "boolean"
-                        },
-                        "identifiertypeid": {
-                            "type": "keyword",
-                            "index": false
-                        },
-                        "identifiertype": {
-                            "type": "keyword",
-                            "index": true
-                        },
-                        "note": {
-                            "type": "text",
-                            "index": true
-                        }
-                    }
+                    "type": "keyword"
+                },
+                "identifiertypeid": {
+                    "type": "keyword",
+                    "index": false
+                },
+                "identifiertype": {
+                    "type": "keyword",
+                    "index": true
+                },
+                "identifiernote": {
+                    "type": "text",
+                    "index": true
                 },
                 "resourcestats": {
                     "properties": {
@@ -80,207 +84,150 @@
                     }
                 },
                 "recordtitle": {
-                    "properties": {
-                        "type": {
-                            "type": "keyword",
-                            "index": false
-                        },
-                        "value": {
-                            "type": "text",
-                            "analyzer": "spanish",
-                            "search_analyzer": "spanish"
+                    "type": "text",
+                    "fields": {
+                        "raw": {
+                            "type": "keyword"
                         }
                     }
                 },
                 "description": {
+                    "type": "text"
+                },
+                "digitalObjectURL": {
                     "type": "text",
-                    "analyzer": "spanish",
-                    "search_analyzer": "spanish"
+                    "index": false
+                },
+                "digitalObjectName": {
+                    "type": "text",
+                    "index": false
+                },
+                "digitalObjectOriginalName": {
+                    "type": "text",
+                    "index": false
+                },
+                "digitalObjectMime": {
+                    "type": "text",
+                    "fields": {
+                        "raw": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "digitalObjectDownloads": {
+                    "type": "long",
+                    "index": false
                 },
                 "digitalObject": {
                     "properties": {
-                        "downloads": {
+                        "id": {
+                            "type": "keyword",
+                            "index": false
+                        },
+                        "name": {
+                            "type": "text",
+                            "index": false
+                        },
+                        "lastModifiedDate": {
+                            "type": "date"
+                        },
+                        "size": {
                             "type": "long"
                         },
-                        "rights": {
-                            "properties": {
-                                "type": {
-                                    "type": "keyword",
-                                    "index": true
-                                },
-                                "url": {
-                                    "type": "keyword",
-                                    "index": true
-                                },
-                                "rightstitle": {
-                                    "type": "keyword",
-                                    "index": true
-                                },
-                                "description": {
-                                    "type": "text",
-                                    "index": false
-                                },
-                                "holder": {
-                                    "type": "text",
-                                    "index": false
-                                }
-                            }
-                        },
-                        "digitalobjecttitle": {
+                        "target_name": {
                             "type": "text",
                             "index": false
                         },
-                        "digitalobjecttitleoriginal": {
-                            "type": "text",
-                            "index": false
-                        },
-                        "url": {
-                            "type": "text",
-                            "index": false
-                        },
-                        "mediatype": {
-                            "properties": {
-                                "name": {
-                                    "type": "text",
-                                    "analyzer": "spanish",
-                                    "search_analyzer": "spanish",
-                                    "fields": {
-                                        "raw": {
-                                            "type": "keyword"
-                                        }
-                                    }
-                                },
-                                "mime": {
-                                    "type": "text",
-                                    "analyzer": "spanish",
-                                    "search_analyzer": "spanish",
-                                    "fields": {
-                                        "raw": {
-                                            "type": "keyword"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "rights": {
-                    "properties": {
                         "type": {
-                            "type": "text",
-                            "index": false
-                        },
-                        "url": {
-                            "type": "text",
-                            "index": false
-                        },
-                        "rightstitle": {
-                            "type": "text"
-                        },
-                        "description": {
-                            "type": "text",
-                            "index": false
-                        },
-                        "holder": {
-                            "type": "text",
+                            "type": "keyword",
                             "index": false
                         }
                     }
                 },
-                "creator": {
+                "rightstitle": {
                     "type": "text",
-                    "analyzer": "spanish",
-                    "search_analyzer": "spanish",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword"
+                        }
+                    }
+                },
+                "rightsdescription": {
+                    "type": "text",
+                    "index": false
+                },
+                "rightsurl": {
+                    "type": "text",
+                    "index": false
+                },
+                "author": {
+                    "type": "text",
                     "fields": {
                         "raw": {
-                            "type": "text"
+                            "type": "keyword"
                         }
                     }
                 },
-                "creatornote": {
+                "authornote": {
                     "type": "text",
                     "analyzer": "spanish",
                     "search_analyzer": "spanish"
                 },
-                "creatorgroup": {
+                "authorgroup": {
                     "type": "text",
                     "analyzer": "spanish",
                     "search_analyzer": "spanish"
                 },
                 "datecreated": {
-                    "properties": {
-                        "format": {
-                            "type": "text",
-                            "index": false
-                        },
-                        "value": {
-                            "type": "date",
-                            "fields": {
-                                "textvalue": {
-                                    "type": "text"
-                                }
-                            }
-                        },
-                        "note": {
+                    "type": "date",
+                    "fields": {
+                        "textvalue": {
                             "type": "text"
                         }
                     }
                 },
+                "datecreatednote": {
+                    "type": "text"
+                },
                 "datedigital": {
-                    "properties": {
-                        "format": {
-                            "type": "text",
-                            "index": false
-                        },
-                        "value": {
+                    "type": "date",
+                    "fields": {
+                        "textvalue": {
                             "type": "text"
                         }
                     }
                 },
                 "dateupload": {
-                    "properties": {
-                        "format": {
-                            "type": "text",
-                            "index": false
-                        },
-                        "value": {
+                    "type": "date",
+                    "fields": {
+                        "textvalue": {
                             "type": "text"
                         }
                     }
                 },
-                "periodcreated": {
-                    "properties": {
-                        "name": {
-                            "type": "text",
-                            "analyzer": "spanish",
-                            "search_analyzer": "spanish",
-                            "fields": {
-                                "raw": {
-                                    "type": "keyword"
-                                }
-                            }
-                        },
-                        "datestart": {
-                            "properties": {
-                                "format": {
-                                    "type": "text",
-                                    "index": false
-                                },
-                                "value": {
-                                    "type": "date"
-                                }
-                            }
-                        },
-                        "dateend": {
-                            "properties": {
-                                "format": {
-                                    "type": "text",
-                                    "index": false
-                                },
-                                "value": {
-                                    "type": "date"
-                                }
-                            }
+                "perioddatestart": {
+                    "type": "date",
+                    "fields": {
+                        "textvalue": {
+                            "type": "text"
+                        }
+                    }
+                },
+                "perioddateend": {
+                    "type": "date",
+                    "fields": {
+                        "textvalue": {
+                            "type": "text"
+                        }
+                    }
+                },
+                "perioddatename": {
+                    "type": "text",
+                    "analyzer": "spanish",
+                    "search_analyzer": "spanish",
+                    "fields": {
+                        "raw": {
+                            "type": "keyword"
                         }
                     }
                 },
@@ -398,18 +345,10 @@
                     "index": false
                 },
                 "timelinedate": {
-                    "properties": {
-                        "format": {
-                            "type": "text",
-                            "index": false
-                        },
-                        "value": {
-                            "type": "date",
-                            "fields": {
-                                "textvalue": {
-                                    "type": "text"
-                                }
-                            }
+                    "type": "date",
+                    "fields": {
+                        "textvalue": {
+                            "type": "text"
                         }
                     }
                 },
@@ -554,7 +493,7 @@
                 },
                 "folio": {
                     "type": "keyword",
-                    "index":false
+                    "index": false
                 },
                 "supportid": {
                     "type": "keyword",
@@ -619,7 +558,7 @@
                     "analyzer": "spanish",
                     "search_analyzer": "spanish"
                 },
-                 "acervo": {
+                "acervo": {
                     "type": "text",
                     "analyzer": "spanish",
                     "search_analyzer": "spanish"
@@ -635,10 +574,10 @@
                     "search_analyzer": "spanish"
                 },
                 "formato": {
-                    "type": "text"
+                    "type": "keyword"
                 },
                 "media": {
-                    "type": "text"
+                    "type": "keyword"
                 },
                 "clasification": {
                     "type": "text",
